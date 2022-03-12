@@ -4,11 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.BaseTimeEntity;
+import study.movie.domain.screen.Screen;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -30,6 +30,9 @@ public class Theater extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String phone;
+
+    @OneToMany(mappedBy = "theater")
+    private List<Screen> screenList = new ArrayList<>();
 
     @Builder
     public Theater(String city, String name, String phone) {

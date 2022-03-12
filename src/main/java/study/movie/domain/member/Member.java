@@ -4,12 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.BaseTimeEntity;
+import study.movie.domain.ticket.Ticket;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -31,6 +31,9 @@ public class Member extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDate birth;
+
+    @OneToMany(mappedBy = "member")
+    private List<Ticket> tickets = new ArrayList<>();
 
     @Builder
     public Member(String name, String email, LocalDate birth) {

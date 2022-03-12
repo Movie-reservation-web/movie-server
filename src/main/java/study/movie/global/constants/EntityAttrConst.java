@@ -7,7 +7,8 @@ import study.movie.global.enumMapper.EnumMapperType;
 
 public class EntityAttrConst {
 
-    @AllArgsConstructor @Getter
+    @AllArgsConstructor
+    @Getter
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum Genre implements EnumMapperType {
         ACTION("g01", "액션"),
@@ -30,10 +31,11 @@ public class EntityAttrConst {
         private String desc;
     }
 
-    @AllArgsConstructor @Getter
+    @AllArgsConstructor
+    @Getter
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum FilmRating implements EnumMapperType {
-        UNDETERMINED("fr00","미정"),
+        UNDETERMINED("fr00", "미정"),
         G_RATED("fr01", "전체관람가"),
         PG_12("fr02", "12세 이상 관람가"),
         PG_15("fr03", "15세 이상 관람가"),
@@ -43,10 +45,11 @@ public class EntityAttrConst {
         private String desc;
     }
 
-    @AllArgsConstructor @Getter
+    @AllArgsConstructor
+    @Getter
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum FilmFormat implements EnumMapperType {
-        THREE_D("ff00","3D"),
+        THREE_D("ff00", "3D"),
         IMAX("ff01", "IMAX"),
         FOUR_D_FLEX("ff02", "4DX"),
         SCREEN_X("ff03", "ScreenX"),
@@ -55,10 +58,11 @@ public class EntityAttrConst {
         private String desc;
     }
 
-    @AllArgsConstructor @Getter
+    @AllArgsConstructor
+    @Getter
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum ScreenFormat implements EnumMapperType {
-        THREE_D("ff00","3D"),
+        THREE_D("ff00", "3D"),
         IMAX("sf01", "IMAX"),
         FOUR_D_FLEX("sf02", "4DX"),
         SCREEN_X("sf03", "ScreenX"),
@@ -74,5 +78,9 @@ public class EntityAttrConst {
         PREMIUM("sf14", "4DX-Screen");
         private String code;
         private String desc;
+    }
+
+    public enum ReserveStatus {
+        EMPTY, RESERVING, RESERVED
     }
 }

@@ -1,10 +1,12 @@
 package study.movie.app.intro.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.app.intro.converter.FilmFormatConverter;
+import study.movie.app.screen.entity.Schedule;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
 
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
 import static study.movie.global.constants.EntityAttrConst.*;
 
 @Entity
@@ -45,6 +48,7 @@ public class Movie extends BaseTimeEntity {
     @Convert(converter = FilmFormatConverter.class)
     private List<FilmFormat> formats;
 
+    @Lob
     private String intro;
 
     private Integer audience;
@@ -55,6 +59,11 @@ public class Movie extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<Review> reviewList = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
 
     //==생성 메서드==//
     @Builder

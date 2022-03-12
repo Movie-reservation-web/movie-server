@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.BaseTimeEntity;
 import study.movie.domain.member.Member;
+import study.movie.domain.screening.Screening;
+import study.movie.domain.seat.Seat;
 
 import javax.persistence.*;
 
@@ -30,11 +32,21 @@ public class Ticket extends BaseTimeEntity {
     @Column(nullable = false)
     private String reservedId;
 
+    @OneToOne
+    @JoinColumn(name = "seat_id")
+    private Seat seat;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "screening_id")
+    private Screening screening;
+
     @Builder
-    public Ticket(Member member, Long price, String reservedId) {
+    public Ticket(Member member, Long price, String reservedId, Seat seat, Screening screening) {
         setOwner(member);
         this.price = price;
         this.reservedId = reservedId;
+        this.seat = seat;
+        this.screening = screening;
     }
 
     public void setOwner(Member member) {

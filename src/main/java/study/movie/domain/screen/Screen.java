@@ -58,6 +58,6 @@ public class Screen {
 
     public void setTheater(Theater theater) {
         this.theater = theater;
-        theater.getScreenList().add(this);
+        theater.getScreens().add(this);
     }
 }

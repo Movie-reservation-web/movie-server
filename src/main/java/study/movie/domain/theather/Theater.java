@@ -32,7 +32,7 @@ public class Theater extends BaseTimeEntity {
     private String phone;
 
     @OneToMany(mappedBy = "theater")
-    private List<Screen> screenList = new ArrayList<>();
+    private List<Screen> screens = new ArrayList<>();
 
     @Builder
     public Theater(String city, String name, String phone) {

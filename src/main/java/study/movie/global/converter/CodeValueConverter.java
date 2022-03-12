@@ -1,13 +1,15 @@
 package study.movie.global.converter;
 
 import study.movie.global.constants.EntityAttrConst;
+import study.movie.global.enumMapper.EnumMapperType;
+import study.movie.global.enumMapper.EnumMapperValue;
 
 import javax.persistence.AttributeConverter;
 import java.util.EnumSet;
 import java.util.NoSuchElementException;
 
 
-public class CodeValueConverter<E extends Enum<E> & EntityAttrConst.CommonType> implements AttributeConverter<E, String> {
+public class CodeValueConverter<E extends Enum<E> & EnumMapperType> implements AttributeConverter<E, String> {
 
     private Class<E> clazz;
 

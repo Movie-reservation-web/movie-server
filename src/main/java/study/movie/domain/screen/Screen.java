@@ -3,9 +3,12 @@ package study.movie.domain.screen;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import study.movie.domain.screening.Screening;
 import study.movie.domain.theather.Theater;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -38,6 +41,9 @@ public class Screen {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ScreenType type;
+
+    @OneToMany(mappedBy = "screen")
+    private List<Screening> screenings = new ArrayList<>();
 
     @Builder
     public Screen(String name, Long screenRow, Long screenColumn,

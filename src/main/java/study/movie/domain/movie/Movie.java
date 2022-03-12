@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.BaseTimeEntity;
+import study.movie.domain.screening.Screening;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -52,6 +53,9 @@ public class Movie extends BaseTimeEntity {
     @Column(name = "types")
     @Enumerated(EnumType.STRING)
     private List<MovieType> types = new ArrayList<>();
+
+    @OneToMany(mappedBy = "movie")
+    private List<Screening> screenings = new ArrayList<>();
 
     @Builder
     public Movie(String name, Long time, String info,

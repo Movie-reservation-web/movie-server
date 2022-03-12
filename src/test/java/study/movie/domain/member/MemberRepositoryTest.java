@@ -6,16 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 
 @SpringBootTest
 @Transactional
 class MemberRepositoryTest {
-
-    @PersistenceContext
-    EntityManager em;
 
     @Autowired
     MemberRepository memberRepository;
@@ -31,7 +26,7 @@ class MemberRepositoryTest {
         Member savedMember = memberRepository.save(member);
 
         // when
-        Member findMember = memberRepository.getById(savedMember.getId());
+        Member findMember = memberRepository.findById(savedMember.getId()).get();
 
         // then
         Assertions.assertThat(savedMember).isEqualTo(findMember);

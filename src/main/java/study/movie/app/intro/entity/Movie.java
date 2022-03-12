@@ -4,7 +4,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.app.intro.converter.ActorArrayConverter;
+import study.movie.app.intro.converter.FilmFormatConverter;
+import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -28,7 +29,7 @@ public class Movie extends BaseTimeEntity {
     private String title;
     private String director;
 
-    @Convert(converter = ActorArrayConverter.class)
+    @Convert(converter = StringArrayConverter.class)
     private List<String> actors;
 
     private Genre genre;
@@ -41,7 +42,8 @@ public class Movie extends BaseTimeEntity {
 
     private LocalDate release;
 
-    private FilmFormat format;
+    @Convert(converter = FilmFormatConverter.class)
+    private List<FilmFormat> formats;
 
     private String intro;
 
@@ -56,7 +58,7 @@ public class Movie extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Movie(String title, String director, List<String> actors, Genre genre, FilmRating filmRating, Integer screenTime, String nation, LocalDate release, FilmFormat format, String intro) {
+    public Movie(String title, String director, List<String> actors, Genre genre, FilmRating filmRating, Integer screenTime, String nation, LocalDate release, List<FilmFormat> formats, String intro) {
         this.title = title;
         this.director = director;
         this.actors = actors;
@@ -65,7 +67,7 @@ public class Movie extends BaseTimeEntity {
         this.screenTime = screenTime;
         this.nation = nation;
         this.release = release;
-        this.format = format;
+        this.formats = formats;
         this.intro = intro;
         this.audience = 0;
         this.score = null;

@@ -41,6 +41,9 @@ public class Seat {
     }
 
     void setScreening(Screening screening) {
+        if (screening == null) {
+            return;
+        }
         this.screening = screening;
         screening.addSeat(this);
     }

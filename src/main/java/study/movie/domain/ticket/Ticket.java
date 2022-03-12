@@ -50,6 +50,9 @@ public class Ticket extends BaseTimeEntity {
     }
 
     public void setOwner(Member member) {
+        if (member == null) {
+            return;
+        }
         this.member = member;
         member.getTickets().add(this);
     }

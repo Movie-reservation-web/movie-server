@@ -45,13 +45,13 @@ public class Movie extends BaseTimeEntity {
     @CollectionTable(name = "movie_genres", joinColumns = @JoinColumn(name = "movie_id"))
     @Column(name = "genres")
     @Enumerated(EnumType.STRING)
-    List<GenreType> genres = new ArrayList<>();
+    private List<GenreType> genres = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "movie_types", joinColumns = @JoinColumn(name = "movie_id"))
     @Column(name = "types")
     @Enumerated(EnumType.STRING)
-    List<MovieType> types = new ArrayList<>();
+    private List<MovieType> types = new ArrayList<>();
 
     @Builder
     public Movie(String name, Long time, String info,

@@ -1,37 +1,77 @@
 package study.movie.global.constants;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import study.movie.global.enumMapper.EnumMapperType;
 
 public class EntityAttrConst {
 
-    /**
-     * Legacy Super System 의 공통코드를 리턴한다.
-     * @return String 코드값
-     */
-    public interface CommonType {
-        String getCode();
-        String getDesc();
+    @AllArgsConstructor @Getter
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    public enum Genre implements EnumMapperType {
+        ACTION("g01", "액션"),
+        ADVENTURE("g02", "모험"),
+        COMEDY("g03", "코미디"),
+        DRAMA("g04", "드라마"),
+        FANTASY("g05", "판타지"),
+        HISTORY("g06", "역사"),
+        HORROR("g07", "호러"),
+        SCIENCE_FICTION("g08", "SF"),
+        THRILLER("g09", "스릴러"),
+        MUSICAL("g10", "뮤지컬"),
+        SPORTS("g11", "스포츠"),
+        WAR("g12", "전쟁"),
+        CRIMINAL("g13", "범죄"),
+        ROMANTIC_COMEDY("g14", "로맨틱코미디"),
+        ROMANCE("g15", "멜로"),
+        ANIMATION("g16", "애니메이션");
+        private String code;
+        private String desc;
     }
 
     @AllArgsConstructor @Getter
-    public enum Genre implements CommonType{
-        ACTION("G0","액션"),
-        ADVENTURE("G1","모험"),
-        COMEDY("COM","코미디"),
-        DRAMA("DRA","드라마"),
-        FANTASY("FAN","판타지"),
-        HISTORY("HIS","역사"),
-        HORROR("HOR","호러"),
-        SCIENCE_FICTION("SCI","SF"),
-        THRILLER("THR","스릴러"),
-        MUSICAL("MUS","뮤지컬"),
-        SPORTS("SPO","스포츠"),
-        WAR("WAR","전쟁"),
-        CRIMINAL("CRI","범죄"),
-        ROMANTIC_COMEDY("RC","로맨틱코미디"),
-        ROMANCE("ROM","멜로"),
-        ANIMATION("ANI","애니메이션");
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    public enum FilmRating implements EnumMapperType {
+        UNDETERMINED("fr00","미정"),
+        G_RATED("fr01", "전체관람가"),
+        PG_12("fr02", "12세 이상 관람가"),
+        PG_15("fr03", "15세 이상 관람가"),
+        X_RATED("fr04", "18세 이상 관람가"),
+        R_RATED("fr05", "청소년 관람불가");
+        private String code;
+        private String desc;
+    }
+
+    @AllArgsConstructor @Getter
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    public enum FilmFormat implements EnumMapperType {
+        THREE_D("ff00","3D"),
+        IMAX("ff01", "IMAX"),
+        FOUR_D_FLEX("ff02", "4DX"),
+        SCREEN_X("ff03", "ScreenX"),
+        FOUR_D_FLEX_SCREEN("f04", "4DX-Screen");
+        private String code;
+        private String desc;
+    }
+
+    @AllArgsConstructor @Getter
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    public enum ScreenFormat implements EnumMapperType {
+        THREE_D("ff00","3D"),
+        IMAX("sf01", "IMAX"),
+        FOUR_D_FLEX("sf02", "4DX"),
+        SCREEN_X("sf03", "ScreenX"),
+        FOUR_D_FLEX_SCREEN("sf04", "4DX-Screen"),
+        SUITE_CINEMA("sf05", "4DX-Screen"),
+        CINE_DE_CHEF("sf06", "4DX-Screen"),
+        GOLD_CLASS("sf07", "4DX-Screen"),
+        SKY_BOX("sf08", "4DX-Screen"),
+        THE_PRIVATE_CINEMA("sf09", "4DX-Screen"),
+        CINE_KIDS("sf11", "4DX-Screen"),
+        SPHERE_FLEX("sf12", "4DX-Screen"),
+        SOUND_FLEX("sf13", "4DX-Screen"),
+        PREMIUM("sf14", "4DX-Screen");
         private String code;
         private String desc;
     }

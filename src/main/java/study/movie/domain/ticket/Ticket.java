@@ -32,8 +32,13 @@ public class Ticket extends BaseTimeEntity {
 
     @Builder
     public Ticket(Member member, Long price, String reservedId) {
-        this.member = member;
+        setOwner(member);
         this.price = price;
         this.reservedId = reservedId;
+    }
+
+    public void setOwner(Member member) {
+        this.member = member;
+        member.getTickets().add(this);
     }
 }

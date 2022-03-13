@@ -10,23 +10,23 @@ public class EntityAttrConst {
     @AllArgsConstructor
     @Getter
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-    public enum Genre implements EnumMapperType {
-        ACTION("g01", "액션"),
-        ADVENTURE("g02", "모험"),
-        COMEDY("g03", "코미디"),
-        DRAMA("g04", "드라마"),
-        FANTASY("g05", "판타지"),
-        HISTORY("g06", "역사"),
-        HORROR("g07", "호러"),
-        SCIENCE_FICTION("g08", "SF"),
-        THRILLER("g09", "스릴러"),
-        MUSICAL("g10", "뮤지컬"),
-        SPORTS("g11", "스포츠"),
-        WAR("g12", "전쟁"),
-        CRIMINAL("g13", "범죄"),
-        ROMANTIC_COMEDY("g14", "로맨틱코미디"),
-        ROMANCE("g15", "멜로"),
-        ANIMATION("g16", "애니메이션");
+    public enum MovieGenre implements EnumMapperType {
+        ACTION("mg01", "액션"),
+        ADVENTURE("mg02", "모험"),
+        COMEDY("mg03", "코미디"),
+        DRAMA("mg04", "드라마"),
+        FANTASY("mg05", "판타지"),
+        HISTORY("mg06", "역사"),
+        HORROR("mg07", "호러"),
+        SCIENCE_FICTION("mg08", "SF"),
+        THRILLER("mg09", "스릴러"),
+        MUSICAL("mg10", "뮤지컬"),
+        SPORTS("mg11", "스포츠"),
+        WAR("mg12", "전쟁"),
+        CRIMINAL("mg13", "범죄"),
+        ROMANTIC_COMEDY("mg14", "로맨틱코미디"),
+        ROMANCE("mg15", "멜로"),
+        ANIMATION("mg16", "애니메이션");
         private String code;
         private String desc;
     }
@@ -75,6 +75,15 @@ public class EntityAttrConst {
         SPHERE_FLEX("sf10", "SPHERE X"),
         SOUND_FLEX("sf11", "SOUND X"),
         PREMIUM("sf12", "PREMIUM");
+        private String code;
+        private String desc;
+    }
+    @AllArgsConstructor
+    @Getter
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    public enum GenderType implements EnumMapperType {
+        MALE("gt00", "남성"),
+        FEMALE("gt01", "여성");
         private String code;
         private String desc;
     }

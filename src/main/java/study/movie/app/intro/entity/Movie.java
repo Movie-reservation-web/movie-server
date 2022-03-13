@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.app.intro.converter.FilmFormatConverter;
-import study.movie.app.reserve.entity.Ticket;
 import study.movie.app.screen.entity.Schedule;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.FetchType.LAZY;
 import static study.movie.global.constants.EntityAttrConst.*;
 
 @Entity
@@ -36,7 +34,7 @@ public class Movie extends BaseTimeEntity {
     @Convert(converter = StringArrayConverter.class)
     private List<String> actors;
 
-    private Genre genre;
+    private MovieGenre genre;
 
     private FilmRating filmRating;
 
@@ -63,7 +61,7 @@ public class Movie extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Movie(String title, String director, List<String> actors, Genre genre, FilmRating filmRating, Integer runningTime, String nation, LocalDate release, List<FilmFormat> formats, String intro) {
+    public Movie(String title, String director, List<String> actors, MovieGenre genre, FilmRating filmRating, Integer runningTime, String nation, LocalDate release, List<FilmFormat> formats, String intro) {
         this.title = title;
         this.director = director;
         this.actors = actors;

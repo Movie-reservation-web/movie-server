@@ -5,13 +5,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.app.reserve.entity.Ticket;
+import study.movie.global.constants.EntityAttrConst.GenderType;
 
 import javax.persistence.*;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -27,4 +26,13 @@ public class Member {
     @OneToMany(mappedBy = "member",  cascade = CascadeType.ALL)
     private List<Ticket> tickets = new ArrayList<>();
 
+    private String name;
+
+    private LocalDate birth;
+
+    private String nickname;
+
+    private String email;
+
+    private GenderType gender;
 }

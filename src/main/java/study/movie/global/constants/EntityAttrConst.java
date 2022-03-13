@@ -67,20 +67,22 @@ public class EntityAttrConst {
         FOUR_D_FLEX("sf02", "4DX"),
         SCREEN_X("sf03", "ScreenX"),
         FOUR_D_FLEX_SCREEN("sf04", "4DX-Screen"),
-        SUITE_CINEMA("sf05", "4DX-Screen"),
-        CINE_DE_CHEF("sf06", "4DX-Screen"),
-        GOLD_CLASS("sf07", "4DX-Screen"),
-        SKY_BOX("sf08", "4DX-Screen"),
-        THE_PRIVATE_CINEMA("sf09", "4DX-Screen"),
-        CINE_KIDS("sf11", "4DX-Screen"),
-        SPHERE_FLEX("sf12", "4DX-Screen"),
-        SOUND_FLEX("sf13", "4DX-Screen"),
-        PREMIUM("sf14", "4DX-Screen");
+        SUITE_CINEMA("sf05", "Suite Cinema"),
+        CINE_DE_CHEF("sf06", "CINE de CHEF"),
+        GOLD_CLASS("sf07", "GOLD Class"),
+        SKY_BOX("sf08", "SKY BOX"),
+        CINE_KIDS("sf09", "CINE Kids"),
+        SPHERE_FLEX("sf10", "SPHERE X"),
+        SOUND_FLEX("sf11", "SOUND X"),
+        PREMIUM("sf12", "PREMIUM");
         private String code;
         private String desc;
     }
 
-    public enum ReserveStatus {
+    public enum SeatStatus {
         EMPTY, RESERVING, RESERVED
+    }
+    public enum ReserveStatus {
+        RESERVE, CANCEL
     }
 }

@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.converter.ListToCommaSeparatedStringConverter;
 import study.movie.domain.movie.GenreType;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.movie.MovieRepository;
 import study.movie.domain.movie.MovieType;
+import study.movie.tools.converter.ListToCommaSeparatedStringConverter;
 
 import java.time.LocalDate;
 import java.util.Arrays;

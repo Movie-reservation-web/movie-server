@@ -1,15 +1,12 @@
-package study.movie.domain.screen;
+package study.movie.domain.seat;
 
 import lombok.RequiredArgsConstructor;
 import study.movie.tools.enummodel.EnumModel;
 
 @RequiredArgsConstructor
-public enum ScreenType implements EnumModel {
-    TWO_DIMENSIONS("2D"),
-    THREE_DIMENSIONS("3D"),
-    FOUR_DIMENSIONS_FLEX("4DX"),
-    IMAX("IMAX"),
-    SCREEN_X("SCREEN-X");
+public enum SeatStatus implements EnumModel {
+    EMPTY("빈 좌석"),
+    RESERVED("예매완료");
 
     private final String value;
 

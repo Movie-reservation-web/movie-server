@@ -1,7 +1,7 @@
 package study.movie.domain.movie;
 
 import lombok.RequiredArgsConstructor;
-import study.movie.model.EnumModel;
+import study.movie.tools.enummodel.EnumModel;
 
 @RequiredArgsConstructor
 public enum MovieType implements EnumModel {

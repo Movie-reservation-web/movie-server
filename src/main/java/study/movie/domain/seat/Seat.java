@@ -26,18 +26,19 @@ public class Seat {
     private Long seatColumn;
 
     @Column(nullable = false)
-    private Boolean reserved = false;
+    @Enumerated(EnumType.STRING)
+    private SeatStatus seatStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "screening_id")
     private Screening screening;
 
     @Builder
-    public Seat(Long seatRow, Long seatColumn, Screening screening) {
+    public Seat(Long seatRow, Long seatColumn, Screening screening, SeatStatus seatStatus) {
         this.seatRow = seatRow;
         this.seatColumn = seatColumn;
+        this.seatStatus = seatStatus;
         setScreening(screening);
-        setReservedTrue();
     }
 
     void setScreening(Screening screening) {
@@ -46,9 +47,5 @@ public class Seat {
         }
         this.screening = screening;
         screening.addSeat(this);
-    }
-
-    void setReservedTrue() {
-        this.reserved = true;
     }
 }

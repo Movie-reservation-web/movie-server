@@ -32,6 +32,7 @@ class SeatRepositoryTest {
                 .seatRow(4L)
                 .seatColumn(5L)
                 .screening(screening)
+                .seatStatus(SeatStatus.RESERVED)
                 .build();
         Seat savedSeat = seatRepository.save(seat);
 

@@ -1,18 +1,12 @@
 package study.movie.app.screen.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static study.movie.global.constants.EntityAttrConst.ReserveStatus;
+import static study.movie.global.constants.EntityAttrConst.SeatStatus;
 
 @Embeddable
 @Data
@@ -24,6 +18,6 @@ public class Seat{
     private Integer column;
 
     @Enumerated(EnumType.STRING)
-    private ReserveStatus status;
+    private SeatStatus status;
 
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.app.intro.converter.FilmFormatConverter;
+import study.movie.app.reserve.entity.Ticket;
 import study.movie.app.screen.entity.Schedule;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
@@ -39,7 +40,7 @@ public class Movie extends BaseTimeEntity {
 
     private FilmRating filmRating;
 
-    private Integer screenTime;
+    private Integer runningTime;
 
     private String nation;
 
@@ -53,60 +54,50 @@ public class Movie extends BaseTimeEntity {
 
     private Integer audience;
 
-    private Float score;
-
-    private Integer reviewQuantity;
-
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
-    private List<Review> reviewList = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     @JsonIgnore
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    private List<Schedule> schedules = new ArrayList<>();
 
     //==생성 메서드==//
     @Builder
-    public Movie(String title, String director, List<String> actors, Genre genre, FilmRating filmRating, Integer screenTime, String nation, LocalDate release, List<FilmFormat> formats, String intro) {
+    public Movie(String title, String director, List<String> actors, Genre genre, FilmRating filmRating, Integer runningTime, String nation, LocalDate release, List<FilmFormat> formats, String intro) {
         this.title = title;
         this.director = director;
         this.actors = actors;
         this.genre = genre;
         this.filmRating = filmRating;
-        this.screenTime = screenTime;
+        this.runningTime = runningTime;
         this.nation = nation;
         this.release = release;
         this.formats = formats;
         this.intro = intro;
         this.audience = 0;
-        this.score = null;
-        this.reviewQuantity = 0;
     }
 
     //== 비즈니스 로직==//
     /**
-     * 리뷰 추가
+     * 리뷰 개수
      */
-    public void addReview(Float score) {
-        float totalScore = this.score * reviewQuantity;
-        reviewQuantity++;
-        applyScore(totalScore + score);
+    public int getReviewCount() {
+        return reviews.size();
     }
 
     /**
      * 리뷰 삭제
      */
-    public void deleteReview(Float score) {
-        float totalScore = this.score * reviewQuantity;
-        reviewQuantity--;
-        applyScore(totalScore - score);
+    public void deleteReview(Review review) {
+        reviews.remove(review);
     }
 
     /**
      * 평점 계산
      */
-    private void applyScore(Float totalScore) {
-        if(reviewQuantity == 0) this.score = null;
-        else this.score = totalScore / reviewQuantity;
+    private String getAverageScore() {
+        return String.format("%.2f", reviews.stream()
+                .mapToDouble(Review::getScore)
+                .average().getAsDouble());
     }
 }

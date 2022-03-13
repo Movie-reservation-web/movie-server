@@ -27,35 +27,33 @@ public class Review {
 
     private String reserveNumber;
 
+    private String writer;
     private Float score;
     private String comment;
 
     @Builder
-    public Review(Movie movie, Float score, String comment) {
-        this.movie = movie;
+    public Review(String writer, Float score, String comment) {
+        this.writer = writer;
         this.score = score;
         this.comment = comment;
     }
 
-    /**
-     * {@link Movie} Review 생성 메서드
-     */
-    public static Review writeReview(Movie movie, Float score, String comment) {
+    //==연관 관계 메서드==//
+    public void write(Movie movie) {
+        this.movie = movie;
+        movie.getReviews().add(this);
+    }
+
+    //==생성 메서드==//
+    public static Review createReview(Movie movie, String writer, Float score, String comment) {
         Review review = Review.builder()
-                .movie(movie)
+                .writer(writer)
                 .score(score)
                 .comment(comment)
                 .build();
 
-        movie.addReview(score);
+        review.write(movie);
         return review;
-    }
-
-    /**
-     * {@link Movie} 비즈니스 로직
-     */
-    public void delete(){
-        getMovie().deleteReview(score);
     }
 
 }

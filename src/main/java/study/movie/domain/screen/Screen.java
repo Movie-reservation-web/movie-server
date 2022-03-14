@@ -1,12 +1,12 @@
-package study.movie.app.screen.entity;
+package study.movie.domain.screen;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.app.screen.converter.ScreenFormatConverter;
-import study.movie.app.theather.entity.Theater;
+import study.movie.converter.screen.ScreenFormatConverter;
+import study.movie.domain.theater.Theater;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
 import study.movie.global.constants.EntityAttrConst.SeatStatus;
 import study.movie.global.entity.BaseTimeEntity;

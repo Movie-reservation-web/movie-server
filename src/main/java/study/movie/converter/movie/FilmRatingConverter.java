@@ -1,4 +1,4 @@
-package study.movie.app.intro.converter;
+package study.movie.converter.movie;
 
 import study.movie.global.converter.CodeValueConverter;
 

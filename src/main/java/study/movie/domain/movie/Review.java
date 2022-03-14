@@ -1,4 +1,4 @@
-package study.movie.app.intro.entity;
+package study.movie.domain.movie;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;

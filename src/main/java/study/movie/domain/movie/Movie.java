@@ -1,10 +1,10 @@
-package study.movie.app.intro.entity;
+package study.movie.domain.movie;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import study.movie.app.intro.converter.FilmFormatConverter;
-import study.movie.app.intro.converter.MovieGenreConverter;
-import study.movie.app.screen.entity.Schedule;
+import study.movie.converter.movie.FilmFormatConverter;
+import study.movie.converter.movie.MovieGenreConverter;
+import study.movie.domain.screen.Schedule;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
 

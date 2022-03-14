@@ -1,12 +1,12 @@
-package study.movie.app.reserve.entity;
+package study.movie.domain.reserve;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.app.member.entity.Member;
-import study.movie.app.screen.entity.Schedule;
-import study.movie.app.screen.entity.Seat;
+import study.movie.domain.member.Member;
+import study.movie.domain.screen.Schedule;
+import study.movie.domain.screen.Seat;
 import study.movie.global.constants.EntityAttrConst.ReserveStatus;
 import study.movie.global.entity.BaseTimeEntity;
 

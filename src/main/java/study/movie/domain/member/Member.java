@@ -1,10 +1,10 @@
-package study.movie.app.member.entity;
+package study.movie.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.app.reserve.entity.Ticket;
+import study.movie.domain.reserve.Ticket;
 import study.movie.global.constants.EntityAttrConst.GenderType;
 import study.movie.global.entity.BaseTimeEntity;
 

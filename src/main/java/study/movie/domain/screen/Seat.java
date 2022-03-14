@@ -1,4 +1,4 @@
-package study.movie.app.screen.entity;
+package study.movie.domain.screen;
 
 import lombok.*;
 

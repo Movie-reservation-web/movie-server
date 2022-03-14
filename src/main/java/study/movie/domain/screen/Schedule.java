@@ -1,12 +1,12 @@
-package study.movie.app.screen.entity;
+package study.movie.domain.screen;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.app.intro.entity.Movie;
-import study.movie.app.reserve.entity.Ticket;
+import study.movie.domain.movie.Movie;
+import study.movie.domain.reserve.Ticket;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;

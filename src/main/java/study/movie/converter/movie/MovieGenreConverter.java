@@ -1,4 +1,4 @@
-package study.movie.app.intro.converter;
+package study.movie.converter.movie;
 
 import study.movie.global.constants.EntityAttrConst;
 import study.movie.global.constants.EntityAttrConst.FilmFormat;

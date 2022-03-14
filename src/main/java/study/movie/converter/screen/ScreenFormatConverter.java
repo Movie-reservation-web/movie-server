@@ -1,4 +1,4 @@
-package study.movie.app.screen.converter;
+package study.movie.converter.screen;
 
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
 import study.movie.global.converter.EnumArrayConverter;

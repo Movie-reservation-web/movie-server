@@ -1,10 +1,10 @@
-package study.movie.app.theather.entity;
+package study.movie.domain.theater;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.app.screen.entity.Screen;
+import study.movie.domain.screen.Screen;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;

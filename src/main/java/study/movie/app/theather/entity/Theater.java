@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.app.screen.entity.Screen;
+import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,13 +13,12 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "theathers")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Theater {
+public class Theater extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "screen_id")
+    @Column(name = "theather_id")
     private Long id;
 
     private String name;

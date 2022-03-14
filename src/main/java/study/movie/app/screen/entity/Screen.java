@@ -7,8 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.app.screen.converter.ScreenFormatConverter;
 import study.movie.app.theather.entity.Theater;
-import study.movie.global.constants.EntityAttrConst.SeatStatus;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
+import study.movie.global.constants.EntityAttrConst.SeatStatus;
+import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Table(name = "screens")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Screen {
+public class Screen extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

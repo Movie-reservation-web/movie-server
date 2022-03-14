@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 import study.movie.app.member.entity.Member;
 import study.movie.app.screen.entity.Schedule;
 import study.movie.app.screen.entity.Seat;
-import study.movie.global.constants.EntityAttrConst;
 import study.movie.global.constants.EntityAttrConst.ReserveStatus;
-import study.movie.global.constants.EntityAttrConst.SeatStatus;
+import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,7 +18,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Ticket {
+public class Ticket extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

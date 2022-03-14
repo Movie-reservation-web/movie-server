@@ -1,11 +1,9 @@
 package study.movie.app.intro.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.movie.app.intro.converter.FilmFormatConverter;
+import study.movie.app.intro.converter.MovieGenreConverter;
 import study.movie.app.screen.entity.Schedule;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
@@ -19,7 +17,6 @@ import static study.movie.global.constants.EntityAttrConst.*;
 
 @Entity
 @Getter
-@Table(name = "movies")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Movie extends BaseTimeEntity {
 
@@ -29,28 +26,35 @@ public class Movie extends BaseTimeEntity {
     private Long id;
 
     private String title;
+
+    private Integer runningTime;
+
     private String director;
 
+    // 추후 결정
     @Convert(converter = StringArrayConverter.class)
     private List<String> actors;
 
-    private MovieGenre genre;
+    // 추후 결정
+    @Convert(converter = MovieGenreConverter.class)
+    private List<MovieGenre> genres;
+
+    // 추후 결정
+    @Convert(converter = FilmFormatConverter.class)
+    private List<FilmFormat> formats;
 
     private FilmRating filmRating;
-
-    private Integer runningTime;
 
     private String nation;
 
     private LocalDate release;
 
-    @Convert(converter = FilmFormatConverter.class)
-    private List<FilmFormat> formats;
-
     @Lob
-    private String intro;
+    private String info;
 
     private Integer audience;
+
+    private String image;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
@@ -61,17 +65,17 @@ public class Movie extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Movie(String title, String director, List<String> actors, MovieGenre genre, FilmRating filmRating, Integer runningTime, String nation, LocalDate release, List<FilmFormat> formats, String intro) {
+    public Movie(String title, String director, List<String> actors, List<MovieGenre> genres, FilmRating filmRating, Integer runningTime, String nation, LocalDate release, List<FilmFormat> formats, String info) {
         this.title = title;
         this.director = director;
         this.actors = actors;
-        this.genre = genre;
+        this.genres = genres;
         this.filmRating = filmRating;
         this.runningTime = runningTime;
         this.nation = nation;
         this.release = release;
         this.formats = formats;
-        this.intro = intro;
+        this.info = info;
         this.audience = 0;
     }
 

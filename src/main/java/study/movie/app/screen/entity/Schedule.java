@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.app.intro.entity.Movie;
 import study.movie.app.reserve.entity.Ticket;
+import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -20,7 +21,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Schedule {
+public class Schedule extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")

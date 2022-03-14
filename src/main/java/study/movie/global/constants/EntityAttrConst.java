@@ -78,6 +78,7 @@ public class EntityAttrConst {
         private String code;
         private String desc;
     }
+
     @AllArgsConstructor
     @Getter
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)

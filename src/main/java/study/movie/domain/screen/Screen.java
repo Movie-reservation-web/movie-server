@@ -21,7 +21,6 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Table(name = "screens")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Screen extends BaseTimeEntity {
 

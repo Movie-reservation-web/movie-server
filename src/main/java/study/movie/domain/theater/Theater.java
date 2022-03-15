@@ -18,7 +18,7 @@ public class Theater extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "theather_id")
+    @Column(name = "theater")
     private Long id;
 
     private String name;

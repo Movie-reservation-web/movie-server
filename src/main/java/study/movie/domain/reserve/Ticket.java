@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
+import static study.movie.global.constants.EntityAttrConst.ReserveStatus.RESERVE;
 
 @Entity
 @Getter
@@ -57,7 +58,7 @@ public class Ticket extends BaseTimeEntity {
                 .reserveDate(reserveDate)
                 .reserveNumber(reserveNumber)
                 .seat(seat)
-                .reserveStatus(ReserveStatus.RESERVE)
+                .reserveStatus(RESERVE)
                 .build();
         ticket.setMember(member);
         ticket.setSchedule(schedule);

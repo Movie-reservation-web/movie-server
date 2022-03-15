@@ -41,15 +41,15 @@ public class Ticket extends BaseTimeEntity {
     private LocalDateTime reserveDate;
 
     @Enumerated(EnumType.STRING)
-    private ReserveStatus status;
+    private ReserveStatus reserveStatus;
 
     //==생성 메서드==//
     @Builder
-    public Ticket(Seat seat, String reserveNumber, LocalDateTime reserveDate) {
+    public Ticket(Seat seat, String reserveNumber, LocalDateTime reserveDate,ReserveStatus reserveStatus) {
         this.seat = seat;
         this.reserveNumber = reserveNumber;
         this.reserveDate = reserveDate;
-        this.status = ReserveStatus.RESERVE;
+        this.reserveStatus = reserveStatus;
     }
 
     public static Ticket createTicket(Member member, Schedule schedule, Seat seat, String reserveNumber, LocalDateTime reserveDate) {
@@ -57,6 +57,7 @@ public class Ticket extends BaseTimeEntity {
                 .reserveDate(reserveDate)
                 .reserveNumber(reserveNumber)
                 .seat(seat)
+                .reserveStatus(ReserveStatus.RESERVE)
                 .build();
         ticket.setMember(member);
         ticket.setSchedule(schedule);

@@ -35,11 +35,9 @@ public class Movie extends BaseTimeEntity {
     @Convert(converter = StringArrayConverter.class)
     private List<String> actors;
 
-    // 추후 결정
     @Convert(converter = MovieGenreConverter.class)
     private List<MovieGenre> genres;
 
-    // 추후 결정
     @Convert(converter = FilmFormatConverter.class)
     private List<FilmFormat> formats;
 

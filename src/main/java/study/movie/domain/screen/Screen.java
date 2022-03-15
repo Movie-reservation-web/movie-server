@@ -80,7 +80,7 @@ public class Screen extends BaseTimeEntity {
     public int getSeatsCount(SeatStatus status) {
         return Optional.of(
                 seats.stream()
-                        .filter(seat -> seat.getStatus() == status)
+                        .filter(seat -> seat.getSeatStatus() == status)
                         .count())
                 .orElse(0L)
                 .intValue();
@@ -89,7 +89,7 @@ public class Screen extends BaseTimeEntity {
     public List<Seat> getSeats(SeatStatus status) {
         return Optional.of(
                 seats.stream()
-                        .filter(seat -> seat.getStatus() == status)
+                        .filter(seat -> seat.getSeatStatus() == status)
                         .collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
     }

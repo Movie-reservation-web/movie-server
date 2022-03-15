@@ -2,6 +2,7 @@ package study.movie.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.reserve.Ticket;
@@ -23,9 +24,6 @@ public class Member extends BaseTimeEntity {
     @Column(name = "ticket_id")
     private Long id;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "member",  cascade = CascadeType.ALL)
-    private List<Ticket> tickets = new ArrayList<>();
 
     private String name;
 
@@ -36,4 +34,17 @@ public class Member extends BaseTimeEntity {
     private String email;
 
     private GenderType gender;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
+
+    @Builder
+    public Member(String name, LocalDate birth, String nickname, String email, GenderType gender) {
+        this.name = name;
+        this.birth = birth;
+        this.nickname = nickname;
+        this.email = email;
+        this.gender = gender;
+    }
 }

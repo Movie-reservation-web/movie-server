@@ -1,5 +1,6 @@
 package study.movie.domain.movie;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +12,11 @@ import study.movie.domain.movie.repository.MovieRepository;
 import study.movie.domain.movie.repository.ReviewRepository;
 import study.movie.global.constants.EntityAttrConst;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalDouble;
 
 import static org.assertj.core.api.Assertions.*;
 import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX;
@@ -23,14 +26,14 @@ import static study.movie.global.constants.EntityAttrConst.MovieGenre.*;
 
 @SpringBootTest
 @Transactional
-@Commit
+@Slf4j
 public class MovieTest {
     @Autowired
     MovieRepository movieRepository;
     @Autowired
     ReviewRepository reviewRepository;
 
-    Movie findMovie;
+    Movie movie;
 
     @BeforeEach
     @DisplayName("movie 저장 및 review 작성")
@@ -38,7 +41,7 @@ public class MovieTest {
         List<String> actors = Arrays.asList("actor1", "actor2", "actor3", "actor4", "actor5");
         List<EntityAttrConst.FilmFormat> formats = Arrays.asList(FOUR_D_FLEX, FOUR_D_FLEX_SCREEN);
         List<EntityAttrConst.MovieGenre> genres = Arrays.asList(DRAMA, ACTION, COMEDY);
-        Movie movie = Movie.builder()
+        movie = Movie.builder()
                 .title("title")
                 .director("director")
                 .actors(actors)
@@ -51,58 +54,59 @@ public class MovieTest {
                 .info("movie information")
                 .image("image1.jpg")
                 .build();
-        Movie savedMovie = movieRepository.save(movie);
-        findMovie = movieRepository.findById(savedMovie.getId()).get();
+        Review.createReview(movie, "writer1", 6.56f, "movie comment1");
+        Review.createReview(movie, "writer2", 7.45f, "movie comment2");
+        Review.createReview(movie, "writer3", 9.55f, "movie comment3");
 
-
+        movieRepository.save(movie);
     }
 
     @Test
     public void 영화_엔티티_리뷰_개수_조회() throws Exception {
         // given
-        Review review1 = Review.createReview(findMovie, "writer1", 6.56f, "movie comment1");
-        Review review2 = Review.createReview(findMovie, "writer2", 7.45f, "movie comment2");
-        Review review3 = Review.createReview(findMovie, "writer3", 9.55f, "movie comment3");
+        long beforeDBReviewCount = reviewRepository.count();
+        long beforeReviewCount = movie.getReviewCount();
 
         // when
-        reviewRepository.save(review1);
-        reviewRepository.save(review2);
-        reviewRepository.save(review3);
+        Review.createReview(movie, "writer4", 9.55f, "movie comment4");
+        long afterDBReviewCount = reviewRepository.count();
+        long afterReviewCount = movie.getReviewCount();
 
         // then
-        assertThat(findMovie.getReviewCount()).isEqualTo(3);
+        assertThat(afterDBReviewCount).isEqualTo(beforeDBReviewCount + 1);
+        assertThat(afterReviewCount).isEqualTo(beforeReviewCount + 1);
     }
 
-    @Test()
+    @Test
     public void 영화_엔티티_리뷰_삭제() throws Exception {
         // given
-        Review review1 = Review.createReview(findMovie, "writer1", 6.56f, "movie comment1");
-        Review review2 = Review.createReview(findMovie, "writer2", 7.45f, "movie comment2");
-        Review review3 = Review.createReview(findMovie, "writer3", 9.55f, "movie comment3");
-
-        Review savedReview1 = reviewRepository.save(review1);
-        Review savedReview2 = reviewRepository.save(review2);
-        Review savedReview3 = reviewRepository.save(review3);
+        Review review = Review.createReview(movie, "writer5", 9.55f, "movie comment5");
+        long beforeDBReviewCount = reviewRepository.count();
+        long beforeReviewCount = movie.getReviewCount();
 
         // when
-        reviewRepository.delete(savedReview1);
-//        Review findReview1 = reviewRepository.findById(savedReview1.getId()).get();
-//        findMovie.deleteReview(findReview1);
-
+        movie.deleteReview(review);
+        long afterDBReviewCount = reviewRepository.count();
+        long afterReviewCount = movie.getReviewCount();
         // then
-        assertThat(findMovie.getReviewCount()).isEqualTo(2);
-//        assertThatThrownBy(() -> reviewRepository.findById(savedReview1.getId()))
-//                .isInstanceOf(Exception.class);
-
+        assertThat(afterDBReviewCount).isEqualTo(beforeDBReviewCount - 1);
+        assertThat(afterReviewCount).isEqualTo(beforeReviewCount - 1);
     }
 
     @Test
     public void 영화_엔티티_평점_조회() throws Exception {
         // given
+        double asDouble = reviewRepository.findAll().stream()
+                .mapToDouble(Review::getScore)
+                .average()
+                .getAsDouble();
+        String savedReviewScoreInDB = String.format("%.2f", asDouble);
 
         // when
+        String savedReviewScoreInMovie = movie.getAverageScore();
 
         // then
+        assertThat(savedReviewScoreInDB).isEqualTo(savedReviewScoreInMovie);
     }
 
 }

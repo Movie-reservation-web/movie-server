@@ -24,7 +24,6 @@ public class Member extends BaseTimeEntity {
     @Column(name = "ticket_id")
     private Long id;
 
-
     private String name;
 
     private LocalDate birth;

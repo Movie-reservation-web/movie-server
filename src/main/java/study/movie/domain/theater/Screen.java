@@ -53,11 +53,11 @@ public class Screen extends BaseTimeEntity {
     private List<Schedule> schedules = new ArrayList<>();
 
     @Builder
-    public Screen(String name, List<ScreenFormat> formats, List<Seat> seats, Integer capacity) {
+    public Screen(String name, List<ScreenFormat> formats, List<Seat> seats) {
         this.name = name;
         this.formats = formats;
         this.seats = seats;
-        this.capacity = capacity;
+        this.capacity = seats.size();
     }
 
     //==생성 메서드==//
@@ -66,7 +66,6 @@ public class Screen extends BaseTimeEntity {
                 .name(name)
                 .formats(formats)
                 .seats(seats)
-                .capacity(seats.size())
                 .build();
         screen.registerTheater(theater);
         return screen;

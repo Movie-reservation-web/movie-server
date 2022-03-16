@@ -5,8 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.member.Member;
-import study.movie.domain.screen.Schedule;
-import study.movie.domain.screen.Seat;
+import study.movie.domain.schedule.Schedule;
 import study.movie.global.constants.EntityAttrConst.ReserveStatus;
 import study.movie.global.entity.BaseTimeEntity;
 
@@ -34,8 +33,7 @@ public class Ticket extends BaseTimeEntity {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-    @Embedded
-    private Seat seat;
+    private String seatNumber;
 
     private String reserveNumber;
 
@@ -46,18 +44,18 @@ public class Ticket extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Ticket(Seat seat, String reserveNumber, LocalDateTime reserveDate,ReserveStatus reserveStatus) {
-        this.seat = seat;
+    public Ticket(String seatNumber, String reserveNumber, LocalDateTime reserveDate,ReserveStatus reserveStatus) {
+        this.seatNumber = seatNumber;
         this.reserveNumber = reserveNumber;
         this.reserveDate = reserveDate;
         this.reserveStatus = reserveStatus;
     }
 
-    public static Ticket createTicket(Member member, Schedule schedule, Seat seat, String reserveNumber, LocalDateTime reserveDate) {
+    public static Ticket createTicket(Member member, Schedule schedule, String seatNumber, String reserveNumber, LocalDateTime reserveDate) {
         Ticket ticket = Ticket.builder()
                 .reserveDate(reserveDate)
                 .reserveNumber(reserveNumber)
-                .seat(seat)
+                .seatNumber(seatNumber)
                 .reserveStatus(RESERVE)
                 .build();
         ticket.setMember(member);

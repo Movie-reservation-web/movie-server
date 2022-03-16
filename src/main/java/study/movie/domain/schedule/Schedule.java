@@ -1,4 +1,4 @@
-package study.movie.domain.screen;
+package study.movie.domain.schedule;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.reserve.Ticket;
+import study.movie.domain.theater.Screen;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;

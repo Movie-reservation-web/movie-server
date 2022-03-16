@@ -1,7 +1,7 @@
-package study.movie.domain.screen.repository;
+package study.movie.domain.schedule.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import study.movie.domain.screen.Schedule;
+import study.movie.domain.schedule.Schedule;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 }

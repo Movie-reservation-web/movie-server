@@ -1,4 +1,4 @@
-package study.movie.domain.screen;
+package study.movie.domain.theater;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
@@ -6,7 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.converter.screen.ScreenFormatConverter;
-import study.movie.domain.theater.Theater;
+import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.Seat;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
 import study.movie.global.constants.EntityAttrConst.SeatStatus;
 import study.movie.global.entity.BaseTimeEntity;
@@ -35,8 +36,10 @@ public class Screen extends BaseTimeEntity {
     private List<ScreenFormat> formats;
 
     @ElementCollection
-    @CollectionTable(name = "seat", joinColumns = @JoinColumn(name = "screen_id"))
-    private List<Seat> seats;
+    @CollectionTable(name = "seat",
+            joinColumns = @JoinColumn(name = "screen_id")
+    )
+    private List<Seat> seats = new ArrayList<>();
 
     private Integer capacity;
 

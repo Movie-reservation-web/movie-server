@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import study.movie.converter.movie.FilmFormatConverter;
 import study.movie.converter.movie.MovieGenreConverter;
-import study.movie.domain.screen.Schedule;
+import study.movie.domain.schedule.Schedule;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
 

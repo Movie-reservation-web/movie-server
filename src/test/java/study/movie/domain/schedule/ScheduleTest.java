@@ -24,10 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX;
-import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX_SCREEN;
 import static study.movie.global.constants.EntityAttrConst.FilmRating.G_RATED;
 import static study.movie.global.constants.EntityAttrConst.MovieGenre.*;
-import static study.movie.global.constants.EntityAttrConst.ScreenFormat.*;
 import static study.movie.global.constants.EntityAttrConst.ScreenFormat.GOLD_CLASS;
 import static study.movie.global.constants.EntityAttrConst.ScreenFormat.SCREEN_X;
 import static study.movie.global.constants.EntityAttrConst.SeatStatus.EMPTY;

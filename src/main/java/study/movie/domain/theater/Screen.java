@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.converter.screen.ScreenFormatConverter;
+import study.movie.converter.theater.ScreenFormatConverter;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.Seat;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;

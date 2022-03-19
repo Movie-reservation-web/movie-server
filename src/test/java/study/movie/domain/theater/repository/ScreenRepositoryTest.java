@@ -14,6 +14,7 @@ import study.movie.global.constants.EntityAttrConst.ScreenFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static study.movie.global.constants.EntityAttrConst.ScreenFormat.*;
@@ -30,9 +31,8 @@ class ScreenRepositoryTest {
         // given
         List<ScreenFormat> screenFormats = Arrays.asList(FOUR_D_FLEX_SCREEN, SCREEN_X, GOLD_CLASS);
         List<Seat> seats = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            seats.add(Seat.createSeat('A', i, EMPTY));
-        }
+        IntStream.range(0,10).forEach(i -> seats.add(Seat.createSeat('A', i)));
+
         Screen screen = Screen.builder()
                 .name("1관")
                 .formats(screenFormats)

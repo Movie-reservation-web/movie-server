@@ -22,6 +22,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX;
 import static study.movie.global.constants.EntityAttrConst.FilmRating.G_RATED;
@@ -67,9 +68,7 @@ public class ScheduleTest {
         movieRepository.save(movie);
         List<ScreenFormat> screenFormats = Arrays.asList(ScreenFormat.FOUR_D_FLEX_SCREEN, SCREEN_X, GOLD_CLASS);
         List<Seat> seats = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            seats.add(Seat.createSeat('A', i, EMPTY));
-        }
+        IntStream.range(0,10).forEach(i -> seats.add(Seat.createSeat('A', i)));
         screen = Screen.builder()
                 .name("1관")
                 .formats(screenFormats)

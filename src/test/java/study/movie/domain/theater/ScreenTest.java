@@ -5,20 +5,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.schedule.Seat;
 import study.movie.domain.theater.repository.ScreenRepository;
 import study.movie.domain.theater.repository.TheaterRepository;
-import study.movie.global.constants.EntityAttrConst;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
+import study.movie.global.constants.EntityAttrConst.SeatStatus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static study.movie.global.constants.EntityAttrConst.ScreenFormat.*;
 import static study.movie.global.constants.EntityAttrConst.SeatStatus.EMPTY;
+import static study.movie.global.constants.EntityAttrConst.SeatStatus.RESERVING;
 
 @SpringBootTest
 @Transactional
@@ -46,10 +47,7 @@ public class ScreenTest {
 
         screenFormats = Arrays.asList(FOUR_D_FLEX_SCREEN, SCREEN_X, GOLD_CLASS);
         seats = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            seats.add(Seat.createSeat('A', i, EMPTY));
-        }
-
+        IntStream.range(0,10).forEach(i -> seats.add(Seat.createSeat('A', i)));
     }
 
     @Test
@@ -85,5 +83,45 @@ public class ScreenTest {
         // then
         Assertions.assertEquals(findSeats, seats);
     }
+    
+    @Test
+    public void 상영관_좌석_상태_변경() throws Exception {
+        // given
+        Seat testSeat = seats.get(0);
+        Screen savedScreen = Screen.createScreen("1관", screenFormats, seats, theater);
+
+        // when
+        savedScreen.updateSeatStatus(testSeat, SeatStatus.RESERVING);
+
+        // then
+        Assertions.assertTrue(savedScreen.getSeats(RESERVING).contains(testSeat));
+
+    }
+    @Test
+    public void 상영관_좌석_상태_변경_없는_좌석_Exception() throws Exception {
+        // given
+        Screen savedScreen = Screen.createScreen("1관", screenFormats, seats, theater);
+
+        // when
+        Seat noneSeat = Seat.createSeat('B', 2);
+
+        // then
+        Assertions.assertThrows(IllegalArgumentException.class, () -> savedScreen.updateSeatStatus(noneSeat, RESERVING));
+
+    }
+    @Test
+    public void 상영관_예매_가능_좌석_확인() throws Exception {
+        // given
+        Screen savedScreen = Screen.createScreen("1관", screenFormats, seats, theater);
+
+        // when
+        Seat possibleSeat = seats.get(0);
+        Seat impossibleSeat = Seat.createSeat('B', 1);
+
+        // then
+        Assertions.assertTrue(savedScreen.isAvailableSeat(possibleSeat));
+        Assertions.assertFalse(savedScreen.isAvailableSeat(impossibleSeat));
+    }
+
 
 }

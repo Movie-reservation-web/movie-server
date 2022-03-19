@@ -23,11 +23,11 @@ public class Seat {
     private SeatStatus seatStatus;
 
     //==생성 메서드==//
-    public static Seat createSeat(Character rowNum, Integer colNum, SeatStatus seatStatus) {
+    public static Seat createSeat(Character rowNum, Integer colNum) {
         Seat seat = new Seat();
         seat.setRowNum(rowNum);
         seat.setColNum(colNum);
-        seat.setSeatStatus(seatStatus);
+        seat.setSeatStatus(SeatStatus.EMPTY);
         return seat;
     }
 

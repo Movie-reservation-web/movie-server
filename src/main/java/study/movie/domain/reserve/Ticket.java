@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.member.Member;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.Seat;
 import study.movie.global.constants.EntityAttrConst.ReserveStatus;
+import study.movie.global.constants.EntityAttrConst.SeatStatus;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -44,33 +46,49 @@ public class Ticket extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Ticket(String seatNumber, String reserveNumber, LocalDateTime reserveDate,ReserveStatus reserveStatus) {
-        this.seatNumber = seatNumber;
+    public Ticket(String reserveNumber, LocalDateTime reserveDate, ReserveStatus reserveStatus) {
         this.reserveNumber = reserveNumber;
         this.reserveDate = reserveDate;
         this.reserveStatus = reserveStatus;
     }
 
-    public static Ticket createTicket(Member member, Schedule schedule, String seatNumber, String reserveNumber, LocalDateTime reserveDate) {
+    public static Ticket createTicket(Member member, Schedule schedule, Seat seat, String reserveNumber, LocalDateTime reserveDate) {
         Ticket ticket = Ticket.builder()
                 .reserveDate(reserveDate)
                 .reserveNumber(reserveNumber)
-                .seatNumber(seatNumber)
                 .reserveStatus(RESERVE)
                 .build();
+
         ticket.setMember(member);
         ticket.setSchedule(schedule);
+        ticket.setSeat(seat);
         return ticket;
     }
 
     //==연관관계 메서드==//
-    public void setMember(Member member) {
+    private void setMember(Member member) {
         this.member = member;
         member.getTickets().add(this);
     }
 
-    public void setSchedule(Schedule schedule) {
+    private void setSchedule(Schedule schedule) {
         this.schedule = schedule;
         schedule.getTickets().add(this);
     }
+
+    private void setSeat(Seat seat) {
+        if(getSchedule().getScreen().isAvailableSeat(seat)) {
+            this.seatNumber = seat.seatToString();
+            getSchedule().getScreen().updateSeatStatus(seat, SeatStatus.RESERVING);
+        }
+        else throw new IllegalArgumentException("올바르지 않은 자리 입니다.");
+    }
+
+    //==비즈니스 로직==//
+    public void cancelReserve(){
+        this.reserveStatus = ReserveStatus.CANCEL;
+        getMember().getTickets().remove(this);
+        getSchedule().getTickets().remove(this);
+    }
+
 }

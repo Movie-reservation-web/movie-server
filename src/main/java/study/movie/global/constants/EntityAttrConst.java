@@ -62,7 +62,7 @@ public class EntityAttrConst {
     @Getter
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum ScreenFormat implements EnumMapperType {
-        THREE_D("ff00", "3D"),
+        THREE_D("sf00", "3D"),
         IMAX("sf01", "IMAX"),
         FOUR_D_FLEX("sf02", "4DX"),
         SCREEN_X("sf03", "ScreenX"),
@@ -92,6 +92,7 @@ public class EntityAttrConst {
     public enum SeatStatus {
         EMPTY, RESERVING, RESERVED
     }
+
     public enum ReserveStatus {
         RESERVE, CANCEL
     }

@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.Movie;
-import study.movie.domain.movie.repository.MovieRepository;
-import study.movie.domain.schedule.repository.ScheduleRepository;
+import study.movie.repository.movie.MovieRepository;
+import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.domain.theater.Screen;
-import study.movie.domain.theater.repository.ScreenRepository;
+import study.movie.domain.theater.Seat;
+import study.movie.repository.theater.ScreenRepository;
 import study.movie.global.constants.EntityAttrConst;
 import study.movie.global.constants.EntityAttrConst.FilmFormat;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
@@ -29,7 +30,6 @@ import static study.movie.global.constants.EntityAttrConst.FilmRating.G_RATED;
 import static study.movie.global.constants.EntityAttrConst.MovieGenre.*;
 import static study.movie.global.constants.EntityAttrConst.ScreenFormat.GOLD_CLASS;
 import static study.movie.global.constants.EntityAttrConst.ScreenFormat.SCREEN_X;
-import static study.movie.global.constants.EntityAttrConst.SeatStatus.EMPTY;
 
 @SpringBootTest
 @Transactional

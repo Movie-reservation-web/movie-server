@@ -1,4 +1,4 @@
-package study.movie.domain.reserve;
+package study.movie.domain.ticket;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.member.Member;
 import study.movie.domain.schedule.Schedule;
-import study.movie.domain.schedule.Seat;
+import study.movie.domain.theater.Seat;
 import study.movie.global.constants.EntityAttrConst.ReserveStatus;
 import study.movie.global.constants.EntityAttrConst.SeatStatus;
 import study.movie.global.entity.BaseTimeEntity;

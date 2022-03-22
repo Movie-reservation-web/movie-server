@@ -26,7 +26,7 @@ public class CodeValueConverter<E extends Enum<E> & EnumMapperType> implements A
      */
     @Override
     public String convertToDatabaseColumn(E attribute) {
-        return attribute.getCode();
+        return attribute.name();
     }
 
     /**
@@ -37,7 +37,7 @@ public class CodeValueConverter<E extends Enum<E> & EnumMapperType> implements A
     @Override
     public E convertToEntityAttribute(String dbData) {
         return EnumSet.allOf(clazz).stream()
-                .filter(e -> e.getCode().equals(dbData))
+                .filter(e -> e.name().equals(dbData))
                 .findAny()
                 .orElseThrow(NoSuchElementException::new);
     }

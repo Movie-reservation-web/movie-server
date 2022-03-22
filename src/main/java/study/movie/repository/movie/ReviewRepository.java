@@ -1,4 +1,4 @@
-package study.movie.domain.movie.repository;
+package study.movie.repository.movie;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import study.movie.domain.movie.Review;

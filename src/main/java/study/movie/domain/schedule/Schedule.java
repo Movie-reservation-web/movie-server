@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.movie.Movie;
-import study.movie.domain.reserve.Ticket;
 import study.movie.domain.theater.Screen;
+import study.movie.domain.ticket.Ticket;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -40,6 +40,7 @@ public class Schedule extends BaseTimeEntity {
     private List<Ticket> tickets = new ArrayList<>();
 
     private LocalDateTime startTime;
+    private Integer reservedSeat;
 
     //==생성 메서드==//
     @Builder

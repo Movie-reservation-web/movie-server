@@ -6,9 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.schedule.Seat;
-import study.movie.domain.theater.repository.ScreenRepository;
-import study.movie.domain.theater.repository.TheaterRepository;
+import study.movie.repository.theater.ScreenRepository;
+import study.movie.repository.theater.TheaterRepository;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
 import study.movie.global.constants.EntityAttrConst.SeatStatus;
 

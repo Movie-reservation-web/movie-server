@@ -1,7 +1,6 @@
-package study.movie.domain.schedule;
+package study.movie.domain.theater;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +20,7 @@ public class Seat {
 
     @Enumerated(EnumType.STRING)
     private SeatStatus seatStatus;
+
 
     //==생성 메서드==//
     public static Seat createSeat(Character rowNum, Integer colNum) {

@@ -1,7 +1,7 @@
-package study.movie.domain.reserve.repository;
+package study.movie.repository.ticket;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import study.movie.domain.reserve.Ticket;
+import study.movie.domain.ticket.Ticket;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 }

@@ -1,4 +1,4 @@
-package study.movie.domain.schedule.repository;
+package study.movie.repository.schedule;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import study.movie.domain.schedule.Schedule;

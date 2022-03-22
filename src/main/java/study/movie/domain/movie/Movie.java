@@ -31,7 +31,6 @@ public class Movie extends BaseTimeEntity {
 
     private String director;
 
-    // 추후 결정
     @Convert(converter = StringArrayConverter.class)
     private List<String> actors;
 
@@ -54,7 +53,7 @@ public class Movie extends BaseTimeEntity {
 
     private String image;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
     @JsonIgnore
@@ -79,7 +78,6 @@ public class Movie extends BaseTimeEntity {
     }
 
     //== 비즈니스 로직==//
-
     /**
      * 리뷰 개수
      */

@@ -1,24 +1,21 @@
 package study.movie.domain.theater.repository;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.schedule.Seat;
+import study.movie.domain.theater.Seat;
 import study.movie.domain.theater.Screen;
-import study.movie.global.constants.EntityAttrConst;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
+import study.movie.repository.theater.ScreenRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static study.movie.global.constants.EntityAttrConst.ScreenFormat.*;
-import static study.movie.global.constants.EntityAttrConst.SeatStatus.*;
 
 @SpringBootTest
 @Transactional

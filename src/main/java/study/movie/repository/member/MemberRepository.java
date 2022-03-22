@@ -1,4 +1,4 @@
-package study.movie.domain.member.repository;
+package study.movie.repository.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import study.movie.domain.member.Member;

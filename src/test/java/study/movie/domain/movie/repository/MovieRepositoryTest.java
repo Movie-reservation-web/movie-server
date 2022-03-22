@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.Movie;
 import study.movie.global.constants.EntityAttrConst.FilmFormat;
 import study.movie.global.constants.EntityAttrConst.MovieGenre;
+import study.movie.repository.movie.MovieRepository;
 
 import java.time.LocalDate;
 import java.util.Arrays;

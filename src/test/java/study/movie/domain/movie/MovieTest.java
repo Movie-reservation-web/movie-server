@@ -6,17 +6,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.movie.repository.MovieRepository;
-import study.movie.domain.movie.repository.ReviewRepository;
+import study.movie.repository.movie.MovieRepository;
+import study.movie.repository.movie.ReviewRepository;
 import study.movie.global.constants.EntityAttrConst;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalDouble;
 
 import static org.assertj.core.api.Assertions.*;
 import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX;

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.converter.theater.ScreenFormatConverter;
 import study.movie.domain.schedule.Schedule;
-import study.movie.domain.schedule.Seat;
 import study.movie.global.constants.EntityAttrConst.ScreenFormat;
 import study.movie.global.constants.EntityAttrConst.SeatStatus;
 import study.movie.global.entity.BaseTimeEntity;
@@ -86,6 +85,7 @@ public class Screen extends BaseTimeEntity {
                 .orElse(0L)
                 .intValue();
     }
+
 
     public List<Seat> getSeats(SeatStatus status) {
         return Optional.of(

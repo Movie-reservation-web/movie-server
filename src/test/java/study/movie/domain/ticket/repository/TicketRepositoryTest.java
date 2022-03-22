@@ -1,11 +1,12 @@
-package study.movie.domain.reserve.repository;
+package study.movie.domain.ticket.repository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.reserve.Ticket;
+import study.movie.domain.ticket.Ticket;
+import study.movie.repository.ticket.TicketRepository;
 
 import java.time.LocalDateTime;
 

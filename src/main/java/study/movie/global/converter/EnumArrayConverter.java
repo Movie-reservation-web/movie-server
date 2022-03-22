@@ -28,7 +28,7 @@ public class EnumArrayConverter<E extends Enum<E> & EnumMapperType> implements A
      */
     @Override
     public String convertToDatabaseColumn(List<E> attribute) {
-        return attribute.stream().map(E::getCode).collect(Collectors.joining(SEPARATOR));
+        return attribute.stream().map(E::name).collect(Collectors.joining(SEPARATOR));
     }
 
     /**
@@ -49,7 +49,7 @@ public class EnumArrayConverter<E extends Enum<E> & EnumMapperType> implements A
      */
     private E convertToEnum(String data) {
         return EnumSet.allOf(clazz).stream()
-                .filter(e -> e.getCode().equals(data))
+                .filter(e -> e.name().equals(data))
                 .findAny()
                 .orElseThrow(NoSuchElementException::new);
     }

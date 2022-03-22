@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.member.Member;
 import study.movie.global.constants.EntityAttrConst.GenderType;
+import study.movie.repository.member.MemberRepository;
 
 import java.time.LocalDate;
 

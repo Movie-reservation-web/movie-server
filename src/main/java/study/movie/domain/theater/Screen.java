@@ -64,49 +64,4 @@ public class Screen extends BaseTimeEntity {
         this.theater = theater;
         theater.getScreens().add(this);
     }
-
-//    //==조회 로직==//
-//    public int getSeatsCount(SeatStatus status) {
-//        return Optional.of(
-//                getSeats().stream()
-//                        .filter(seat -> seat.getSeatStatus() == status)
-//                        .count())
-//                .orElse(0L)
-//                .intValue();
-//    }
-//
-//
-//    public List<Seat> getSeats(SeatStatus status) {
-//        return Optional.of(
-//                getSeats().stream()
-//                        .filter(seat -> seat.getSeatStatus() == status)
-//                        .collect(Collectors.toList()))
-//                .orElse(new ArrayList<>());
-//    }
-//
-//    //==비즈니스 로직==//
-//
-//    /**
-//     * 예매 가능한 좌석인지
-//     */
-//    public boolean isAvailableSeat(Seat seat) {
-//        return getSeats().stream()
-//                .anyMatch(s -> isEmptySeat(s, seat));
-//    }
-//
-//    /**
-//     * 좌석 상태 변경
-//     */
-//    public void updateSeatStatus(Seat seat, SeatStatus status) {
-//        getSeats().stream()
-//                .filter(s -> isEmptySeat(s, seat))
-//                .findAny()
-//                .orElseThrow(IllegalArgumentException::new)
-//                .setSeatStatus(status);
-//    }
-//
-//    private boolean isEmptySeat(Seat seatA, Seat seatB) {
-//        return seatA.seatToString().equals(seatB.seatToString())
-//                && seatA.getSeatStatus() == SeatStatus.EMPTY;
-//    }
 }

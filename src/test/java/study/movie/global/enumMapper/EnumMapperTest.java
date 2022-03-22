@@ -38,7 +38,7 @@ class EnumMapperTest {
         }
 
         @Override
-        public String getDesc() {
+        public String getValue() {
             return desc;
         }
     }

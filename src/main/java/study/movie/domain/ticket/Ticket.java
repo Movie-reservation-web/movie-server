@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.member.Member;
 import study.movie.domain.schedule.Schedule;
-import study.movie.domain.theater.Seat;
+import study.movie.domain.schedule.Seat;
 import study.movie.global.constants.EntityAttrConst.ReserveStatus;
 import study.movie.global.constants.EntityAttrConst.SeatStatus;
 import study.movie.global.entity.BaseTimeEntity;
@@ -42,14 +42,14 @@ public class Ticket extends BaseTimeEntity {
     private LocalDateTime reserveDate;
 
     @Enumerated(EnumType.STRING)
-    private ReserveStatus reserveStatus;
+    private TicketStatus ticketStatus;
 
     //==생성 메서드==//
     @Builder
-    public Ticket(String reserveNumber, LocalDateTime reserveDate, ReserveStatus reserveStatus) {
+    public Ticket(String reserveNumber, LocalDateTime reserveDate, TicketStatus ticketStatus) {
         this.reserveNumber = reserveNumber;
         this.reserveDate = reserveDate;
-        this.reserveStatus = reserveStatus;
+        this.ticketStatus = ticketStatus;
     }
 
     public static Ticket createTicket(Member member, Schedule schedule, Seat seat, String reserveNumber, LocalDateTime reserveDate) {
@@ -86,7 +86,7 @@ public class Ticket extends BaseTimeEntity {
 
     //==비즈니스 로직==//
     public void cancelReserve(){
-        this.reserveStatus = ReserveStatus.CANCEL;
+        this.ticketStatus = TicketStatus.CANCEL;
         getMember().getTickets().remove(this);
         getSchedule().getTickets().remove(this);
     }

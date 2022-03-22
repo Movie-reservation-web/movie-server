@@ -6,19 +6,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.schedule.Seat;
+import study.movie.domain.schedule.SeatStatus;
 import study.movie.repository.theater.ScreenRepository;
 import study.movie.repository.theater.TheaterRepository;
-import study.movie.global.constants.EntityAttrConst.ScreenFormat;
-import study.movie.global.constants.EntityAttrConst.SeatStatus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static study.movie.global.constants.EntityAttrConst.ScreenFormat.*;
-import static study.movie.global.constants.EntityAttrConst.SeatStatus.EMPTY;
-import static study.movie.global.constants.EntityAttrConst.SeatStatus.RESERVING;
+import static study.movie.domain.schedule.SeatStatus.EMPTY;
+import static study.movie.domain.schedule.SeatStatus.RESERVING;
+import static study.movie.domain.theater.ScreenFormat.*;
+import static study.movie.domain.theater.ScreenFormat.SCREEN_X;
+
 
 @SpringBootTest
 @Transactional
@@ -90,7 +92,7 @@ public class ScreenTest {
         Screen savedScreen = Screen.createScreen("1관", screenFormats, seats, theater);
 
         // when
-        savedScreen.updateSeatStatus(testSeat, SeatStatus.RESERVING);
+        savedScreen.updateSeatStatus(testSeat, RESERVING);
 
         // then
         Assertions.assertTrue(savedScreen.getSeats(RESERVING).contains(testSeat));

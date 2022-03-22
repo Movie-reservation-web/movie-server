@@ -7,6 +7,6 @@ public interface EnumMapperType {
 
     String getCode();
 
-    String getDesc();
+    String getValue();
 
 }

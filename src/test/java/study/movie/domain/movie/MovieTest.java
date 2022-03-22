@@ -7,19 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.global.constants.EntityAttrConst;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.movie.ReviewRepository;
-import study.movie.global.constants.EntityAttrConst;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX;
-import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX_SCREEN;
-import static study.movie.global.constants.EntityAttrConst.FilmRating.G_RATED;
-import static study.movie.global.constants.EntityAttrConst.MovieGenre.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static study.movie.domain.movie.FilmFormat.*;
+import static study.movie.domain.movie.MovieGenre.*;
+import static study.movie.domain.movie.FilmRating.*;
 
 @SpringBootTest
 @Transactional
@@ -36,8 +35,8 @@ public class MovieTest {
     @DisplayName("movie 저장 및 review 작성")
     public void setUp() {
         List<String> actors = Arrays.asList("actor1", "actor2", "actor3", "actor4", "actor5");
-        List<EntityAttrConst.FilmFormat> formats = Arrays.asList(FOUR_D_FLEX, FOUR_D_FLEX_SCREEN);
-        List<EntityAttrConst.MovieGenre> genres = Arrays.asList(DRAMA, ACTION, COMEDY);
+        List<FilmFormat> formats = Arrays.asList(FOUR_D_FLEX, FOUR_D_FLEX_SCREEN);
+        List<MovieGenre> genres = Arrays.asList(DRAMA, ACTION, COMEDY);
         movie = Movie.builder()
                 .title("title")
                 .director("director")

@@ -39,6 +39,10 @@ public class Schedule extends BaseTimeEntity {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Ticket> tickets = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "schedule")
+    private List<Seat> seats = new ArrayList<>();
+
     private LocalDateTime startTime;
     private Integer reservedSeat;
 
@@ -60,6 +64,9 @@ public class Schedule extends BaseTimeEntity {
      * 영화 등록
      */
     public void addMovie(Movie movie) {
+        if (movie == null) {
+            return;
+        }
         this.movie = movie;
         movie.getSchedules().add(this);
     }
@@ -68,6 +75,9 @@ public class Schedule extends BaseTimeEntity {
      * 상영관 등록
      */
     public void addScreen(Screen screen) {
+        if (screen == null) {
+            return;
+        }
         this.screen = screen;
         screen.getSchedules().add(this);
     }

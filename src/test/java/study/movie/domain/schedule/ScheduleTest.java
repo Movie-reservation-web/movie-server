@@ -6,15 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.Movie;
+import study.movie.domain.movie.MovieGenre;
+import study.movie.domain.theater.ScreenFormat;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.domain.theater.Screen;
-import study.movie.domain.theater.Seat;
 import study.movie.repository.theater.ScreenRepository;
 import study.movie.global.constants.EntityAttrConst;
-import study.movie.global.constants.EntityAttrConst.FilmFormat;
-import study.movie.global.constants.EntityAttrConst.ScreenFormat;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -25,11 +25,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX;
-import static study.movie.global.constants.EntityAttrConst.FilmRating.G_RATED;
-import static study.movie.global.constants.EntityAttrConst.MovieGenre.*;
-import static study.movie.global.constants.EntityAttrConst.ScreenFormat.GOLD_CLASS;
-import static study.movie.global.constants.EntityAttrConst.ScreenFormat.SCREEN_X;
+import static study.movie.domain.movie.FilmFormat.*;
+import static study.movie.domain.movie.FilmFormat.FOUR_D_FLEX;
+import static study.movie.domain.movie.MovieGenre.*;
+import static study.movie.domain.movie.FilmRating.*;
+import static study.movie.domain.theater.ScreenFormat.*;
+import static study.movie.domain.theater.ScreenFormat.SCREEN_X;
+
 
 @SpringBootTest
 @Transactional
@@ -51,7 +53,7 @@ public class ScheduleTest {
     public void setUp() {
         List<String> actors = Arrays.asList("actor1", "actor2", "actor3", "actor4", "actor5");
         List<FilmFormat> formats = Arrays.asList(FOUR_D_FLEX, FilmFormat.FOUR_D_FLEX_SCREEN);
-        List<EntityAttrConst.MovieGenre> genres = Arrays.asList(DRAMA, ACTION, COMEDY);
+        List<MovieGenre> genres = Arrays.asList(DRAMA, ACTION, COMEDY);
         movie = Movie.builder()
                 .title("title")
                 .director("director")

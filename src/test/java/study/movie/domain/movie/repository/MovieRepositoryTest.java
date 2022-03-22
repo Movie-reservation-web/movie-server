@@ -5,19 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.Movie;
-import study.movie.global.constants.EntityAttrConst.FilmFormat;
-import study.movie.global.constants.EntityAttrConst.MovieGenre;
+import study.movie.domain.movie.MovieGenre;
 import study.movie.repository.movie.MovieRepository;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX;
-import static study.movie.global.constants.EntityAttrConst.FilmFormat.FOUR_D_FLEX_SCREEN;
-import static study.movie.global.constants.EntityAttrConst.FilmRating.G_RATED;
-import static study.movie.global.constants.EntityAttrConst.MovieGenre.*;
+import static study.movie.domain.movie.FilmFormat.*;
+import static study.movie.domain.movie.MovieGenre.*;
+import static study.movie.domain.movie.FilmRating.*;
+
 
 @SpringBootTest
 @Transactional

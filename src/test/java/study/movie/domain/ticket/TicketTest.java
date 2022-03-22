@@ -12,7 +12,7 @@ import study.movie.domain.movie.Movie;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.ticket.TicketRepository;
 import study.movie.domain.schedule.Schedule;
-import study.movie.domain.theater.Seat;
+import study.movie.domain.schedule.Seat;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.domain.theater.Screen;
 import study.movie.repository.theater.ScreenRepository;
@@ -138,7 +138,7 @@ public class TicketTest {
         findTicket.cancelReserve();
 
         // then
-        Assertions.assertEquals(findTicket.getReserveStatus(), ReserveStatus.CANCEL);
+        Assertions.assertEquals(findTicket.getTicketStatus(), TicketStatus.CANCEL);
         Assertions.assertFalse(findMember.getTickets().contains(findTicket));
         Assertions.assertFalse(findSchedule.getTickets().contains(findTicket));
     }

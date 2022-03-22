@@ -1,4 +1,4 @@
-package study.movie.domain.theater;
+package study.movie.domain.schedule;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-
-import static study.movie.global.constants.EntityAttrConst.SeatStatus;
 
 @Embeddable
 @Data

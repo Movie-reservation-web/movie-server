@@ -9,8 +9,6 @@ import study.movie.converter.theater.ScreenFormatConverter;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.Seat;
 import study.movie.domain.schedule.SeatStatus;
-import study.movie.global.constants.EntityAttrConst.ScreenFormat;
-import study.movie.global.constants.EntityAttrConst.SeatStatus;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;

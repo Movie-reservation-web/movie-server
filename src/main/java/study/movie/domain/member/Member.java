@@ -38,6 +38,7 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Ticket> tickets = new ArrayList<>();
 
+    //==생성 메서드==//
     @Builder
     public Member(String name, LocalDate birth, String nickname, String email, GenderType gender) {
         this.name = name;

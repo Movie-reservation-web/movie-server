@@ -1,6 +1,7 @@
 package study.movie.domain.theater;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,14 +22,12 @@ public class Seat {
     @Enumerated(EnumType.STRING)
     private SeatStatus seatStatus;
 
-
     //==생성 메서드==//
-    public static Seat createSeat(Character rowNum, Integer colNum) {
-        Seat seat = new Seat();
-        seat.setRowNum(rowNum);
-        seat.setColNum(colNum);
-        seat.setSeatStatus(SeatStatus.EMPTY);
-        return seat;
+    @Builder
+    public Seat(Character rowNum, Integer colNum, SeatStatus seatStatus) {
+        this.rowNum = rowNum;
+        this.colNum = colNum;
+        this.seatStatus = seatStatus;
     }
 
     //==비즈니스 로직==//

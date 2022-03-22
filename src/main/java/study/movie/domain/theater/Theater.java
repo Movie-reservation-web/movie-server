@@ -27,6 +27,7 @@ public class Theater extends BaseTimeEntity {
     @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)
     private List<Screen> screens = new ArrayList<>();
 
+    //==생성 메서드==//
     @Builder
     public Theater(String name, String city, String phone) {
         this.name = name;

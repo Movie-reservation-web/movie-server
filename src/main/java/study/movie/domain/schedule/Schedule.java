@@ -44,17 +44,12 @@ public class Schedule extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Schedule(LocalDateTime startTime) {
+    public Schedule(Movie movie, Screen screen,  LocalDateTime startTime, Integer reservedSeat) {
         this.startTime = startTime;
+        this.reservedSeat = reservedSeat;
+        if(movie != null) addMovie(movie);
+        if(screen != null) addScreen(screen);
     }
-
-    public static Schedule createSchedule(Movie movie, Screen screen, LocalDateTime startTime) {
-        Schedule schedule = Schedule.builder().startTime(startTime).build();
-        schedule.addMovie(movie);
-        schedule.addScreen(screen);
-        return schedule;
-    }
-
     //==연관 관계 메서드==//
     /**
      * 영화 등록

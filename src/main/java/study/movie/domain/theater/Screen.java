@@ -51,25 +51,15 @@ public class Screen extends BaseTimeEntity {
     @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL)
     private List<Schedule> schedules = new ArrayList<>();
 
+    //==생성 메서드==//
     @Builder
-    public Screen(String name, List<ScreenFormat> formats, List<Seat> seats) {
+    public Screen(String name, List<ScreenFormat> formats, Integer capacity, List<Schedule> schedules, Theater theater) {
         this.name = name;
         this.formats = formats;
-        this.seats = seats;
-        this.capacity = seats.size();
+        this.capacity = capacity;
+        if(theater != null) registerTheater(theater);
+        //seats????
     }
-
-    //==생성 메서드==//
-    public static Screen createScreen(String name, List<ScreenFormat> formats, List<Seat> seats, Theater theater) {
-        Screen screen = Screen.builder()
-                .name(name)
-                .formats(formats)
-                .seats(seats)
-                .build();
-        screen.registerTheater(theater);
-        return screen;
-    }
-
     //==연관 관계 메서드==//
     public void registerTheater(Theater theater) {
         this.theater = theater;

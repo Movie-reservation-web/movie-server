@@ -44,25 +44,16 @@ public class Ticket extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ReserveStatus reserveStatus;
 
+
     //==생성 메서드==//
     @Builder
-    public Ticket(String reserveNumber, LocalDateTime reserveDate, ReserveStatus reserveStatus) {
+    public Ticket(Member member, Schedule schedule, String seatNumber, String reserveNumber, LocalDateTime reserveDate, ReserveStatus reserveStatus) {
+        this.seatNumber = seatNumber;
         this.reserveNumber = reserveNumber;
         this.reserveDate = reserveDate;
         this.reserveStatus = reserveStatus;
-    }
-
-    public static Ticket createTicket(Member member, Schedule schedule, Seat seat, String reserveNumber, LocalDateTime reserveDate) {
-        Ticket ticket = Ticket.builder()
-                .reserveDate(reserveDate)
-                .reserveNumber(reserveNumber)
-                .reserveStatus(RESERVE)
-                .build();
-
-        ticket.setMember(member);
-        ticket.setSchedule(schedule);
-        ticket.setSeat(seat);
-        return ticket;
+        if(member != null) setMember(member);
+        if(schedule != null) setSchedule(schedule);
     }
 
     //==연관관계 메서드==//

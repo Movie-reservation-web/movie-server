@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.ticket.Ticket;
-import study.movie.global.constants.EntityAttrConst.GenderType;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;

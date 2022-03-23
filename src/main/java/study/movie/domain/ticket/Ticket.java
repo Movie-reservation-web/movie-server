@@ -52,8 +52,8 @@ public class Ticket extends BaseTimeEntity {
         this.reserveNumber = reserveNumber;
         this.reserveDate = reserveDate;
         this.reserveStatus = reserveStatus;
-        if(member != null) setMember(member);
-        if(schedule != null) setSchedule(schedule);
+        setMember(member);
+        setSchedule(schedule);
     }
 
     //==연관관계 메서드==//

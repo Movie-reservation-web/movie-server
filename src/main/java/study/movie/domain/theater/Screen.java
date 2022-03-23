@@ -57,8 +57,7 @@ public class Screen extends BaseTimeEntity {
         this.name = name;
         this.formats = formats;
         this.capacity = capacity;
-        if(theater != null) registerTheater(theater);
-        //seats????
+        registerTheater(theater);
     }
     //==연관 관계 메서드==//
     public void registerTheater(Theater theater) {

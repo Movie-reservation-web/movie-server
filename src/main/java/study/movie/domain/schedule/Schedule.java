@@ -47,8 +47,8 @@ public class Schedule extends BaseTimeEntity {
     public Schedule(Movie movie, Screen screen,  LocalDateTime startTime, Integer reservedSeat) {
         this.startTime = startTime;
         this.reservedSeat = reservedSeat;
-        if(movie != null) addMovie(movie);
-        if(screen != null) addScreen(screen);
+        addMovie(movie);
+        addScreen(screen);
     }
     //==연관 관계 메서드==//
     /**

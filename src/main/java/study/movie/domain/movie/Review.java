@@ -34,7 +34,7 @@ public class Review extends BaseTimeEntity {
         this.writer = writer;
         this.score = score;
         this.comment = comment;
-        if(movie != null) write(movie);
+        write(movie);
     }
 
     //==연관 관계 메서드==//
@@ -42,4 +42,9 @@ public class Review extends BaseTimeEntity {
         this.movie = movie;
         movie.getReviews().add(this);
     }
+
+    /**
+     * 리뷰 생성
+     */
+
 }

@@ -59,9 +59,6 @@ public class Schedule extends BaseTimeEntity {
      * 영화 등록
      */
     public void addMovie(Movie movie) {
-        if (movie == null) {
-            return;
-        }
         this.movie = movie;
         movie.getSchedules().add(this);
     }
@@ -70,9 +67,6 @@ public class Schedule extends BaseTimeEntity {
      * 상영관 등록
      */
     public void addScreen(Screen screen) {
-        if (screen == null) {
-            return;
-        }
         this.screen = screen;
         screen.getSchedules().add(this);
     }

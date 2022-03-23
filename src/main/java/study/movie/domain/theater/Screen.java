@@ -10,7 +10,6 @@ import study.movie.domain.schedule.Schedule;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,19 +44,18 @@ public class Screen extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Screen(String name, List<ScreenFormat> formats, Integer maxRows, Integer maxCols, Theater theaters) {
+    public Screen(String name, List<ScreenFormat> formats, Integer maxRows, Integer maxCols, Theater theater) {
         this.name = name;
         this.formats = formats;
-        this.capacity = capacity;
         this.maxRows = maxRows;
         this.maxCols = maxCols;
         registerTheater(theater);
     }
-
 
     //==연관 관계 메서드==//
     public void registerTheater(Theater theater) {
         this.theater = theater;
         theater.getScreens().add(this);
     }
+
 }

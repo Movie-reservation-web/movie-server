@@ -42,9 +42,4 @@ public class Review extends BaseTimeEntity {
         this.movie = movie;
         movie.getReviews().add(this);
     }
-
-    /**
-     * 리뷰 생성
-     */
-
 }

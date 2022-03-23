@@ -1,7 +1,10 @@
 package study.movie.domain.movie;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import study.movie.converter.movie.FilmFormatConverter;
 import study.movie.converter.movie.MovieGenreConverter;
 import study.movie.domain.schedule.Schedule;
@@ -12,8 +15,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static study.movie.global.constants.EntityAttrConst.*;
 
 @Entity
 @Getter
@@ -78,11 +79,6 @@ public class Movie extends BaseTimeEntity {
     }
 
     //== 비즈니스 로직==//
-
-    /**
-     * 영화 생성
-     */
-
     /**
      * 리뷰 개수
      */

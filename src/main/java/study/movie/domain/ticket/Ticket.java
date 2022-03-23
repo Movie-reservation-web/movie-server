@@ -40,11 +40,10 @@ public class Ticket extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private TicketStatus ticketStatus;
 
+
     //==생성 메서드==//
     @Builder
     public Ticket(Member member, Schedule schedule, String seatNumber, String reserveNumber, LocalDateTime reserveDate, TicketStatus ticketStatus) {
-        this.member = member;
-        this.schedule = schedule;
         this.seatNumber = seatNumber;
         this.reserveNumber = reserveNumber;
         this.reserveDate = reserveDate;

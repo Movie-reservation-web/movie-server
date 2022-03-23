@@ -78,6 +78,11 @@ public class Movie extends BaseTimeEntity {
     }
 
     //== 비즈니스 로직==//
+
+    /**
+     * 영화 생성
+     */
+
     /**
      * 리뷰 개수
      */

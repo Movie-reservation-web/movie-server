@@ -45,15 +45,15 @@ public class Screen extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Screen(String name, List<ScreenFormat> formats, Integer maxRows, Integer maxCols, @NotNull Theater theater, List<Schedule> schedules) {
+    public Screen(String name, List<ScreenFormat> formats, Integer maxRows, Integer maxCols, Theater theaters) {
         this.name = name;
         this.formats = formats;
+        this.capacity = capacity;
         this.maxRows = maxRows;
         this.maxCols = maxCols;
-        this.theater = theater;
-        this.schedules = schedules;
-        this.registerTheater(theater);
+        registerTheater(theater);
     }
+
 
     //==연관 관계 메서드==//
     public void registerTheater(Theater theater) {

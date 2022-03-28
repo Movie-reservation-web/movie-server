@@ -1,6 +1,6 @@
 package study.movie.converter.movie;
 
-import study.movie.global.constants.EntityAttrConst.MovieGenre;
+import study.movie.domain.movie.MovieGenre;
 import study.movie.global.converter.EnumArrayConverter;
 
 import javax.persistence.Converter;

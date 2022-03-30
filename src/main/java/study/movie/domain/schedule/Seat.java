@@ -39,9 +39,9 @@ public class Seat {
 
     //==비즈니스 로직==//
     public String seatToString() {
-        return rowNum + String.valueOf(colNum);
+        return getRowNum() + String.valueOf(colNum);
     }
-    public Integer getRowNum(){
-        return (int) rowNum - 64;
+    public char getRowNum(){
+        return (char) (rowNum + 64);
     }
 }

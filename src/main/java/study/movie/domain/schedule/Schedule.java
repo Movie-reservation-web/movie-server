@@ -48,11 +48,12 @@ public class Schedule extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Schedule(Movie movie, Screen screen,  LocalDateTime startTime, Integer reservedSeat) {
+    public Schedule(Movie movie, Screen screen, LocalDateTime startTime, Integer reservedSeat) {
         this.startTime = startTime;
-        this.reservedSeat = reservedSeat;
+        this.reservedSeat = 0;
         addMovie(movie);
         addScreen(screen);
+        initializeSeats(screen);
     }
     //==연관 관계 메서드==//
     /**
@@ -71,11 +72,34 @@ public class Schedule extends BaseTimeEntity {
         screen.getSchedules().add(this);
     }
 
+    /**
+     * 좌석 초기화
+     */
+    public void initializeSeats(Screen screen) {
+        for (int i = 1; i <= screen.getMaxRows(); i++) {
+            for (int j = 1; j <= screen.getMaxCols(); j++) {
+                Seat seat = Seat.builder()
+                        .rowNum(i)
+                        .colNum(j)
+                        .seatStatus(SeatStatus.EMPTY)
+                        .build();
+                getSeats().add(seat);
+            }
+        }
+    }
+
     //==조회 로직==//
     /**
      * 종료 시간 조회
      */
     public LocalDateTime getEndTime() {
         return startTime.plus(Duration.ofMinutes(movie.getRunningTime()));
+    }
+
+    /**
+     * 전체 좌석 수
+     */
+    public int getTotalSeatCount(){
+        return getSeats().size();
     }
 }

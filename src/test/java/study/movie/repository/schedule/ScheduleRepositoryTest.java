@@ -1,0 +1,140 @@
+package study.movie.repository.schedule;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
+import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.movie.FilmFormat;
+import study.movie.domain.movie.FilmRating;
+import study.movie.domain.movie.Movie;
+import study.movie.domain.movie.MovieGenre;
+import study.movie.domain.schedule.Schedule;
+import study.movie.domain.theater.Screen;
+import study.movie.domain.theater.ScreenFormat;
+import study.movie.domain.theater.Theater;
+import study.movie.dto.schedule.ScheduleSearchCond;
+
+import javax.persistence.EntityManager;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest
+@Transactional
+@Commit
+@Slf4j
+class ScheduleRepositoryTest {
+    @Autowired
+    EntityManager em;
+
+    @Autowired
+    ScheduleRepository scheduleRepository;
+
+    private Theater createTheater(String theaterName, String city, String phone) {
+        Theater theater = Theater.builder()
+                .name(theaterName)
+                .city(city)
+                .phone(phone)
+                .build();
+        em.persist(theater);
+        return theater;
+    }
+
+    private Screen registerScreen(String screenName, ScreenFormat format, Theater theater, int maxCols, int maxRows) {
+        return Screen.builder()
+                .name(screenName)
+                .format(format)
+                .theater(theater)
+                .maxCols(maxCols)
+                .maxRows(maxRows)
+                .build();
+    }
+
+    private Movie createMovie(String title, String director) {
+        Movie movie = Movie.builder()
+                .title(title)
+                .director(director)
+                .actors(Arrays.asList("aa", "bb"))
+                .formats(Arrays.asList(FilmFormat.values()[0], FilmFormat.values()[1]))
+                .filmRating(FilmRating.G_RATED)
+                .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
+                .image("abc.jpg")
+                .info("information")
+                .nation("korea")
+                .runningTime(160)
+                .releaseDate(LocalDate.now())
+                .build();
+        em.persist(movie);
+        return movie;
+    }
+
+    @Test
+    public void 상영일정_저장_조회() throws Exception {
+        // given
+        Theater theater = createTheater("용산 CGV", "서울", "000-000");
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동");
+
+        // when
+        LocalDateTime startTime = LocalDateTime.of(2022, 3, 10, 3, 2, 21);
+        Schedule savedSchedule = Schedule.builder()
+                .startTime(startTime)
+                .screen(screen)
+                .movie(movie)
+                .build();
+
+        List<Schedule> schedules = scheduleRepository.findAll();
+
+        // then
+        assertThat(schedules).containsExactly(savedSchedule);
+        assertEquals(screen, schedules.get(0).getScreen());
+        assertEquals(movie, schedules.get(0).getMovie());
+        assertEquals(startTime.plus(Duration.ofMinutes(movie.getRunningTime())), schedules.get(0).getEndTime());
+    }
+
+    @Test
+    public void 상영일정_조건_검색() throws Exception {
+        // given
+        String theaterName = "CGV 용산";
+        Theater theater = createTheater(theaterName, "서울", "000-000");
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        String title = "영화1";
+        Movie movie = createMovie(title, "홍길동");
+        LocalDateTime startTime = LocalDateTime.of(2022, 3, 10, 3, 2, 21);
+        Schedule savedSchedule = Schedule.builder()
+                .startTime(startTime)
+                .screen(screen)
+                .movie(movie)
+                .build();
+
+        // when
+        ScheduleSearchCond cond1 = new ScheduleSearchCond();
+        cond1.setTheaterName(theaterName);
+
+        ScheduleSearchCond cond2 = new ScheduleSearchCond();
+        cond2.setScreenDate(startTime.toLocalDate());
+        cond2.setMovieTitle(title);
+
+        ScheduleSearchCond cond3 = new ScheduleSearchCond();
+        cond3.setTheaterName(theaterName);
+        cond3.setScreenDate(startTime.toLocalDate());
+        cond3.setMovieTitle(title);
+
+
+        List<Schedule> schedules1 = scheduleRepository.searchSchedules(cond1);
+        List<Schedule> schedules2 = scheduleRepository.searchSchedules(cond2);
+        List<Schedule> schedules3 = scheduleRepository.searchSchedules(cond3);
+
+        // then
+        assertThat(schedules1).containsExactly(savedSchedule);
+        assertThat(schedules2).containsExactly(savedSchedule);
+        assertThat(schedules3).containsExactly(savedSchedule);
+    }
+}

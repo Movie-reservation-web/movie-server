@@ -9,6 +9,7 @@ import study.movie.global.enumMapper.EnumMapperType;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ScreenFormat implements EnumMapperType {
+    TWO_D("2D"),
     THREE_D("3D"),
     IMAX("IMAX"),
     FOUR_D_FLEX("4DX"),

@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.converter.theater.ScreenFormatConverter;
 import study.movie.domain.schedule.Schedule;
 import study.movie.global.entity.BaseTimeEntity;
 
@@ -27,8 +26,7 @@ public class Screen extends BaseTimeEntity {
 
     private String name;
 
-    @Convert(converter = ScreenFormatConverter.class)
-    private List<ScreenFormat> formats;
+    private ScreenFormat format;
 
     private Integer maxRows;
     private Integer maxCols;
@@ -44,9 +42,9 @@ public class Screen extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Screen(String name, List<ScreenFormat> formats, Integer maxRows, Integer maxCols, Theater theater) {
+    public Screen(String name, ScreenFormat format, Integer maxRows, Integer maxCols, Theater theater) {
         this.name = name;
-        this.formats = formats;
+        this.format = format;
         this.maxRows = maxRows;
         this.maxCols = maxCols;
         registerTheater(theater);

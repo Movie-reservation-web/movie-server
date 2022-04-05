@@ -40,7 +40,7 @@ public class Schedule extends BaseTimeEntity {
     private List<Ticket> tickets = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "schedule")
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Seat> seats = new ArrayList<>();
 
     private LocalDateTime startTime;
@@ -48,7 +48,7 @@ public class Schedule extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Schedule(Movie movie, Screen screen, LocalDateTime startTime, Integer reservedSeat) {
+    public Schedule(Movie movie, Screen screen, LocalDateTime startTime) {
         this.startTime = startTime;
         this.reservedSeat = 0;
         addMovie(movie);
@@ -56,6 +56,7 @@ public class Schedule extends BaseTimeEntity {
         initializeSeats(screen);
     }
     //==연관 관계 메서드==//
+
     /**
      * 영화 등록
      */
@@ -75,7 +76,7 @@ public class Schedule extends BaseTimeEntity {
     /**
      * 좌석 초기화
      */
-    public void initializeSeats(Screen screen) {
+    public List<Seat> initializeSeats(Screen screen) {
         for (int i = 1; i <= screen.getMaxRows(); i++) {
             for (int j = 1; j <= screen.getMaxCols(); j++) {
                 Seat seat = Seat.builder()
@@ -83,12 +84,15 @@ public class Schedule extends BaseTimeEntity {
                         .colNum(j)
                         .seatStatus(SeatStatus.EMPTY)
                         .build();
+                seat.registerSchedule(this);
                 getSeats().add(seat);
             }
         }
+        return seats;
     }
 
     //==조회 로직==//
+
     /**
      * 종료 시간 조회
      */
@@ -99,7 +103,7 @@ public class Schedule extends BaseTimeEntity {
     /**
      * 전체 좌석 수
      */
-    public int getTotalSeatCount(){
+    public int getTotalSeatCount() {
         return getSeats().size();
     }
 }

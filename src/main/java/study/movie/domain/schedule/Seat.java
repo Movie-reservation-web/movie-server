@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.*;
 public class Seat {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seat_id")
     private Long id;
 
@@ -43,5 +43,9 @@ public class Seat {
     }
     public char getRowNum(){
         return (char) (rowNum + 64);
+    }
+
+    public void registerSchedule(Schedule schedule) {
+        this.schedule = schedule;
     }
 }

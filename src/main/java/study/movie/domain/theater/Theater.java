@@ -21,7 +21,9 @@ public class Theater extends BaseTimeEntity {
     private Long id;
 
     private String name;
-    private String city;
+
+    private CityCode city;
+
     private String phone;
 
     @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)
@@ -29,7 +31,7 @@ public class Theater extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Theater(String name, String city, String phone) {
+    public Theater(String name, CityCode city, String phone) {
         this.name = name;
         this.city = city;
         this.phone = phone;

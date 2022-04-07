@@ -10,6 +10,7 @@ public class ScheduleSearchCond {
     private LocalDate screenDate;
     private String movieTitle;
     private String theaterName;
+    private boolean finalSearch;
 
 }
 

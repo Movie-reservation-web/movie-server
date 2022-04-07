@@ -1,14 +1,12 @@
 package study.movie.dto.schedule;
 
 import lombok.Data;
-import study.movie.converter.movie.FilmFormatConverter;
 import study.movie.domain.movie.FilmFormat;
-import study.movie.domain.movie.FilmRating;
 import study.movie.domain.schedule.Schedule;
 
-import javax.persistence.Convert;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class ReservationResponse {
@@ -16,11 +14,9 @@ public class ReservationResponse {
     /**
      * 영화 정보
      */
-    @Convert(converter = FilmFormatConverter.class)
-    private FilmRating filmRating;
+    private String filmRating;
     private String title;
-    @Convert(converter = FilmFormatConverter.class)
-    private List<FilmFormat> filmFormats;
+    private List<String> filmFormats;
 
     /**
      * 극장 정보
@@ -34,11 +30,11 @@ public class ReservationResponse {
     private LocalDate date;
 
     public ReservationResponse(Schedule schedule) {
-        this.filmRating = schedule.getMovie().getFilmRating();
+        this.filmRating = schedule.getMovie().getFilmRating().toString();
         this.title = schedule.getMovie().getTitle();
-        this.filmFormats = schedule.getMovie().getFormats();
+        this.filmFormats = schedule.getMovie().getFormats().stream().map(FilmFormat::toString).collect(Collectors.toList());
         this.theaterName = schedule.getScreen().getTheater().getName();
-        this.theaterCity = schedule.getScreen().getTheater().getCity();
+        this.theaterCity = schedule.getScreen().getTheater().getCity().toString();
         this.date = LocalDate.from(schedule.getStartTime());
     }
 }

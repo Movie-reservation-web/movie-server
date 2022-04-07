@@ -10,7 +10,9 @@ import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.FilmRating;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.movie.MovieGenre;
+import study.movie.domain.schedule.ReservationStatus;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.theater.Theater;
@@ -28,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
-@Commit
 @Slf4j
+@Commit
 class ScheduleRepositoryTest {
     @Autowired
     EntityManager em;
@@ -37,10 +39,10 @@ class ScheduleRepositoryTest {
     @Autowired
     ScheduleRepository scheduleRepository;
 
-    private Theater createTheater(String theaterName, String city, String phone) {
+    private Theater createTheater(String theaterName, CityCode city, String phone) {
         Theater theater = Theater.builder()
                 .name(theaterName)
-                .city(city)
+                .city(CityCode.SEL)
                 .phone(phone)
                 .build();
         em.persist(theater);
@@ -78,7 +80,7 @@ class ScheduleRepositoryTest {
     @Test
     public void 상영일정_저장_조회() throws Exception {
         // given
-        Theater theater = createTheater("용산 CGV", "서울", "000-000");
+        Theater theater = createTheater("용산 CGV", CityCode.SEL, "000-000");
         Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
 
@@ -103,7 +105,7 @@ class ScheduleRepositoryTest {
     public void 상영일정_조건_검색() throws Exception {
         // given
         String theaterName = "CGV 용산";
-        Theater theater = createTheater(theaterName, "서울", "000-000");
+        Theater theater = createTheater(theaterName, CityCode.SEL, "000-000");
         Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         String title = "영화1";
         Movie movie = createMovie(title, "홍길동");
@@ -137,4 +139,28 @@ class ScheduleRepositoryTest {
         assertThat(schedules2).containsExactly(savedSchedule);
         assertThat(schedules3).containsExactly(savedSchedule);
     }
+
+    @Test
+    public void 상영일정_좌석수_조회() throws Exception {
+        // given
+        Theater theater = createTheater("용산 CGV", CityCode.SEL, "000-000");
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동");
+        Schedule savedSchedule = Schedule.builder()
+                .startTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21))
+                .screen(screen)
+                .movie(movie)
+                .build();
+
+        em.flush();
+
+        // when
+        int totalSeatCount = screen.getMaxRows() * screen.getMaxCols();
+        Schedule findSchedule = scheduleRepository.findById(savedSchedule.getId()).get();
+
+        // then
+        assertEquals(totalSeatCount,findSchedule.getReservedSeatCount(ReservationStatus.EMPTY));
+        assertEquals(totalSeatCount,findSchedule.getTotalSeatCount());
+    }
+
 }

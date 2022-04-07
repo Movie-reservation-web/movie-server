@@ -15,6 +15,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -39,24 +41,28 @@ public class Schedule extends BaseTimeEntity {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Ticket> tickets = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
-    private List<Seat> seats = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "seat", joinColumns = @JoinColumn(name = "schedule_id"))
+    @MapKeyColumn
+    @Column(name = "reserve_status")
+    @Enumerated(EnumType.STRING)
+    private Map<Seat, ReservationStatus> seats = new ConcurrentHashMap<>();
+
 
     private LocalDateTime startTime;
-    private Integer reservedSeat;
+    private Integer reservedSeatCount;
 
     //==생성 메서드==//
     @Builder
     public Schedule(Movie movie, Screen screen, LocalDateTime startTime) {
         this.startTime = startTime;
-        this.reservedSeat = 0;
+        this.reservedSeatCount = 0;
         addMovie(movie);
         addScreen(screen);
         initializeSeats(screen);
     }
-    //==연관 관계 메서드==//
 
+    //==연관 관계 메서드==//
     /**
      * 영화 등록
      */
@@ -76,23 +82,20 @@ public class Schedule extends BaseTimeEntity {
     /**
      * 좌석 초기화
      */
-    public List<Seat> initializeSeats(Screen screen) {
+    public void initializeSeats(Screen screen) {
         for (int i = 1; i <= screen.getMaxRows(); i++) {
             for (int j = 1; j <= screen.getMaxCols(); j++) {
-                Seat seat = Seat.builder()
-                        .rowNum(i)
-                        .colNum(j)
-                        .seatStatus(SeatStatus.EMPTY)
-                        .build();
-                seat.registerSchedule(this);
-                getSeats().add(seat);
+                getSeats().put(
+                        Seat.builder()
+                                .rowNum(i)
+                                .colNum(j)
+                                .build()
+                        ,ReservationStatus.EMPTY);
             }
         }
-        return seats;
     }
 
     //==조회 로직==//
-
     /**
      * 종료 시간 조회
      */
@@ -106,4 +109,13 @@ public class Schedule extends BaseTimeEntity {
     public int getTotalSeatCount() {
         return getSeats().size();
     }
+
+    /**
+     * 좌석 수 조회
+     * @param status
+     */
+    public int getReservedSeatCount(ReservationStatus status){
+        return (int) getSeats().values().stream().filter(value -> value == status).count();
+    }
+
 }

@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.schedule.Schedule;
-import study.movie.dto.schedule.CreateScheduleRequest;
-import study.movie.dto.schedule.ScheduleResponse;
-import study.movie.dto.schedule.ScheduleSearchCond;
+import study.movie.dto.schedule.*;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.theater.ScreenRepository;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +21,11 @@ public class ScheduleServiceImpl {
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
 
+    /**
+     * 상영일정 저장
+     */
     @Transactional
-    public ScheduleResponse save(CreateScheduleRequest request) {
+    public CreateScheduleResponse save(CreateScheduleRequest request) {
         Schedule savedSchedule = Schedule.builder()
                 .screen(screenRepository
                         .findById(request.getScreenId())
@@ -33,17 +35,40 @@ public class ScheduleServiceImpl {
                         .orElseThrow(IllegalArgumentException::new))
                 .startTime(request.getStartTime())
                 .build();
-        return new ScheduleResponse(savedSchedule);
+        return new CreateScheduleResponse(savedSchedule);
     }
 
-    public List<ScheduleResponse> findAllSchedules() {
+    /**
+     * 모든 상영 일정 조회
+     */
+    public List<ScheduleSearchResponse> findAllSchedules() {
         return scheduleRepository.findAll().stream()
-                .map(ScheduleResponse::new)
+                .map(ScheduleSearchResponse::new)
                 .collect(Collectors.toList());
     }
 
-    public ScheduleResponse searchSchedules(ScheduleSearchCond cond){
-        scheduleRepository.searchSchedules(cond);
-        return null;
+    /**
+     * 상영 일정 조회
+     */
+    public List<? extends BaseScheduleResponse> searchSchedules(ScheduleSearchCond cond){
+        return scheduleRepository.searchSchedules(cond).stream()
+                .map(checkResponse(cond.isFinalSearch()))
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * search condition 에 맞춰 return response 판별
+     */
+    private Function<Schedule, ? extends BaseScheduleResponse> checkResponse(Boolean finalSearchCond){
+        return finalSearchCond ? ScheduleScreenResponse::new : ScheduleSearchResponse::new;
+    }
+
+    /**
+     * 상영 일정 삭제
+     */
+    @Transactional
+    public void removeSchedule(Long id) {
+        scheduleRepository.deleteById(id);
     }
 }

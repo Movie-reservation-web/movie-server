@@ -3,13 +3,16 @@ package study.movie.service.schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.schedule.ReservationStatus;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.Seat;
 import study.movie.dto.schedule.*;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.theater.ScreenRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -52,6 +55,7 @@ public class ScheduleServiceImpl {
      */
     public List<? extends BaseScheduleResponse> searchSchedules(ScheduleSearchCond cond){
         return scheduleRepository.searchSchedules(cond).stream()
+                .filter(schedule -> cond.getFormats().contains(schedule.getScreen().getFormat().getFilmFormat().name()))
                 .map(checkResponse(cond.isFinalSearch()))
                 .distinct()
                 .collect(Collectors.toList());
@@ -71,4 +75,16 @@ public class ScheduleServiceImpl {
     public void removeSchedule(Long id) {
         scheduleRepository.deleteById(id);
     }
+
+    public List<ScheduleSeatResponse> getAllScheduleSeat(Long id){
+        Map<Seat, ReservationStatus> seats = scheduleRepository
+                .findById(id)
+                .orElseThrow(IllegalArgumentException::new)
+                .getSeats();
+
+        return seats.keySet().stream()
+                .map(seat -> new ScheduleSeatResponse(seat, seats.get(seat)))
+                .collect(Collectors.toList());
+    }
+
 }

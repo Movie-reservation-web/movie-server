@@ -5,6 +5,7 @@ import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.schedule.Schedule;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class ScheduleResponse {
      * 예매 날짜 정보
      */
     private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalTime endTime;
     private Integer totalSeatCount;
 
     public ScheduleResponse(Schedule schedule) {

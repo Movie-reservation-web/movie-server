@@ -15,10 +15,7 @@ import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.theater.Theater;
-import study.movie.dto.schedule.CreateScheduleRequest;
-import study.movie.dto.schedule.CreateScheduleResponse;
-import study.movie.dto.schedule.ScheduleSearchCond;
-import study.movie.dto.schedule.ScheduleSearchResponse;
+import study.movie.dto.schedule.*;
 import study.movie.repository.schedule.ScheduleRepository;
 
 import javax.persistence.EntityManager;
@@ -71,7 +68,7 @@ class ScheduleServiceTest {
                 .title(title)
                 .director(director)
                 .actors(Arrays.asList("aa", "bb"))
-                .formats(Arrays.asList(FilmFormat.values()[0], FilmFormat.values()[1]))
+                .formats(Arrays.asList(FilmFormat.TWO_D, FilmFormat.FOUR_D_FLEX))
                 .filmRating(FilmRating.G_RATED)
                 .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
                 .image("abc.jpg")
@@ -129,14 +126,65 @@ class ScheduleServiceTest {
         cond.setFinalSearch(false);
 
         // when
-        List<ScheduleSearchResponse> scheduleSearchRespons = (List<ScheduleSearchResponse>) scheduleService.searchSchedules(cond);
+        List<ScheduleSearchResponse> scheduleSearchResponse = (List<ScheduleSearchResponse>) scheduleService.searchSchedules(cond);
         List<Schedule> schedules = scheduleRepository.searchSchedules(cond);
         long dbCount = schedules.size();
 
         // then
         assertThat(schedules).containsExactly(savedSchedule1,savedSchedule2);
-        assertEquals(dbCount-1, scheduleSearchRespons.size(),"시간은 다르지만 날짜가 같은 객체는 중복제거되어야 한다.");
-        assertEquals(screenDate, scheduleSearchRespons.get(0).getScreenDate());
+        assertEquals(dbCount-1, scheduleSearchResponse.size(),"시간은 다르지만 날짜가 같은 객체는 중복제거되어야 한다.");
+        assertEquals(screenDate, scheduleSearchResponse.get(0).getScreenDate());
+    }
+
+    @Test
+    public void 상영일정_조건_검색_상영관_포멧() throws Exception {
+        // given
+        String theaterName = "CGV 용산";
+        Theater theater = createTheater(theaterName, CityCode.SEL, "000-000");
+        Screen screen1 = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Screen screen2 = registerScreen("1관", ScreenFormat.FOUR_D_FLEX, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동");
+        LocalDate screenDate = LocalDate.of(2022, 3, 10);
+        LocalDateTime startTime = screenDate.atTime(3, 2, 21);
+        Schedule.builder()
+                .startTime(startTime)
+                .screen(screen1)
+                .movie(movie)
+                .build();
+
+        Schedule.builder()
+                .startTime(startTime)
+                .screen(screen2)
+                .movie(movie)
+                .build();
+
+        List<String> filmFormats = Arrays.asList(FilmFormat.FOUR_D_FLEX.getCode());
+        ScheduleSearchCond cond = new ScheduleSearchCond();
+        cond.setFormats(filmFormats);
+        cond.setTheaterName(theaterName);
+        cond.setMovieTitle(movie.getTitle());
+        cond.setScreenDate(screenDate);
+        cond.setFinalSearch(true);
+
+        ScheduleSearchCond cond1 = new ScheduleSearchCond();
+        cond1.setFormats(filmFormats);
+        cond1.setMovieTitle(movie.getTitle());
+        cond1.setFinalSearch(false);
+
+        // when
+        List<ScheduleScreenResponse> scheduleScreenResponses = (List<ScheduleScreenResponse>) scheduleService.searchSchedules(cond);
+        List<ScheduleSearchResponse> scheduleSearchResponses = (List<ScheduleSearchResponse>) scheduleService.searchSchedules(cond1);
+
+        // then
+        for (ScheduleSearchResponse scheduleSearchResponse : scheduleSearchResponses) {
+            assertEquals(scheduleSearchResponse.getMovie().getMovieTitle(), cond1.getMovieTitle());
+        }
+        for (ScheduleScreenResponse scheduleScreenResponse : scheduleScreenResponses) {
+            for (String format : cond1.getFormats()) {
+                assertTrue(FilmFormat.valueOf(format).getValue().equals(scheduleScreenResponse.getScreenFormat()));
+            }
+            assertEquals(cond.getScreenDate(),scheduleScreenResponse.getStartTime().toLocalDate());
+        }
     }
 
     @Test
@@ -151,12 +199,12 @@ class ScheduleServiceTest {
         LocalDateTime startTime2 = screenDate.atTime(6, 2, 21);
 
         // when
-        Schedule savedSchedule1 = Schedule.builder()
+        Schedule.builder()
                 .startTime(startTime1)
                 .screen(screen)
                 .movie(movie)
                 .build();
-        Schedule savedSchedule2 = Schedule.builder()
+        Schedule.builder()
                 .startTime(startTime2)
                 .screen(screen)
                 .movie(movie)

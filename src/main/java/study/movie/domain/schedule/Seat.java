@@ -24,4 +24,10 @@ public class Seat {
     public String seatToString() {
         return (char) (rowNum + '@') + String.valueOf(colNum);
     }
+    public static Seat stringToSeat(String data){
+        return Seat.builder()
+                .colNum(data.charAt(0) - '@')
+                .rowNum(Integer.parseInt(data.substring(1)))
+                .build();
+    }
 }

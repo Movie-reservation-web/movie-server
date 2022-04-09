@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.ticket.Ticket;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -31,7 +32,6 @@ public class Screen extends BaseTimeEntity {
     private Integer maxRows;
     private Integer maxCols;
 
-    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "theater_id")
     private Theater theater;
@@ -39,6 +39,10 @@ public class Screen extends BaseTimeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL)
     private List<Schedule> schedules = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
 
     //==생성 메서드==//
     @Builder

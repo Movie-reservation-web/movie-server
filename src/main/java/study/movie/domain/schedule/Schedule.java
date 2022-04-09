@@ -1,20 +1,17 @@
 package study.movie.domain.schedule;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.theater.Screen;
-import study.movie.domain.ticket.Ticket;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,10 +33,6 @@ public class Schedule extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "screen_id")
     private Screen screen;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
-    private List<Ticket> tickets = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "seat", joinColumns = @JoinColumn(name = "schedule_id"))
@@ -99,8 +92,8 @@ public class Schedule extends BaseTimeEntity {
     /**
      * 종료 시간 조회
      */
-    public LocalDateTime getEndTime() {
-        return startTime.plus(Duration.ofMinutes(movie.getRunningTime()));
+    public LocalTime getEndTime() {
+        return startTime.toLocalTime().plus(Duration.ofMinutes(movie.getRunningTime()));
     }
 
     /**

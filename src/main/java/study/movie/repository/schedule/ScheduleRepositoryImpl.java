@@ -48,7 +48,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     private BooleanExpression reserveDateEq(LocalDate date) {
-        return date != null ? schedule.startTime.between(
+        return date != null ? schedule.screenTime.startDateTime.between(
                 date.atStartOfDay(),
                 LocalDateTime.of(date, LocalTime.MAX).withNano(0)
         ) : null;

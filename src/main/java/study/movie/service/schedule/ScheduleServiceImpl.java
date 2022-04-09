@@ -3,8 +3,11 @@ package study.movie.service.schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.movie.FilmFormat;
+import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.ReservationStatus;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.schedule.Seat;
 import study.movie.dto.schedule.*;
 import study.movie.repository.movie.MovieRepository;
@@ -29,14 +32,16 @@ public class ScheduleServiceImpl {
      */
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request) {
+        Movie findMovie = movieRepository
+                .findById(request.getMovieId())
+                .orElseThrow(IllegalArgumentException::new);
+
         Schedule savedSchedule = Schedule.builder()
+                .movie(findMovie)
                 .screen(screenRepository
                         .findById(request.getScreenId())
                         .orElseThrow(IllegalArgumentException::new))
-                .movie(movieRepository
-                        .findById(request.getMovieId())
-                        .orElseThrow(IllegalArgumentException::new))
-                .startTime(request.getStartTime())
+                .screenTime(new ScreenTime(request.getStartTime(), findMovie))
                 .build();
         return new CreateScheduleResponse(savedSchedule);
     }
@@ -55,12 +60,18 @@ public class ScheduleServiceImpl {
      */
     public List<? extends BaseScheduleResponse> searchSchedules(ScheduleSearchCond cond){
         return scheduleRepository.searchSchedules(cond).stream()
-                .filter(schedule -> cond.getFormats().contains(schedule.getScreen().getFormat().getFilmFormat().name()))
+                .filter(schedule -> filterFormats(schedule.getScreen().getFormat().getFilmFormat(), cond.getFormats()))
                 .map(checkResponse(cond.isFinalSearch()))
                 .distinct()
                 .collect(Collectors.toList());
     }
 
+    /**
+     * search condition 에 맞는 영화 포멧이 존재하는지 필터링
+     */
+    private boolean filterFormats(FilmFormat filmFormat, List<String> formats) {
+        return formats == null || formats.contains(filmFormat.name());
+    }
     /**
      * search condition 에 맞춰 return response 판별
      */

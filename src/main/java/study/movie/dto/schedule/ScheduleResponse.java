@@ -3,9 +3,8 @@ package study.movie.dto.schedule;
 import lombok.Data;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.ScreenTime;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,8 +27,7 @@ public class ScheduleResponse {
     /**
      * 예매 날짜 정보
      */
-    private LocalDateTime startTime;
-    private LocalTime endTime;
+    private ScreenTime screenTime;
     private Integer totalSeatCount;
 
     public ScheduleResponse(Schedule schedule) {
@@ -38,8 +36,7 @@ public class ScheduleResponse {
         this.filmFormats = schedule.getMovie().getFormats().stream().map(FilmFormat::toString).collect(Collectors.toList());
         this.theaterName = schedule.getScreen().getTheater().getName();
         this.theaterCity = schedule.getScreen().getTheater().getCity().toString();
-        this.startTime = schedule.getStartTime();
-        this.endTime = schedule.getEndTime();
+        this.screenTime = schedule.getScreenTime();
         this.totalSeatCount = schedule.getTotalSeatCount();
     }
 }

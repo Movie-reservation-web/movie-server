@@ -15,7 +15,7 @@ public class ScheduleSearchResponse extends BaseScheduleResponse{
     public ScheduleSearchResponse(Schedule schedule) {
         this.id = schedule.getId();
         this.movie = new ScheduleMovieResponse(schedule.getMovie());
-        this.screenDate = schedule.getStartTime().toLocalDate();
+        this.screenDate = schedule.getScreenTime().getStartDateTime().toLocalDate();
         this.theater = new ScheduleTheaterResponse(schedule.getScreen().getTheater());
     }
 }

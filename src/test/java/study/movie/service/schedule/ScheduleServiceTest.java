@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.FilmRating;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.movie.MovieGenre;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
 import study.movie.domain.theater.ScreenFormat;
@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Commit
 @Slf4j
 class ScheduleServiceTest {
     @Autowired
@@ -81,6 +80,7 @@ class ScheduleServiceTest {
         em.flush();
         return movie;
     }
+
     @Test
     public void 상영일정_저장() throws Exception {
         // given
@@ -96,7 +96,7 @@ class ScheduleServiceTest {
         // then
         assertEquals(theater.getName(), response.getTheaterName());
         assertEquals(movie.getTitle(), response.getMovieTitle());
-        assertEquals(startTime, response.getStartTime());
+        assertEquals(startTime, response.getScreenTime().getStartDateTime());
     }
 
     @Test
@@ -107,16 +107,16 @@ class ScheduleServiceTest {
         Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        LocalDateTime startTime1 = screenDate.atTime(3, 2, 21);
-        LocalDateTime startTime2 = screenDate.atTime(6, 2, 21);
+        ScreenTime screenTime1 = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
+        ScreenTime screenTime2 = new ScreenTime(screenDate.atTime(6, 2, 21), movie);
         Schedule savedSchedule1 = Schedule.builder()
-                .startTime(startTime1)
+                .screenTime(screenTime1)
                 .screen(screen)
                 .movie(movie)
                 .build();
 
         Schedule savedSchedule2 = Schedule.builder()
-                .startTime(startTime2)
+                .screenTime(screenTime2)
                 .screen(screen)
                 .movie(movie)
                 .build();
@@ -131,8 +131,8 @@ class ScheduleServiceTest {
         long dbCount = schedules.size();
 
         // then
-        assertThat(schedules).containsExactly(savedSchedule1,savedSchedule2);
-        assertEquals(dbCount-1, scheduleSearchResponse.size(),"시간은 다르지만 날짜가 같은 객체는 중복제거되어야 한다.");
+        assertThat(schedules).containsExactly(savedSchedule1, savedSchedule2);
+        assertEquals(dbCount - 1, scheduleSearchResponse.size(), "시간은 다르지만 날짜가 같은 객체는 중복제거되어야 한다.");
         assertEquals(screenDate, scheduleSearchResponse.get(0).getScreenDate());
     }
 
@@ -145,15 +145,15 @@ class ScheduleServiceTest {
         Screen screen2 = registerScreen("1관", ScreenFormat.FOUR_D_FLEX, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        LocalDateTime startTime = screenDate.atTime(3, 2, 21);
+        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
         Schedule.builder()
-                .startTime(startTime)
+                .screenTime(screenTime)
                 .screen(screen1)
                 .movie(movie)
                 .build();
 
         Schedule.builder()
-                .startTime(startTime)
+                .screenTime(screenTime)
                 .screen(screen2)
                 .movie(movie)
                 .build();
@@ -183,7 +183,7 @@ class ScheduleServiceTest {
             for (String format : cond1.getFormats()) {
                 assertTrue(FilmFormat.valueOf(format).getValue().equals(scheduleScreenResponse.getScreenFormat()));
             }
-            assertEquals(cond.getScreenDate(),scheduleScreenResponse.getStartTime().toLocalDate());
+            assertEquals(cond.getScreenDate(), scheduleScreenResponse.getScreenTime().getStartDateTime().toLocalDate());
         }
     }
 
@@ -195,17 +195,17 @@ class ScheduleServiceTest {
         Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        LocalDateTime startTime1 = screenDate.atTime(3, 2, 21);
-        LocalDateTime startTime2 = screenDate.atTime(6, 2, 21);
+        ScreenTime screenTime1 = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
+        ScreenTime screenTime2 = new ScreenTime(screenDate.atTime(6, 2, 21), movie);
 
         // when
         Schedule.builder()
-                .startTime(startTime1)
+                .screenTime(screenTime1)
                 .screen(screen)
                 .movie(movie)
                 .build();
         Schedule.builder()
-                .startTime(startTime2)
+                .screenTime(screenTime2)
                 .screen(screen)
                 .movie(movie)
                 .build();
@@ -222,10 +222,10 @@ class ScheduleServiceTest {
         Theater theater = createTheater("용산 CGV", CityCode.SEL, "000-000");
         Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
-        LocalDateTime startTime = LocalDateTime.of(2022, 5, 10, 3, 2, 21);
+        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 5, 10, 3, 2, 21), movie);
 
         Schedule savedSchedule = Schedule.builder()
-                .startTime(startTime)
+                .screenTime(screenTime)
                 .screen(screen)
                 .movie(movie)
                 .build();

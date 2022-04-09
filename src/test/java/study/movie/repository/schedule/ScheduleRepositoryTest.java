@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.FilmRating;
@@ -12,6 +11,7 @@ import study.movie.domain.movie.Movie;
 import study.movie.domain.movie.MovieGenre;
 import study.movie.domain.schedule.ReservationStatus;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
 import study.movie.domain.theater.ScreenFormat;
@@ -19,7 +19,6 @@ import study.movie.domain.theater.Theater;
 import study.movie.dto.schedule.ScheduleSearchCond;
 
 import javax.persistence.EntityManager;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -31,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @Transactional
 @Slf4j
-@Commit
 class ScheduleRepositoryTest {
     @Autowired
     EntityManager em;
@@ -85,9 +83,9 @@ class ScheduleRepositoryTest {
         Movie movie = createMovie("영화1", "홍길동");
 
         // when
-        LocalDateTime startTime = LocalDateTime.of(2022, 3, 10, 3, 2, 21);
+        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie);
         Schedule savedSchedule = Schedule.builder()
-                .startTime(startTime)
+                .screenTime(screenTime)
                 .screen(screen)
                 .movie(movie)
                 .build();
@@ -98,7 +96,6 @@ class ScheduleRepositoryTest {
         assertThat(schedules).containsExactly(savedSchedule);
         assertEquals(screen, schedules.get(0).getScreen());
         assertEquals(movie, schedules.get(0).getMovie());
-        assertEquals(startTime.plus(Duration.ofMinutes(movie.getRunningTime())), schedules.get(0).getEndTime());
     }
 
     @Test
@@ -109,9 +106,9 @@ class ScheduleRepositoryTest {
         Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         String title = "영화1";
         Movie movie = createMovie(title, "홍길동");
-        LocalDateTime startTime = LocalDateTime.of(2022, 3, 10, 3, 2, 21);
+        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie);
         Schedule savedSchedule = Schedule.builder()
-                .startTime(startTime)
+                .screenTime(screenTime)
                 .screen(screen)
                 .movie(movie)
                 .build();
@@ -121,12 +118,12 @@ class ScheduleRepositoryTest {
         cond1.setTheaterName(theaterName);
 
         ScheduleSearchCond cond2 = new ScheduleSearchCond();
-        cond2.setScreenDate(startTime.toLocalDate());
+        cond2.setScreenDate(screenTime.getStartDateTime().toLocalDate());
         cond2.setMovieTitle(title);
 
         ScheduleSearchCond cond3 = new ScheduleSearchCond();
         cond3.setTheaterName(theaterName);
-        cond3.setScreenDate(startTime.toLocalDate());
+        cond3.setScreenDate(screenTime.getStartDateTime().toLocalDate());
         cond3.setMovieTitle(title);
 
 
@@ -146,8 +143,9 @@ class ScheduleRepositoryTest {
         Theater theater = createTheater("용산 CGV", CityCode.SEL, "000-000");
         Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
+        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie);
         Schedule savedSchedule = Schedule.builder()
-                .startTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21))
+                .screenTime(screenTime)
                 .screen(screen)
                 .movie(movie)
                 .build();

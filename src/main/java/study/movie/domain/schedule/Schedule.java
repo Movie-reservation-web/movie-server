@@ -9,9 +9,6 @@ import study.movie.domain.theater.Screen;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,14 +38,14 @@ public class Schedule extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Map<Seat, ReservationStatus> seats = new ConcurrentHashMap<>();
 
-
-    private LocalDateTime startTime;
+    @Embedded
+    private ScreenTime screenTime;
     private Integer reservedSeatCount;
 
     //==생성 메서드==//
     @Builder
-    public Schedule(Movie movie, Screen screen, LocalDateTime startTime) {
-        this.startTime = startTime;
+    public Schedule(Movie movie, Screen screen, ScreenTime screenTime) {
+        this.screenTime = screenTime;
         this.reservedSeatCount = 0;
         addMovie(movie);
         addScreen(screen);
@@ -87,15 +84,7 @@ public class Schedule extends BaseTimeEntity {
             }
         }
     }
-
     //==조회 로직==//
-    /**
-     * 종료 시간 조회
-     */
-    public LocalTime getEndTime() {
-        return startTime.toLocalTime().plus(Duration.ofMinutes(movie.getRunningTime()));
-    }
-
     /**
      * 전체 좌석 수
      */

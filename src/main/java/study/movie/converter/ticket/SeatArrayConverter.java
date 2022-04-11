@@ -23,8 +23,11 @@ public class SeatArrayConverter implements AttributeConverter<List<Seat>, String
 
     @Override
     public List<Seat> convertToEntityAttribute(String dbData) {
-        return Arrays.stream(dbData.split(SEPARATOR))
-                .map(Seat::stringToSeat)
+        return convertToStringSeat(Arrays.stream(dbData.split(SEPARATOR)).collect(Collectors.toList()));
+    }
+
+    public List<Seat> convertToStringSeat(List<String> data) {
+        return data.stream().map(Seat::stringToSeat)
                 .collect(Collectors.toList());
     }
 }

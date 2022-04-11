@@ -8,8 +8,9 @@ import study.movie.converter.ticket.SeatArrayConverter;
 import study.movie.domain.member.Member;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.schedule.Seat;
-import study.movie.domain.theater.Screen;
+import study.movie.domain.theater.ScreenFormat;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -31,6 +32,21 @@ public class Ticket extends BaseTimeEntity {
     @Column(name = "ticket_id")
     private Long id;
 
+    private String reserveNumber;
+    private String scheduleNumber;
+
+    private String theaterName;
+    private String screenName;
+    private ScreenFormat format;
+
+    private ScreenTime screenTime;
+
+    @Convert(converter = SeatArrayConverter.class)
+    private List<Seat> seats = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private TicketStatus ticketStatus;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -39,31 +55,19 @@ public class Ticket extends BaseTimeEntity {
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "screen_id")
-    private Screen screen;
-
-    @Convert(converter = SeatArrayConverter.class)
-    private List<Seat> seats = new ArrayList<>();
-
-    private String reserveNumber;
-
-    private LocalDateTime reserveDateTime;
-
-    @Enumerated(EnumType.STRING)
-    private TicketStatus ticketStatus;
-
-
     //==생성 메서드==//
     @Builder
     public Ticket(Member member, Schedule schedule, List<Seat> seats) {
+        this.reserveNumber = createReserveNumber(schedule.getScreenTime().getStartDateTime());
+        this.scheduleNumber = schedule.getScheduleNumber();
+        this.theaterName = schedule.getScreen().getTheater().getName();
+        this.screenName = schedule.getScreen().getName();
+        this.screenTime = schedule.getScreenTime();
         this.seats = seats;
-        this.reserveNumber = createReserveNumber(schedule.getStartTime());
-        this.reserveDateTime = schedule.getStartTime();
         this.ticketStatus = TicketStatus.RESERVED;
+        this.format = schedule.getScreen().getFormat();
         setMember(member);
         setMovie(schedule);
-        setScreen(schedule);
     }
 
     //==연관관계 메서드==//
@@ -77,9 +81,9 @@ public class Ticket extends BaseTimeEntity {
         schedule.getMovie().getTickets().add(this);
     }
 
-    private void setScreen(Schedule schedule) {
-        this.screen = schedule.getScreen();
-        schedule.getScreen().getTickets().add(this);
+    public void deleteTicket(){
+        getMember().getTickets().remove(this);
+        getMovie().getTickets().remove(this);
     }
 
     //==조회 로직==//
@@ -88,13 +92,16 @@ public class Ticket extends BaseTimeEntity {
     }
 
     //==비즈니스 로직==//
+    /**
+     * 예매 취소
+     */
     public void cancelReservation(){
         this.ticketStatus = TicketStatus.CANCEL;
-        getMember().getTickets().remove(this);
-        getMovie().getTickets().remove(this);
-        getScreen().getTickets().remove(this);
     }
 
+    /**
+     * 예매 번호 생성
+     */
     private String createReserveNumber(LocalDateTime dateTime){
         return String.valueOf(dateTime.getYear()).substring(2) +
                 String.format("%02d", dateTime.getMonthValue()) +

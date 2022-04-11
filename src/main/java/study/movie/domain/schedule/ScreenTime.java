@@ -1,7 +1,7 @@
 package study.movie.domain.schedule;
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.movie.Movie;
 
@@ -11,12 +11,13 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Embeddable
-@Data
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ScreenTime {
 
     @Future
     private LocalDateTime startDateTime;
+
     @Future
     private LocalDateTime endDateTime;
 

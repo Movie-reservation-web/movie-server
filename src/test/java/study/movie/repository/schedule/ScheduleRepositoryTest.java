@@ -4,12 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.FilmRating;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.movie.MovieGenre;
-import study.movie.domain.schedule.ReservationStatus;
+import study.movie.domain.schedule.SeatStatus;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.theater.CityCode;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
+@Commit
 @Slf4j
 class ScheduleRepositoryTest {
     @Autowired
@@ -36,6 +38,7 @@ class ScheduleRepositoryTest {
 
     @Autowired
     ScheduleRepository scheduleRepository;
+
 
     private Theater createTheater(String theaterName, CityCode city, String phone) {
         Theater theater = Theater.builder()
@@ -157,7 +160,7 @@ class ScheduleRepositoryTest {
         Schedule findSchedule = scheduleRepository.findById(savedSchedule.getId()).get();
 
         // then
-        assertEquals(totalSeatCount,findSchedule.getReservedSeatCount(ReservationStatus.EMPTY));
+        assertEquals(totalSeatCount,findSchedule.getReservedSeatCount(SeatStatus.EMPTY));
         assertEquals(totalSeatCount,findSchedule.getTotalSeatCount());
     }
 

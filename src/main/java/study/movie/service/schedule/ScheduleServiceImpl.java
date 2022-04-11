@@ -5,17 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.Movie;
-import study.movie.domain.schedule.ReservationStatus;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
-import study.movie.domain.schedule.Seat;
 import study.movie.dto.schedule.*;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.theater.ScreenRepository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,7 +55,7 @@ public class ScheduleServiceImpl {
     /**
      * 상영 일정 조회
      */
-    public List<? extends BaseScheduleResponse> searchSchedules(ScheduleSearchCond cond){
+    public List<? extends BaseScheduleResponse> searchSchedules(ScheduleSearchCond cond) {
         return scheduleRepository.searchSchedules(cond).stream()
                 .filter(schedule -> filterFormats(schedule.getScreen().getFormat().getFilmFormat(), cond.getFormats()))
                 .map(checkResponse(cond.isFinalSearch()))
@@ -72,10 +69,11 @@ public class ScheduleServiceImpl {
     private boolean filterFormats(FilmFormat filmFormat, List<String> formats) {
         return formats == null || formats.contains(filmFormat.name());
     }
+
     /**
      * search condition 에 맞춰 return response 판별
      */
-    private Function<Schedule, ? extends BaseScheduleResponse> checkResponse(Boolean finalSearchCond){
+    private Function<Schedule, ? extends BaseScheduleResponse> checkResponse(Boolean finalSearchCond) {
         return finalSearchCond ? ScheduleScreenResponse::new : ScheduleSearchResponse::new;
     }
 
@@ -87,15 +85,5 @@ public class ScheduleServiceImpl {
         scheduleRepository.deleteById(id);
     }
 
-    public List<ScheduleSeatResponse> getAllScheduleSeat(Long id){
-        Map<Seat, ReservationStatus> seats = scheduleRepository
-                .findById(id)
-                .orElseThrow(IllegalArgumentException::new)
-                .getSeats();
-
-        return seats.keySet().stream()
-                .map(seat -> new ScheduleSeatResponse(seat, seats.get(seat)))
-                .collect(Collectors.toList());
-    }
 
 }

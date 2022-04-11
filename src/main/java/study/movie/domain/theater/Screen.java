@@ -1,12 +1,8 @@
 package study.movie.domain.theater;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.movie.domain.schedule.Schedule;
-import study.movie.domain.ticket.Ticket;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -40,15 +36,11 @@ public class Screen extends BaseTimeEntity {
     @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL)
     private List<Schedule> schedules = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL)
-    private List<Ticket> tickets = new ArrayList<>();
-
     //==생성 메서드==//
     @Builder
     public Screen(String name, ScreenFormat format, Integer maxRows, Integer maxCols, Theater theater) {
-        this.name = name;
         this.format = format;
+        this.name = name;
         this.maxRows = maxRows;
         this.maxCols = maxCols;
         registerTheater(theater);

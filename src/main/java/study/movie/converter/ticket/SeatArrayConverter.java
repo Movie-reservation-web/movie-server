@@ -1,5 +1,6 @@
 package study.movie.converter.ticket;
 
+import org.springframework.stereotype.Component;
 import study.movie.domain.schedule.Seat;
 
 import javax.persistence.AttributeConverter;
@@ -8,7 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Converter
+@Converter(autoApply = true)
+@Component
 public class SeatArrayConverter implements AttributeConverter<List<Seat>, String> {
     private static final String SEPARATOR = ",";
 

@@ -29,7 +29,6 @@ public class TicketServiceImpl implements TicketService {
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
 
-
     /**
      * 티켓 예매
      */
@@ -70,6 +69,10 @@ public class TicketServiceImpl implements TicketService {
         scheduleRepository.updateSeatStatus(condition);
     }
 
+    /**
+     * 티켓 조회(사용자)
+     * @param memberId
+     */
     public List<ReserveTicketResponse> getAllTicket(Long memberId){
         return ticketRepository.findAllTicketByMember(memberId).stream()
                 .map(ticket -> new ReserveTicketResponse(enumMapper, ticket))

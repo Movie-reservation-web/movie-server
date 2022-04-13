@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.FilmRating;
@@ -30,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Slf4j
+@Rollback
 class ScheduleServiceTest {
     @Autowired
     EntityManager em;
@@ -39,7 +41,6 @@ class ScheduleServiceTest {
 
     @Autowired
     ScheduleRepository scheduleRepository;
-
 
     private Theater createTheater(String theaterName, CityCode city, String phone) {
         Theater theater = Theater.builder()
@@ -62,12 +63,12 @@ class ScheduleServiceTest {
                 .build();
     }
 
-    private Movie createMovie(String title, String director) {
+    private Movie createMovie(String title, String director, List<FilmFormat> formats) {
         Movie movie = Movie.builder()
                 .title(title)
                 .director(director)
                 .actors(Arrays.asList("aa", "bb"))
-                .formats(Arrays.asList(FilmFormat.TWO_D, FilmFormat.FOUR_D_FLEX))
+                .formats(formats)
                 .filmRating(FilmRating.G_RATED)
                 .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
                 .image("abc.jpg")
@@ -85,8 +86,8 @@ class ScheduleServiceTest {
     public void 상영일정_저장() throws Exception {
         // given
         Theater theater = createTheater("용산 CGV", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDateTime startTime = LocalDateTime.of(2022, 5, 10, 3, 2, 21);
 
         // when
@@ -104,8 +105,8 @@ class ScheduleServiceTest {
         // given
         String theaterName = "CGV 용산";
         Theater theater = createTheater(theaterName, CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime1 = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
         ScreenTime screenTime2 = new ScreenTime(screenDate.atTime(6, 2, 21), movie);
@@ -141,9 +142,9 @@ class ScheduleServiceTest {
         // given
         String theaterName = "CGV 용산";
         Theater theater = createTheater(theaterName, CityCode.SEL, "000-000");
-        Screen screen1 = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Screen screen2 = registerScreen("1관", ScreenFormat.FOUR_D_FLEX, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Screen screen1 = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Screen screen2 = registerScreen("2관", ScreenFormat.FOUR_D_FLEX, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
         Schedule.builder()
@@ -158,33 +159,32 @@ class ScheduleServiceTest {
                 .movie(movie)
                 .build();
 
-        List<String> filmFormats = Arrays.asList(FilmFormat.FOUR_D_FLEX.getCode());
-        ScheduleSearchCond cond = new ScheduleSearchCond();
-        cond.setFormats(filmFormats);
-        cond.setTheaterName(theaterName);
-        cond.setMovieTitle(movie.getTitle());
-        cond.setScreenDate(screenDate);
-        cond.setFinalSearch(true);
-
+        FilmFormat filmFormat = FilmFormat.TWO_D;
         ScheduleSearchCond cond1 = new ScheduleSearchCond();
-        cond1.setFormats(filmFormats);
+        cond1.setFormat(filmFormat);
+        cond1.setTheaterName(theaterName);
         cond1.setMovieTitle(movie.getTitle());
-        cond1.setFinalSearch(false);
+        cond1.setScreenDate(screenDate);
+        cond1.setFinalSearch(true);
 
+        ScheduleSearchCond cond2 = new ScheduleSearchCond();
+        cond2.setFormat(filmFormat);
+        cond2.setMovieTitle(movie.getTitle());
+        cond2.setFinalSearch(false);
+
+        // 상영관1 -> 일반(2D) , 상영관2 -> 4DX(2D)
+        // 조건 -> 영화 포맷(2D)
         // when
-        List<ScheduleScreenResponse> scheduleScreenResponses = (List<ScheduleScreenResponse>) scheduleService.searchSchedules(cond);
-        List<ScheduleSearchResponse> scheduleSearchResponses = (List<ScheduleSearchResponse>) scheduleService.searchSchedules(cond1);
+        List<ScheduleScreenResponse> screenResponses = (List<ScheduleScreenResponse>) scheduleService.searchSchedules(cond1);
+        List<ScheduleSearchResponse> searchResponses = (List<ScheduleSearchResponse>) scheduleService.searchSchedules(cond2);
 
         // then
-        for (ScheduleSearchResponse scheduleSearchResponse : scheduleSearchResponses) {
-            assertEquals(scheduleSearchResponse.getMovie().getMovieTitle(), cond1.getMovieTitle());
-        }
-        for (ScheduleScreenResponse scheduleScreenResponse : scheduleScreenResponses) {
-            for (String format : cond1.getFormats()) {
-                assertTrue(FilmFormat.valueOf(format).getValue().equals(scheduleScreenResponse.getScreenFormat()));
-            }
-            assertEquals(cond.getScreenDate(), scheduleScreenResponse.getScreenTime().getStartDateTime().toLocalDate());
-        }
+        assertEquals(1, screenResponses.size());
+        assertTrue(ScreenFormat.NORMAL.getValue().equals(screenResponses.get(0).getScreenFormat()));
+        assertEquals(cond1.getScreenDate(), screenResponses.get(0).getScreenTime().getStartDateTime().toLocalDate());
+
+        assertEquals(1, searchResponses.size());
+        assertEquals(searchResponses.get(0).getMovie().getMovieTitle(), cond2.getMovieTitle());
     }
 
     @Test
@@ -192,8 +192,8 @@ class ScheduleServiceTest {
         // given
         String theaterName = "CGV 용산";
         Theater theater = createTheater(theaterName, CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime1 = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
         ScreenTime screenTime2 = new ScreenTime(screenDate.atTime(6, 2, 21), movie);
@@ -220,8 +220,8 @@ class ScheduleServiceTest {
     public void 상영일정_삭제() throws Exception {
         // given
         Theater theater = createTheater("용산 CGV", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 5, 10, 3, 2, 21), movie);
 
         Schedule savedSchedule = Schedule.builder()
@@ -241,5 +241,4 @@ class ScheduleServiceTest {
         assertFalse(em.find(Screen.class, screen.getId()).getSchedules().contains(savedSchedule));
         assertFalse(em.find(Movie.class, movie.getId()).getSchedules().contains(savedSchedule));
     }
-
 }

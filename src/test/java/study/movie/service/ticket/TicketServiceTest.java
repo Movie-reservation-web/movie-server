@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.member.GenderType;
 import study.movie.domain.member.Member;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @Transactional
 @Slf4j
-@Commit
+@Rollback
 class TicketServiceTest {
     @Autowired
     EntityManager em;
@@ -59,6 +59,7 @@ class TicketServiceTest {
         return member;
 
     }
+
     private Theater createTheater(String theaterName, CityCode city, String phone) {
         Theater theater = Theater.builder()
                 .name(theaterName)
@@ -69,6 +70,7 @@ class TicketServiceTest {
         em.flush();
         return theater;
     }
+
     private Screen registerScreen(String screenName, ScreenFormat format, Theater theater, int maxCols, int maxRows) {
         return Screen.builder()
                 .name(screenName)
@@ -78,6 +80,7 @@ class TicketServiceTest {
                 .maxRows(maxRows)
                 .build();
     }
+
     private Movie createMovie(String title, String director) {
         Movie movie = Movie.builder()
                 .title(title)
@@ -102,7 +105,7 @@ class TicketServiceTest {
         // given
         Member member = createMember();
         Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
@@ -135,7 +138,7 @@ class TicketServiceTest {
         // given
         Member member = createMember();
         Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie);

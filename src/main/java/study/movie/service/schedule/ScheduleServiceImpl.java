@@ -13,6 +13,7 @@ import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.theater.ScreenRepository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ public class ScheduleServiceImpl {
      */
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request) {
+        // 영화 조회
         Movie findMovie = movieRepository
                 .findById(request.getMovieId())
                 .orElseThrow(IllegalArgumentException::new);
@@ -57,7 +59,7 @@ public class ScheduleServiceImpl {
      */
     public List<? extends BaseScheduleResponse> searchSchedules(ScheduleSearchCond cond) {
         return scheduleRepository.searchSchedules(cond).stream()
-                .filter(schedule -> filterFormats(schedule.getScreen().getFormat().getFilmFormat(), cond.getFormats()))
+                .filter(schedule -> filterFormats(schedule.getScreen().getFormat().getFilmFormats(), cond.getFormat()))
                 .map(checkResponse(cond.isFinalSearch()))
                 .distinct()
                 .collect(Collectors.toList());
@@ -66,8 +68,8 @@ public class ScheduleServiceImpl {
     /**
      * search condition 에 맞는 영화 포멧이 존재하는지 필터링
      */
-    private boolean filterFormats(FilmFormat filmFormat, List<String> formats) {
-        return formats == null || formats.contains(filmFormat.name());
+    private boolean filterFormats(Set<FilmFormat> filmFormat, FilmFormat format) {
+        return format == null || filmFormat.contains(format);
     }
 
     /**

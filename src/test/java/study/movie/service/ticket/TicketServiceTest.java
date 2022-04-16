@@ -105,10 +105,10 @@ class TicketServiceTest {
         // given
         Member member = createMember();
         Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
+        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
 
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(screenTime)
@@ -138,10 +138,10 @@ class TicketServiceTest {
         // given
         Member member = createMember();
         Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie);
+        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
 
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(screenTime)

@@ -89,4 +89,5 @@ public class TicketServiceImpl implements TicketService {
         condition.setSeats(seats);
         return condition;
     }
+
 }

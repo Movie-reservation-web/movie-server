@@ -3,6 +3,7 @@ package study.movie.domain.schedule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Embeddable;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import java.util.Objects;
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"rowNum", "colNum"})
 public class Seat {
 
     private Integer rowNum;

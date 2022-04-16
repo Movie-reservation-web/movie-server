@@ -1,7 +1,10 @@
 package study.movie.domain.theater;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import study.movie.domain.schedule.Schedule;
 import study.movie.global.entity.BaseTimeEntity;
 

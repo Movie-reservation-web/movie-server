@@ -1,9 +1,6 @@
 package study.movie.domain.schedule;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Table(name = "seat")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"seat", "status"})
 public class SeatEntity {
 
     @Id

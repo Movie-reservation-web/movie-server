@@ -42,7 +42,7 @@ class ScheduleRepositoryTest {
     private Theater createTheater(String theaterName, CityCode city, String phone) {
         Theater theater = Theater.builder()
                 .name(theaterName)
-                .city(CityCode.SEL)
+                .city(city)
                 .phone(phone)
                 .build();
         em.persist(theater);
@@ -81,11 +81,11 @@ class ScheduleRepositoryTest {
     public void 상영일정_저장_조회() throws Exception {
         // given
         Theater theater = createTheater("용산 CGV", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
 
         // when
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie);
+        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime());
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(screenTime)
                 .screen(screen)
@@ -105,10 +105,10 @@ class ScheduleRepositoryTest {
         // given
         String theaterName = "CGV 용산";
         Theater theater = createTheater(theaterName, CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         String title = "영화1";
         Movie movie = createMovie(title, "홍길동");
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie);
+        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime());
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(screenTime)
                 .screen(screen)
@@ -143,9 +143,9 @@ class ScheduleRepositoryTest {
     public void 상영일정_좌석수_조회() throws Exception {
         // given
         Theater theater = createTheater("용산 CGV", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.NORMAL, theater, 3, 3);
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         Movie movie = createMovie("영화1", "홍길동");
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie);
+        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime());
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(screenTime)
                 .screen(screen)
@@ -162,5 +162,7 @@ class ScheduleRepositoryTest {
         assertEquals(totalSeatCount,findSchedule.getReservedSeatCount(SeatStatus.EMPTY));
         assertEquals(totalSeatCount,findSchedule.getTotalSeatCount());
     }
+
+
 
 }

@@ -40,7 +40,7 @@ public class ScheduleServiceImpl {
                 .screen(screenRepository
                         .findById(request.getScreenId())
                         .orElseThrow(IllegalArgumentException::new))
-                .screenTime(new ScreenTime(request.getStartTime(), findMovie))
+                .screenTime(new ScreenTime(request.getStartTime(), findMovie.getRunningTime()))
                 .build();
         return new CreateScheduleResponse(savedSchedule);
     }
@@ -59,11 +59,18 @@ public class ScheduleServiceImpl {
      */
     public List<? extends BaseScheduleResponse> searchSchedules(ScheduleSearchCond cond) {
         return scheduleRepository.searchSchedules(cond).stream()
-                .filter(schedule -> filterFormats(schedule.getScreen().getFormat().getFilmFormats(), cond.getFormat()))
                 .map(checkResponse(cond.isFinalSearch()))
                 .distinct()
                 .collect(Collectors.toList());
     }
+    
+    /**
+     * 상영 일정 조회 - 영화 선택
+     */
+    public MovieFormatResponse searchScheduleByMovie(String movieTitle){
+        return new MovieFormatResponse(movieTitle, scheduleRepository.findFormatByMovie(movieTitle));
+    }
+
 
     /**
      * search condition 에 맞는 영화 포멧이 존재하는지 필터링
@@ -83,8 +90,8 @@ public class ScheduleServiceImpl {
      * 상영 일정 삭제
      */
     @Transactional
-    public void removeSchedule(Long id) {
-        scheduleRepository.deleteById(id);
+    public void removeSchedule(Long scheduleId) {
+        scheduleRepository.deleteById(scheduleId);
     }
 
 

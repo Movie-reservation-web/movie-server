@@ -1,24 +1,18 @@
 package study.movie.dto.schedule;
 
 import lombok.Data;
-import study.movie.domain.movie.FilmFormat;
-import study.movie.domain.movie.FilmRating;
 import study.movie.domain.movie.Movie;
-
-import java.util.List;
 
 @Data
 public class ScheduleMovieResponse {
 
-    private Long id;
     private String movieTitle;
-    private FilmRating filmRating;
-    private List<FilmFormat> filmFormat;
+    private String filmRating;
+    private String image;
 
     public ScheduleMovieResponse(Movie movie) {
-        this.id = movie.getId();
         this.movieTitle = movie.getTitle();
-        this.filmRating = movie.getFilmRating();
-        this.filmFormat = movie.getFormats();
+        this.filmRating = movie.getFilmRating().getValue();
+        this.image = movie.getImage();
     }
 }

@@ -3,24 +3,24 @@ package study.movie.service.schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
-import study.movie.dto.schedule.*;
+import study.movie.dto.schedule.condition.ScheduleSearchCond;
+import study.movie.dto.schedule.request.CreateScheduleRequest;
+import study.movie.dto.schedule.response.*;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.theater.ScreenRepository;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ScheduleServiceImpl {
+public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
@@ -63,20 +63,21 @@ public class ScheduleServiceImpl {
                 .distinct()
                 .collect(Collectors.toList());
     }
-    
+
     /**
-     * 상영 일정 조회 - 영화 선택
+     * 상영 일정 조회 - 영화 선택 시 호출
      */
-    public MovieFormatResponse searchScheduleByMovie(String movieTitle){
+    public MovieFormatResponse searchScheduleByMovie(String movieTitle) {
         return new MovieFormatResponse(movieTitle, scheduleRepository.findFormatByMovie(movieTitle));
     }
 
-
     /**
-     * search condition 에 맞는 영화 포멧이 존재하는지 필터링
+     * 상영일정에 대한 좌석 정보
      */
-    private boolean filterFormats(Set<FilmFormat> filmFormat, FilmFormat format) {
-        return format == null || filmFormat.contains(format);
+    public List<SeatResponse> getScheduleSeatEntity(Long scheduleId) {
+        return scheduleRepository.findSeatByScheduleId(scheduleId).stream()
+                .map(SeatResponse::new)
+                .collect(Collectors.toList());
     }
 
     /**

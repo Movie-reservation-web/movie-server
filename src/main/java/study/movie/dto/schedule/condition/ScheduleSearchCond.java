@@ -1,4 +1,4 @@
-package study.movie.dto.schedule;
+package study.movie.dto.schedule.condition;
 
 import lombok.Data;
 import study.movie.domain.theater.ScreenFormat;

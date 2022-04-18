@@ -38,9 +38,6 @@ class SeatRepositoryTest {
     @Autowired
     ScheduleRepository scheduleRepository;
 
-    @Autowired
-    SeatRepository seatRepository;
-
     private Theater createTheater(String theaterName, CityCode city, String phone) {
         Theater theater = Theater.builder()
                 .name(theaterName)

@@ -3,8 +3,8 @@ package study.movie.repository.schedule;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.SeatEntity;
 import study.movie.domain.theater.ScreenFormat;
-import study.movie.dto.schedule.ScheduleSearchCond;
-import study.movie.dto.schedule.UpdateSeatCond;
+import study.movie.dto.schedule.condition.ScheduleSearchCond;
+import study.movie.dto.schedule.condition.UpdateSeatCond;
 
 import java.util.List;
 

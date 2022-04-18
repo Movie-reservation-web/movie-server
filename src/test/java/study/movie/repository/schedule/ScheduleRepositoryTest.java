@@ -17,7 +17,7 @@ import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.theater.Theater;
-import study.movie.dto.schedule.ScheduleSearchCond;
+import study.movie.dto.schedule.condition.ScheduleSearchCond;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;

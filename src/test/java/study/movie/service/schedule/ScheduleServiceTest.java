@@ -15,7 +15,12 @@ import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.theater.Theater;
-import study.movie.dto.schedule.*;
+import study.movie.dto.schedule.condition.ScheduleSearchCond;
+import study.movie.dto.schedule.request.CreateScheduleRequest;
+import study.movie.dto.schedule.response.CreateScheduleResponse;
+import study.movie.dto.schedule.response.MovieFormatResponse;
+import study.movie.dto.schedule.response.ScheduleScreenResponse;
+import study.movie.dto.schedule.response.ScheduleSearchResponse;
 import study.movie.repository.schedule.ScheduleRepository;
 
 import javax.persistence.EntityManager;

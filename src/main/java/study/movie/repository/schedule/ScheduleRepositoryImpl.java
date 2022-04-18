@@ -8,8 +8,8 @@ import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.Seat;
 import study.movie.domain.schedule.SeatEntity;
 import study.movie.domain.theater.ScreenFormat;
-import study.movie.dto.schedule.ScheduleSearchCond;
-import study.movie.dto.schedule.UpdateSeatCond;
+import study.movie.dto.schedule.condition.ScheduleSearchCond;
+import study.movie.dto.schedule.condition.UpdateSeatCond;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,6 +44,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 )
                 .fetch();
     }
+
     @Override
     public List<ScreenFormat> findFormatByMovie(String movieTitle) {
         return queryFactory.select(screen.format)
@@ -70,9 +71,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     @Override
     public List<SeatEntity> findSeatByScheduleId(Long scheduleId) {
         return queryFactory.selectFrom(seatEntity)
-                .join(seatEntity.schedule, schedule).fetchJoin()
-                .join(schedule.screen, screen).fetchJoin()
-                .join(screen.theater, theater).fetchJoin()
+                .leftJoin(seatEntity.schedule, schedule)
                 .where(schedule.id.eq(scheduleId))
                 .fetch();
     }

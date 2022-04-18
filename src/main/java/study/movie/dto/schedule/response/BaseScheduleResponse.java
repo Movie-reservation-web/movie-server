@@ -1,7 +1,5 @@
-package study.movie.dto.schedule;
+package study.movie.dto.schedule.response;
 
 public abstract class BaseScheduleResponse {
     public Long id;
-
-
 }

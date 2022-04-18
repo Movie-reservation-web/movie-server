@@ -42,6 +42,7 @@ public class Schedule extends BaseTimeEntity {
     private List<SeatEntity> seats = new ArrayList<>();
 
     private ScreenTime screenTime;
+
     private Integer reservedSeatCount;
 
     //==생성 메서드==//

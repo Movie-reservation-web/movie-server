@@ -10,7 +10,7 @@ import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.global.enumMapper.EnumMapper;
 
-import static study.movie.global.constants.EnumClassConstants.*;
+import static study.movie.global.constants.EnumClassConst.*;
 
 @Configuration
 public class EnumConfig {

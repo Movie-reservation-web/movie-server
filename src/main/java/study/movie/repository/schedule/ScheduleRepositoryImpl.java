@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.Seat;
-import study.movie.dto.schedule.ScheduleSearchCond;
-import study.movie.dto.schedule.UpdateSeatCond;
+import study.movie.domain.schedule.SeatEntity;
+import study.movie.domain.theater.ScreenFormat;
+import study.movie.dto.schedule.condition.ScheduleSearchCond;
+import study.movie.dto.schedule.condition.UpdateSeatCond;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,9 +38,23 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .leftJoin(screen.theater, theater)
                 .where(
                         movieTitleEq(cond.getMovieTitle()),
+                        screenFormatEq(cond.getFormat()),
                         theaterNameEq(cond.getTheaterName()),
                         reserveDateEq(cond.getScreenDate())
                 )
+                .fetch();
+    }
+
+    @Override
+    public List<ScreenFormat> findFormatByMovie(String movieTitle) {
+        return queryFactory.select(screen.format)
+                .from(schedule)
+                .leftJoin(schedule.movie, movie)
+                .leftJoin(schedule.screen, screen)
+                .where(
+                        movieTitleEq(movieTitle)
+                )
+                .distinct()
                 .fetch();
     }
 
@@ -52,6 +68,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .execute();
     }
 
+    @Override
+    public List<SeatEntity> findSeatByScheduleId(Long scheduleId) {
+        return queryFactory.selectFrom(seatEntity)
+                .leftJoin(seatEntity.schedule, schedule)
+                .where(schedule.id.eq(scheduleId))
+                .fetch();
+    }
+
     private BooleanExpression scheduleEq(Long scheduleId) {
         return scheduleId != null ? seatEntity.schedule.id.eq(scheduleId) : null;
     }
@@ -62,6 +86,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     private BooleanExpression movieTitleEq(String movieTitle) {
         return hasText(movieTitle) ? movie.title.eq(movieTitle) : null;
+    }
+
+    private BooleanExpression screenFormatEq(ScreenFormat format) {
+        return format != null ? screen.format.eq(format) : null;
     }
 
     private BooleanExpression theaterNameEq(String theaterName) {

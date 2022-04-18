@@ -17,6 +17,7 @@ import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.ticket.TicketRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,9 @@ public class TicketServiceImpl implements TicketService {
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
 
-
+    /**
+     * 티켓 예매
+     */
     @Transactional
     public ReserveTicketResponse reserve(ReserveTicketRequest request) {
         // 상영일정, 좌석 조회
@@ -49,6 +52,9 @@ public class TicketServiceImpl implements TicketService {
         return new ReserveTicketResponse(enumMapper, savedTicket);
     }
 
+    /**
+     * 예매 취소
+     */
     @Transactional
     public void cancelReservation(String reserveNumber) {
         // 티켓, 스케줄 조회
@@ -63,6 +69,19 @@ public class TicketServiceImpl implements TicketService {
         scheduleRepository.updateSeatStatus(condition);
     }
 
+    /**
+     * 티켓 조회(사용자)
+     * @param memberId
+     */
+    public List<ReserveTicketResponse> getAllTicket(Long memberId){
+        return ticketRepository.findAllTicketByMember(memberId).stream()
+                .map(ticket -> new ReserveTicketResponse(enumMapper, ticket))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 좌석 상태 변경 condition 생성
+     */
     private UpdateSeatCond createUpdateSeatStatusCond(Schedule schedule, List<Seat> seats, SeatStatus status) {
         UpdateSeatCond condition = new UpdateSeatCond();
         condition.setScheduleId(schedule.getId());
@@ -70,4 +89,5 @@ public class TicketServiceImpl implements TicketService {
         condition.setSeats(seats);
         return condition;
     }
+
 }

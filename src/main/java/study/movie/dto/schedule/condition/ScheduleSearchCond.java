@@ -1,18 +1,17 @@
-package study.movie.dto.schedule;
+package study.movie.dto.schedule.condition;
 
 import lombok.Data;
+import study.movie.domain.theater.ScreenFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 public class ScheduleSearchCond {
 
     private LocalDate screenDate;
     private String movieTitle;
-    private List<String> formats;
+    private ScreenFormat format;
     private String theaterName;
     private boolean finalSearch;
-
 }
 

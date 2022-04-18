@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.stream.Collectors;
 
-import static study.movie.global.constants.EnumClassConstants.*;
+import static study.movie.global.constants.EnumClassConst.*;
 
 @Data
 public class ReserveTicketResponse {
@@ -44,7 +44,7 @@ public class ReserveTicketResponse {
     private LocalTime startTime;
 
     /**
-     * 예매 고객 정보
+     * 예매 인원 수
      */
     private Integer reservedMemberCount;
 

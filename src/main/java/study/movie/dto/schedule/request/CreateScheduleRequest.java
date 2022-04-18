@@ -1,4 +1,4 @@
-package study.movie.dto.schedule;
+package study.movie.dto.schedule.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

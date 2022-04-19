@@ -9,6 +9,7 @@ import study.movie.domain.schedule.ScreenTime;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.response.*;
+import study.movie.global.utils.BasicServiceUtils;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.theater.ScreenRepository;
@@ -17,10 +18,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static study.movie.global.exception.ErrorCode.MOVIE_NOT_FOUND;
+import static study.movie.global.exception.ErrorCode.SCHEDULE_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ScheduleServiceImpl implements ScheduleService {
+public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
@@ -33,17 +37,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         // 영화 조회
         Movie findMovie = movieRepository
                 .findById(request.getMovieId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(getExceptionSupplier(MOVIE_NOT_FOUND));
 
         Schedule savedSchedule = Schedule.builder()
                 .movie(findMovie)
                 .screen(screenRepository
                         .findById(request.getScreenId())
-                        .orElseThrow(IllegalArgumentException::new))
+                        .orElseThrow(getExceptionSupplier(SCHEDULE_NOT_FOUND)))
                 .screenTime(new ScreenTime(request.getStartTime(), findMovie.getRunningTime()))
                 .build();
         return new CreateScheduleResponse(savedSchedule);
     }
+
 
     /**
      * 모든 상영 일정 조회

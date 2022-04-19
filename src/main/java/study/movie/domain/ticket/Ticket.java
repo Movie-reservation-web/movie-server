@@ -12,6 +12,7 @@ import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.schedule.Seat;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.global.entity.BaseTimeEntity;
+import study.movie.global.exception.CustomException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
+import static study.movie.global.exception.ErrorCode.ALREADY_CANCELLED_TICKET;
 
 @Entity
 @Getter
@@ -96,6 +98,7 @@ public class Ticket extends BaseTimeEntity {
      * 예매 취소
      */
     public void cancelReservation(){
+        if (this.ticketStatus == TicketStatus.CANCEL) throw new CustomException(ALREADY_CANCELLED_TICKET);
         this.ticketStatus = TicketStatus.CANCEL;
     }
 

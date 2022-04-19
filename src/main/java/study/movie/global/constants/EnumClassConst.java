@@ -1,17 +1,23 @@
 package study.movie.global.constants;
 
-public abstract class EnumClassConst {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public enum EnumClassConst {
 
     /**
      * Enum Class Name
      */
-    public static final String FILM_RATING = "FilmRating";
-    public static final String FILM_FORMAT = "FilmFormat";
-    public static final String MOVIE_GENRE = "MovieGenre";
+    FILM_RATING("FilmRating", "상영 등급"),
+    FILM_FORMAT("FilmFormat", "영화 포멧"),
+    MOVIE_GENRE("MovieGenre", "장르"),
+    CITY_CODE("CityCode", "도시"),
+    SCREEN_FORMAT("ScreenFormat", "상영관 포멧"),
+    GENDER_TYPE("GenderType", "성별");
+    private String className;
+    private String value;
 
-    public static final String CITY_CODE = "CityCode";
-    public static final String SCREEN_FORMAT = "ScreenFormat";
-
-    public static final String GENDER_TYPE = "GenderType";
 
 }

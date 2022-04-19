@@ -1,9 +1,8 @@
-package study.movie.converter.controller.theater;
+package study.movie.controller.theater;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import study.movie.global.dto.Response;
 
 
 @RestController

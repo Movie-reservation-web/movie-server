@@ -20,4 +20,6 @@ public abstract class ResponseMessage {
     public static final String DELETE_SCHEDULE = "상영일정 삭제 성공";
     public static final String RESERVE_TICKET = "티켓 예메 성공";
     public static final String CANCEL_TICKET = "예매 티켓 취소";
+
+    public static final String READ_CATEGORY = "카테고리 조회 성공";
 }

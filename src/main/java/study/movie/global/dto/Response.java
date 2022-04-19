@@ -36,37 +36,34 @@ public class Response {
         }
 
         @Builder(builderClassName = "ErrorBuilder", builderMethodName = "ErrorBuilder")
-        private Result(int status, String message, String error, String code) {
+        private Result(ErrorCode errorCode) {
             this.timeStamp = LocalDateTime.now();
-            this.status = status;
-            this.error = error;
-            this.code = code;
-            this.message = message;
+            this.status = errorCode.getStatus().value();
+            this.error = errorCode.getStatus().name();
+            this.code = errorCode.name();
+            this.message = errorCode.getDetail();
         }
 
         @Builder(builderClassName = "ValidationBuilder", builderMethodName = "ValidationBuilder")
-        private Result(int status, String message, String error, String code, T data) {
+        private Result(ErrorCode errorCode, T data) {
             this.timeStamp = LocalDateTime.now();
-            this.status = status;
-            this.error = error;
-            this.code = code;
-            this.message = message;
+            this.status = errorCode.getStatus().value();
+            this.error = errorCode.getStatus().name();
+            this.code = errorCode.name();
+            this.message = errorCode.getDetail();
             this.data = data;
-        }
-
-        // 이 부분도 error 처럼 변경해야함
-        private static <T> Result<T> resultResponse(HttpStatus status, String message, T data) {
-            return Result.<T>ResponseBuilder()
-                    .timeStamp(LocalDateTime.now())
-                    .status(status.value())
-                    .message(message)
-                    .data(data)
-                    .build();
         }
     }
 
     public static <T> ResponseEntity<?> success(HttpStatus status, String message, T data) {
-        return ResponseEntity.ok(Result.resultResponse(status, message, data));
+        return ResponseEntity
+                .status(status.value())
+                .body(Result.<T>ResponseBuilder()
+                        .timeStamp(LocalDateTime.now())
+                        .status(status.value())
+                        .message(message)
+                        .data(data)
+                        .build());
     }
 
     /**
@@ -110,24 +107,17 @@ public class Response {
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(Result.ErrorBuilder()
-                        .status(errorCode.getStatus().value())
-                        .error(errorCode.getStatus().name())
-                        .code(errorCode.name())
-                        .message(errorCode.getDetail())
+                        .errorCode(errorCode)
                         .build()
                 );
 
     }
 
     public static ResponseEntity<Object> validationFail(List<ValidationResponse> detail) {
-        ErrorCode errorCode = ARGUMENTS_NOT_VALID;
         return ResponseEntity
-                .status(errorCode.getStatus())
+                .status(ARGUMENTS_NOT_VALID.getStatus())
                 .body(Result.ValidationBuilder()
-                        .status(errorCode.getStatus().value())
-                        .error(errorCode.getStatus().name())
-                        .code(errorCode.name())
-                        .message(errorCode.getDetail())
+                        .errorCode(ARGUMENTS_NOT_VALID)
                         .data(detail)
                         .build()
                 );

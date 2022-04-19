@@ -1,4 +1,4 @@
-package study.movie.converter.controller.schedule;
+package study.movie.controller.schedule;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import study.movie.service.schedule.ScheduleService;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static study.movie.global.constants.ResponseMessage.*;
 
 @RestController
@@ -23,7 +24,7 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<?> saveSchedule(@Valid @RequestBody CreateScheduleRequest request) {
         CreateScheduleResponse result = scheduleService.save(request);
-        return Response.success(CREATE_SCHEDULE, result);
+        return Response.success(CREATED,CREATE_SCHEDULE, result);
     }
 
     @GetMapping

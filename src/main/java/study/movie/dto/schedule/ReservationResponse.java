@@ -38,7 +38,7 @@ public class ReservationResponse {
         this.title = schedule.getMovie().getTitle();
         this.filmFormats = schedule.getMovie().getFormats();
         this.theaterName = schedule.getScreen().getTheater().getName();
-        this.theaterCity = schedule.getScreen().getTheater().getCity();
+        this.theaterCity = String.valueOf(schedule.getScreen().getTheater().getCity());
         this.date = LocalDate.from(schedule.getStartTime());
     }
 }

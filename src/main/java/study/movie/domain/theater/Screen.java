@@ -31,7 +31,6 @@ public class Screen extends BaseTimeEntity {
     private Integer maxRows;
     private Integer maxCols;
 
-    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "theater_id")
     private Theater theater;
@@ -43,8 +42,8 @@ public class Screen extends BaseTimeEntity {
     //==생성 메서드==//
     @Builder
     public Screen(String name, ScreenFormat format, Integer maxRows, Integer maxCols, Theater theater) {
-        this.name = name;
         this.format = format;
+        this.name = name;
         this.maxRows = maxRows;
         this.maxCols = maxCols;
         registerTheater(theater);

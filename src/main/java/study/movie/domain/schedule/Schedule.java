@@ -7,14 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.theater.Screen;
-import study.movie.domain.ticket.Ticket;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -27,6 +27,8 @@ public class Schedule extends BaseTimeEntity {
     @Column(name = "schedule_id")
     private Long id;
 
+    private String scheduleNumber;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "movie_id")
     private Movie movie;
@@ -36,25 +38,24 @@ public class Schedule extends BaseTimeEntity {
     private Screen screen;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
-    private List<Ticket> tickets = new ArrayList<>();
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SeatEntity> seats = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
-    private List<Seat> seats = new ArrayList<>();
+    private ScreenTime screenTime;
 
-    private LocalDateTime startTime;
-    private Integer reservedSeat;
+    private Integer reservedSeatCount;
 
     //==생성 메서드==//
     @Builder
-    public Schedule(Movie movie, Screen screen, LocalDateTime startTime) {
-        this.startTime = startTime;
-        this.reservedSeat = 0;
+    public Schedule(Movie movie, Screen screen, ScreenTime screenTime) {
+        this.screenTime = screenTime;
+        this.reservedSeatCount = 0;
+        this.scheduleNumber = createScheduleNumber(screenTime.getStartDateTime());
         addMovie(movie);
         addScreen(screen);
         initializeSeats(screen);
     }
+
     //==연관 관계 메서드==//
 
     /**
@@ -74,36 +75,51 @@ public class Schedule extends BaseTimeEntity {
     }
 
     /**
+     * 좌석 등록
+     */
+    private void addSeat(SeatEntity seat) {
+        seats.add(seat);
+        seat.addSchedule(this);
+    }
+
+    /**
      * 좌석 초기화
      */
-    public List<Seat> initializeSeats(Screen screen) {
+    public void initializeSeats(Screen screen) {
         for (int i = 1; i <= screen.getMaxRows(); i++) {
             for (int j = 1; j <= screen.getMaxCols(); j++) {
-                Seat seat = Seat.builder()
+                SeatEntity seat = SeatEntity.builder()
                         .rowNum(i)
                         .colNum(j)
-                        .seatStatus(SeatStatus.EMPTY)
                         .build();
-                seat.registerSchedule(this);
-                getSeats().add(seat);
+                addSeat(seat);
             }
         }
-        return seats;
+    }
+
+    //==비즈니스 로직==//
+    /**
+     * 상영일정 번호 생성
+     */
+    private String createScheduleNumber(LocalDateTime dateTime) {
+        return String.valueOf(dateTime.getYear()).substring(2) +
+                String.format("%02d", dateTime.getMonthValue()) +
+                UUID.randomUUID().toString().substring(0, 9).toUpperCase(Locale.ROOT);
     }
 
     //==조회 로직==//
-
-    /**
-     * 종료 시간 조회
-     */
-    public LocalDateTime getEndTime() {
-        return startTime.plus(Duration.ofMinutes(movie.getRunningTime()));
-    }
-
     /**
      * 전체 좌석 수
      */
     public int getTotalSeatCount() {
         return getSeats().size();
     }
+
+    /**
+     * 좌석 수 조회
+     */
+    public int getReservedSeatCount(SeatStatus status) {
+        return (int) getSeats().stream().filter(seatEntity -> seatEntity.getStatus() == status).count();
+    }
+
 }

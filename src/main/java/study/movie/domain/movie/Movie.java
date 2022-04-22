@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import study.movie.converter.movie.FilmFormatConverter;
 import study.movie.converter.movie.MovieGenreConverter;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.ticket.Ticket;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
 
@@ -60,6 +61,10 @@ public class Movie extends BaseTimeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<Schedule> schedules = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
 
     //==생성 메서드==//
     @Builder

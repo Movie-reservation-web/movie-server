@@ -3,10 +3,7 @@ package study.movie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.movie.FilmFormat;
-import study.movie.domain.movie.FilmRating;
-import study.movie.domain.movie.Movie;
-import study.movie.domain.movie.MovieGenre;
+import study.movie.domain.movie.*;
 import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
 import study.movie.domain.theater.ScreenFormat;
@@ -19,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static study.movie.domain.theater.ScreenFormat.*;
-import static study.movie.domain.theater.ScreenFormat.SOUND_X;
+import static study.movie.domain.theater.ScreenFormat.PREMIUM;
 
 @Component
 @Transactional
@@ -32,17 +29,17 @@ public class InitService {
                 "CGV 용산",
                 CityCode.SEL,
                 Arrays.asList("1관", "2관", "3관", "4관", "5관"),
-                Arrays.asList(TWO_D, IMAX, FOUR_D_FLEX, SCREEN_X, SOUND_X));
+                Arrays.asList(TWO_D, IMAX, FOUR_D_FLEX, SCREEN_X, PREMIUM));
         addTheaterScreen(
                 "CGV 강남",
                 CityCode.SEL,
                 Arrays.asList("1관", "2관", "3관", "4관"),
-                Arrays.asList(TWO_D, TWO_D, FOUR_D_FLEX, SOUND_X));
+                Arrays.asList(TWO_D, TWO_D, FOUR_D_FLEX, PREMIUM));
         addTheaterScreen(
                 "CGV 수원",
                 CityCode.KYG,
                 Arrays.asList("1관", "2관", "3관", "4관", "5관"),
-                Arrays.asList(TWO_D, TWO_D, TWO_D, SCREEN_X, SOUND_X));
+                Arrays.asList(TWO_D, TWO_D, TWO_D, SCREEN_X, PREMIUM));
 
         addMovies(
                 Arrays.asList("영화1", "영화2", "영화3", "영화4", "영화5", "영화6"),
@@ -112,6 +109,16 @@ public class InitService {
                 .build();
         em.persist(movie);
         return movie;
+    }
+    public Review writeReview(Movie movie) {
+        Review review = Review.builder()
+                .writer("홍길동")
+                .comment("리뷰 내용")
+                .score(10F)
+                .movie(movie)
+                .build();
+        em.flush();
+        return review;
     }
 
 }

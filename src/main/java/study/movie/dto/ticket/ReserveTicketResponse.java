@@ -53,6 +53,11 @@ public class ReserveTicketResponse {
      */
     private String seats;
 
+    /**
+     * 결제 타입
+     */
+    private String paymentType;
+
     public ReserveTicketResponse(EnumMapper enumMapper, Ticket ticket) {
         this.reserveNumber = ticket.getReserveNumber();
         this.filmRating = enumMapper.getJsonValue(FILM_RATING.getClassName(), ticket.getMovie().getFilmRating().ordinal());

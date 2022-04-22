@@ -13,3 +13,4 @@ public class CreateScheduleRequest {
     private Long movieId;
     private Long screenId;
 }
+

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.member.GenderType;
 import study.movie.domain.member.Member;
@@ -22,19 +22,24 @@ import study.movie.domain.ticket.Ticket;
 import study.movie.domain.ticket.TicketStatus;
 import study.movie.dto.ticket.ReserveTicketRequest;
 import study.movie.dto.ticket.ReserveTicketResponse;
+import study.movie.global.exception.CustomException;
 import study.movie.repository.ticket.TicketRepository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 @Transactional
 @Slf4j
-@Rollback
+//@Rollback
+@Commit
 class TicketServiceTest {
     @Autowired
     EntityManager em;
@@ -162,7 +167,79 @@ class TicketServiceTest {
         // when
         ticketService.cancelReservation(savedTicket.getReserveNumber());
 
+        boolean isTicketInMovie = savedTicket.getMovie().getTickets().contains(savedTicket);
+        boolean isTicketInMember = savedTicket.getMember().getTickets().contains(savedTicket);
         // then
         assertEquals(TicketStatus.CANCEL, savedTicket.getTicketStatus());
+        assertFalse(isTicketInMovie);
+        assertFalse(isTicketInMember);
+    }
+
+    @Test
+    public void 취소되지_않은_티켓_데이터_삭제() throws Exception {
+        // given
+        Member member = createMember();
+        Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동");
+        LocalDate screenDate = LocalDate.of(2022, 3, 10);
+        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
+
+        Schedule savedSchedule = Schedule.builder()
+                .screenTime(screenTime)
+                .screen(screen)
+                .movie(movie)
+                .build();
+        em.flush();
+        List<String> seats = Arrays.asList("A2", "C2");
+
+        ReserveTicketRequest request = new ReserveTicketRequest();
+        request.setMemberId(member.getId());
+        request.setScheduleId(savedSchedule.getId());
+        request.setSeats(seats);
+        ReserveTicketResponse response = ticketService.reserve(request);
+
+        Ticket savedTicket = ticketRepository.findByReserveNumber(response.getReserveNumber()).orElseThrow();
+        Long id = savedTicket.getId();
+
+        // then
+        assertThatThrownBy(() -> ticketService.delete(id))
+                .isInstanceOf(CustomException.class);
+    }
+    @Test
+    public void 취소된_티켓_데이터_삭제() throws Exception {
+        // given
+        Member member = createMember();
+        Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
+        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Movie movie = createMovie("영화1", "홍길동");
+        LocalDate screenDate = LocalDate.of(2022, 3, 10);
+        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
+
+        Schedule savedSchedule = Schedule.builder()
+                .screenTime(screenTime)
+                .screen(screen)
+                .movie(movie)
+                .build();
+        em.flush();
+        List<String> seats = Arrays.asList("A2", "C2");
+
+        ReserveTicketRequest request = new ReserveTicketRequest();
+        request.setMemberId(member.getId());
+        request.setScheduleId(savedSchedule.getId());
+        request.setSeats(seats);
+        ReserveTicketResponse response = ticketService.reserve(request);
+
+        Ticket savedTicket = ticketRepository.findByReserveNumber(response.getReserveNumber()).orElseThrow();
+        Long id = savedTicket.getId();
+
+        // when
+        ticketService.cancelReservation(savedTicket.getReserveNumber());
+
+        ticketService.delete(id);
+
+        // then
+        assertThatThrownBy(() -> ticketRepository.findById(id).orElseThrow())
+                .isInstanceOf(NoSuchElementException.class);
     }
 }

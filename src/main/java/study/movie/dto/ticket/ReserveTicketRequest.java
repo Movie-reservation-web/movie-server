@@ -2,13 +2,17 @@ package study.movie.dto.ticket;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 public class ReserveTicketRequest {
 
-    private Long scheduleId;
-    private Long memberId;
-    private List<String> seats;
 
+    @NotNull
+    private Long scheduleId;
+    @NotNull
+    private Long memberId;
+    @NotNull
+    private List<String> seats;
 }

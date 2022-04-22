@@ -83,10 +83,6 @@ public class Ticket extends BaseTimeEntity {
         schedule.getMovie().getTickets().add(this);
     }
 
-    public void deleteTicket(){
-        getMember().getTickets().remove(this);
-        getMovie().getTickets().remove(this);
-    }
 
     //==조회 로직==//
     public int getReservedMemberCount(){
@@ -99,6 +95,8 @@ public class Ticket extends BaseTimeEntity {
      */
     public void cancelReservation(){
         if (this.ticketStatus == TicketStatus.CANCEL) throw new CustomException(ALREADY_CANCELLED_TICKET);
+        getMember().getTickets().remove(this);
+        getMovie().getTickets().remove(this);
         this.ticketStatus = TicketStatus.CANCEL;
     }
 

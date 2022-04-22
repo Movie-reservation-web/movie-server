@@ -55,7 +55,7 @@ public class Movie extends BaseTimeEntity {
 
     private String image;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private List<Review> reviews = new ArrayList<>();
 
     @JsonIgnore
@@ -105,5 +105,12 @@ public class Movie extends BaseTimeEntity {
         return String.format("%.2f", reviews.stream()
                 .mapToDouble(Review::getScore)
                 .average().getAsDouble());
+    }
+
+    public void addAudience(int num){
+        audience += num;
+    }
+    public void deleteAudience(int num){
+        audience -= num;
     }
 }

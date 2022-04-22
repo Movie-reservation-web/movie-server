@@ -27,12 +27,17 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     private final MessageSource messageSource;
 
     @ExceptionHandler(value = CustomException.class)
-    public final ResponseEntity<?> handleDefaultExceptions(CustomException e) {
+    public final ResponseEntity<?> handleCustomExceptions(CustomException e) {
         return Response.fail(e.getErrorCode());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public final ResponseEntity<?> handleIllegalArgumentExceptions() {
+        return Response.fail(ILLEGAL_ARGUMENT);
+    }
+
     @ExceptionHandler(value = { ConstraintViolationException.class, DataIntegrityViolationException.class})
-    protected ResponseEntity<?> handleDataException() {
+    public final ResponseEntity<?> handleDataException() {
         return Response.fail(DUPLICATED_RESOURCE);
     }
 

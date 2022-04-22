@@ -45,8 +45,7 @@ public class Review extends BaseTimeEntity {
         movie.getReviews().add(this);
     }
 
-    public void delete(Movie movie){
-        this.movie = movie;
+    public void delete(){
         this.movie.getReviews().remove(this);
     }
 

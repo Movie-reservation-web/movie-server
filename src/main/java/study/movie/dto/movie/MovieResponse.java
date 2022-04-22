@@ -11,11 +11,13 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @AllArgsConstructor
 public class MovieResponse {
 
+    private Long id;
     private String title;
     private Integer runningTime;
     private String director;
@@ -53,6 +55,5 @@ public class MovieResponse {
         this.reviews = movie.getReviews();
         this.score = movie.getAverageScore();
     }
-
 
 }

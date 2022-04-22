@@ -9,9 +9,10 @@ import study.movie.domain.movie.Review;
 @AllArgsConstructor
 public class ReviewRequest {
 
+    private Long id;
     private Long movieId;
-    private String writer;
-    private Float score;
-    private String comment;
+//    private String writer;
+//    private Float score;
+//    private String comment;
 
 }

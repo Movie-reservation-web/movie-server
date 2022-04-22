@@ -5,18 +5,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.SeatEntity;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface ScheduleRepository extends JpaRepository<Schedule, Long>, ScheduleRepositoryCustom {
-
-    Optional<Schedule> findByScheduleNumber(String scheduleNumber);
+public interface SeatRepository extends JpaRepository<SeatEntity, Long> {
 
     @Transactional
     @Modifying
-    @Query("delete from Schedule s where s.id in :ids")
-    void deleteAllByIdInQuery(@Param("ids") List<Long> ids);
-
+    @Query("delete from SeatEntity s where s.schedule.id in :ids")
+    void deleteAllByScheduleIdInQuery(@Param("ids") List<Long> ids);
 }

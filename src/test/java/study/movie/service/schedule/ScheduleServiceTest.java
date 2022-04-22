@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.Movie;
+import study.movie.domain.movie.Review;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.theater.CityCode;
@@ -21,6 +22,7 @@ import study.movie.dto.schedule.response.CreateScheduleResponse;
 import study.movie.dto.schedule.response.MovieFormatResponse;
 import study.movie.dto.schedule.response.ScheduleScreenResponse;
 import study.movie.dto.schedule.response.ScheduleSearchResponse;
+import study.movie.repository.movie.ReviewRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 
 import javax.persistence.EntityManager;
@@ -32,7 +34,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static study.movie.domain.theater.ScreenFormat.*;
-import static study.movie.domain.theater.ScreenFormat.SOUND_X;
+import static study.movie.domain.theater.ScreenFormat.PREMIUM;
 
 @SpringBootTest
 @Transactional
@@ -51,6 +53,8 @@ class ScheduleServiceTest {
     @Autowired
     InitService init;
 
+    @Autowired
+    ReviewRepository reviewRepository;
     @Test
     public void 상영일정_저장() throws Exception {
         // given
@@ -115,12 +119,12 @@ class ScheduleServiceTest {
                 theaterName1,
                 CityCode.SEL,
                 Arrays.asList("1관", "2관", "3관", "4관", "5관"),
-                Arrays.asList(TWO_D, IMAX, FOUR_D_FLEX, SCREEN_X, SOUND_X));
+                Arrays.asList(TWO_D, IMAX, FOUR_D_FLEX, SCREEN_X, PREMIUM));
         List<Screen> screens2 = init.addTheaterScreen(
                 theaterName2,
                 CityCode.SEL,
                 Arrays.asList("1관", "2관", "3관", "4관"),
-                Arrays.asList(TWO_D, TWO_D, FOUR_D_FLEX, SOUND_X));
+                Arrays.asList(TWO_D, TWO_D, FOUR_D_FLEX, PREMIUM));
 
         List<Movie> movies = init.addMovies(
                 Arrays.asList("영화1", "영화2", "영화3", "영화4", "영화5", "영화6"),
@@ -199,12 +203,12 @@ class ScheduleServiceTest {
                 theaterName1,
                 CityCode.SEL,
                 Arrays.asList("1관", "2관", "3관", "4관", "5관"),
-                Arrays.asList(TWO_D, IMAX, FOUR_D_FLEX, SCREEN_X, SOUND_X));
+                Arrays.asList(TWO_D, IMAX, FOUR_D_FLEX, SCREEN_X, PREMIUM));
         List<Screen> screens2 = init.addTheaterScreen(
                 theaterName2,
                 CityCode.SEL,
                 Arrays.asList("1관", "2관", "3관", "4관"),
-                Arrays.asList(TWO_D, TWO_D, FOUR_D_FLEX, SOUND_X));
+                Arrays.asList(TWO_D, TWO_D, FOUR_D_FLEX, PREMIUM));
 
         List<Movie> movies = init.addMovies(
                 Arrays.asList("영화1", "영화2", "영화3", "영화4", "영화5", "영화6"),
@@ -309,4 +313,29 @@ class ScheduleServiceTest {
         assertFalse(em.find(Screen.class, screen.getId()).getSchedules().contains(savedSchedule));
         assertFalse(em.find(Movie.class, movie.getId()).getSchedules().contains(savedSchedule));
     }
+
+
+    @Test
+    public void 리뷰삭제() throws Exception {
+        // given
+        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Review review = Review.builder()
+                .comment("리뷰")
+                .movie(movie)
+                .score(12F)
+                .writer("asdasd")
+                .build();
+
+        em.flush();
+
+        // when
+        review.delete();
+        reviewRepository.deleteById(review.getId());
+
+        // then
+        assertThat(reviewRepository.count()).isEqualTo(0);
+    }
+
+
+
 }

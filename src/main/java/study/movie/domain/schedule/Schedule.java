@@ -1,6 +1,5 @@
 package study.movie.domain.schedule;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,9 +36,8 @@ public class Schedule extends BaseTimeEntity {
     @JoinColumn(name = "screen_id")
     private Screen screen;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SeatEntity> seats = new ArrayList<>();
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.PERSIST)
+    private final List<SeatEntity> seats = new ArrayList<>();
 
     private ScreenTime screenTime;
 

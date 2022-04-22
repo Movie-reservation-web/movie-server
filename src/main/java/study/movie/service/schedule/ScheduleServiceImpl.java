@@ -12,8 +12,10 @@ import study.movie.dto.schedule.response.*;
 import study.movie.global.utils.BasicServiceUtils;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
+import study.movie.repository.schedule.SeatRepository;
 import study.movie.repository.theater.ScreenRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,7 +30,7 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
     private final ScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
-
+    private final SeatRepository seatRepository;
     /**
      * 상영일정 저장
      */
@@ -38,7 +40,6 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
         Movie findMovie = movieRepository
                 .findById(request.getMovieId())
                 .orElseThrow(getExceptionSupplier(MOVIE_NOT_FOUND));
-
         Schedule savedSchedule = Schedule.builder()
                 .movie(findMovie)
                 .screen(screenRepository
@@ -46,6 +47,7 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
                         .orElseThrow(getExceptionSupplier(SCHEDULE_NOT_FOUND)))
                 .screenTime(new ScreenTime(request.getStartTime(), findMovie.getRunningTime()))
                 .build();
+
         return new CreateScheduleResponse(savedSchedule);
     }
 
@@ -97,7 +99,8 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
      */
     @Transactional
     public void removeSchedule(Long scheduleId) {
-        scheduleRepository.deleteById(scheduleId);
+        seatRepository.deleteAllByScheduleIdInQuery(Collections.singletonList(scheduleId));
+        scheduleRepository.deleteAllByIdInQuery(Collections.singletonList(scheduleId));
     }
 
 

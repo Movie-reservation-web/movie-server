@@ -30,9 +30,6 @@ public class EnumMapper {
     public List<EnumMapperValue> get(String key) {
         return factory.get(key);
     }
-    public String getJsonValue(String key, int index){
-        return factory.get(key).get(index).toString();
-    }
 
     public Map<String, List<EnumMapperValue>> get(List<String> keys) {
         if (keys == null || keys.size() == 0) return new LinkedHashMap<>();

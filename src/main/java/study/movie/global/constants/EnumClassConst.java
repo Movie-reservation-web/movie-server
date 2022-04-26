@@ -1,11 +1,14 @@
 package study.movie.global.constants;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import study.movie.global.enumMapper.EnumMapperType;
 
 @Getter
 @AllArgsConstructor
-public enum EnumClassConst {
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum EnumClassConst implements EnumMapperType {
 
     /**
      * Enum Class Name
@@ -19,5 +22,8 @@ public enum EnumClassConst {
     private String className;
     private String value;
 
-
+    @Override
+    public String getCode() {
+        return name();
+    }
 }

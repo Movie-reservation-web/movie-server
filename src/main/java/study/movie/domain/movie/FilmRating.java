@@ -15,6 +15,7 @@ public enum FilmRating implements EnumMapperType {
     PG_15("15세 이상 관람가"),
     X_RATED("18세 이상 관람가"),
     R_RATED("청소년 관람불가");
+
     private String value;
 
     @Override

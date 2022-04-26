@@ -1,5 +1,7 @@
 package study.movie.domain.theater;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import study.movie.domain.movie.FilmFormat;
@@ -9,6 +11,7 @@ import study.movie.global.enumMapper.EnumMapperType;
 import java.util.Map;
 import java.util.Set;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.*;
 import static study.movie.domain.payment.AgeType.ADULT;
 import static study.movie.domain.payment.AgeType.TEENAGER;
 
@@ -17,6 +20,7 @@ import static study.movie.domain.payment.AgeType.TEENAGER;
  */
 @AllArgsConstructor
 @Getter
+@JsonFormat(shape = Shape.OBJECT)
 public enum ScreenFormat implements EnumMapperType {
     TWO_D(
             "2D",
@@ -67,8 +71,13 @@ public enum ScreenFormat implements EnumMapperType {
             true
     );
     private final String value;
+
+    @JsonIgnore
     private final Set<FilmFormat> filmFormats;
+
+    @JsonIgnore
     private final Map<AgeType, Integer> ageCriterionMap;
+
     private final boolean isFixRate;
 
     @Override
@@ -80,4 +89,8 @@ public enum ScreenFormat implements EnumMapperType {
         return ageCriterionMap.get(ageType);
     }
 
+    @JsonIgnore
+    public boolean isFixRate() {
+        return isFixRate;
+    }
 }

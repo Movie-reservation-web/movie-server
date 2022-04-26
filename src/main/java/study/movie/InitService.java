@@ -91,6 +91,7 @@ public class InitService {
                 .maxCols(maxCols)
                 .maxRows(maxRows)
                 .build();
+
     }
 
     public Movie createMovie(String title, String director, List<FilmFormat> formats) {
@@ -105,7 +106,7 @@ public class InitService {
                 .info(title + " information")
                 .nation("KR")
                 .runningTime(160)
-                .releaseDate(LocalDate.now())
+                .releaseDate(LocalDate.now().plusDays(10))
                 .build();
         em.persist(movie);
         return movie;

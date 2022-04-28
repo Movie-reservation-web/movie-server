@@ -39,6 +39,7 @@ public enum ErrorCode{
     NOT_CANCELLED_TICKET(BAD_REQUEST, "취소되지 않은 티켓입니다."),
     ILLEGAL_ARGUMENT(BAD_REQUEST, "적절하지 않은 인자입니다."),
 
+    INVALID_SORT_OPTION(BAD_REQUEST, "정렬 조건이 올바르지 않습니다."),
 
     /**
      * <p>

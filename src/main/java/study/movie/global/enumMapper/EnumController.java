@@ -60,6 +60,14 @@ public class EnumController {
     }
 
     /**
+     * 상영일정 검색 정렬 방식
+     */
+    @GetMapping("/sort-type/schedule")
+    public ResponseEntity<?> getScheduleSortTypes() {
+        return getCategories(SCHEDULE_SORT_TYPE);
+    }
+
+    /**
      * EnumClassConst 에 있는 카테고리 조회
      *
      * @param category

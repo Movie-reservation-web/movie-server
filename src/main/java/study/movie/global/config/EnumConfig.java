@@ -9,6 +9,7 @@ import study.movie.domain.movie.MovieGenre;
 import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.global.enumMapper.EnumMapper;
+import study.movie.sortStrategy.schedule.ScheduleMetaType;
 
 import static study.movie.global.constants.EnumClassConst.*;
 
@@ -24,6 +25,7 @@ public class EnumConfig {
         enumMapper.put(CITY_CODE.getClassName(), CityCode.class);
         enumMapper.put(SCREEN_FORMAT.getClassName(), ScreenFormat.class);
         enumMapper.put(GENDER_TYPE.getClassName(), GenderType.class);
+        enumMapper.put(SCHEDULE_SORT_TYPE.getClassName(), ScheduleMetaType.class);
         return enumMapper;
     }
 }

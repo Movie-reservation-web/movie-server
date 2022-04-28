@@ -50,6 +50,6 @@ public abstract class ResponseMessage {
     /**
      * Category
      */
-    public static final String READ_CATEGORY = "카테고리 조회 성공";
+    public static final String READ_CATEGORY = " 카테고리 조회 성공";
 
 }

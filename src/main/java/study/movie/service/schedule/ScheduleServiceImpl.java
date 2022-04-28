@@ -1,23 +1,31 @@
 package study.movie.service.schedule;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
+import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
+import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
+import study.movie.global.page.DomainSpec;
+import study.movie.global.page.PageableDTO;
 import study.movie.global.utils.BasicServiceUtils;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.schedule.SeatRepository;
 import study.movie.repository.theater.ScreenRepository;
+import study.movie.sortStrategy.schedule.ScheduleMetaType;
+import study.movie.sortStrategy.schedule.ScheduleSortStrategy;
 
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static study.movie.global.exception.ErrorCode.MOVIE_NOT_FOUND;
@@ -26,14 +34,49 @@ import static study.movie.global.exception.ErrorCode.SCHEDULE_NOT_FOUND;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     private final SeatRepository seatRepository;
-    /**
-     * 상영일정 저장
-     */
+    private final DomainSpec<ScheduleMetaType> spec = new DomainSpec<>(ScheduleMetaType.class, new ScheduleSortStrategy());
+
+    @Override
+    public List<ScheduleSearchResponse> findAllSchedules() {
+        return scheduleRepository.findAllSchedules().stream()
+                .map(ScheduleSearchResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleSearchResponse> searchBasicSchedules(ScheduleBasicSearchCond cond) {
+        return scheduleRepository.searchBasicSchedules(cond).stream()
+                .map(ScheduleSearchResponse::of)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleScreenResponse> searchScheduleScreens(ScheduleScreenRequest request) {
+        return scheduleRepository.searchScheduleScreens(request).stream()
+                .map(ScheduleScreenResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public MovieFormatResponse searchScheduleByMovie(String movieTitle) {
+        return MovieFormatResponse.of(movieTitle, scheduleRepository.findFormatByMovie(movieTitle));
+    }
+
+    @Override
+    public List<SeatResponse> getScheduleSeatEntity(Long scheduleId) {
+        return scheduleRepository.findSeatByScheduleId(scheduleId).stream()
+                .map(SeatResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request) {
         // 영화 조회
@@ -48,60 +91,39 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
                 .screenTime(new ScreenTime(request.getStartTime(), findMovie.getRunningTime()))
                 .build();
 
-        return new CreateScheduleResponse(savedSchedule);
+        return CreateScheduleResponse.of(savedSchedule);
     }
 
-
-    /**
-     * 모든 상영 일정 조회
-     */
-    public List<ScheduleSearchResponse> findAllSchedules() {
-        return scheduleRepository.findAll().stream()
-                .map(ScheduleSearchResponse::new)
-                .collect(Collectors.toList());
+    @Override
+    public Page<ScheduleResponse> search(ScheduleSearchCond cond, PageableDTO pageableDTO) {
+        Pageable pageable = spec.getPageable(pageableDTO);
+        return scheduleRepository.search(cond, pageable, pageableDTO.getTotalElements()).map(ScheduleResponse::of);
     }
 
-    /**
-     * 상영 일정 조회
-     */
-    public List<? extends BaseScheduleResponse> searchSchedules(ScheduleSearchCond cond) {
-        return scheduleRepository.searchSchedules(cond).stream()
-                .map(checkResponse(cond.isFinalSearch()))
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 상영 일정 조회 - 영화 선택 시 호출
-     */
-    public MovieFormatResponse searchScheduleByMovie(String movieTitle) {
-        return new MovieFormatResponse(movieTitle, scheduleRepository.findFormatByMovie(movieTitle));
-    }
-
-    /**
-     * 상영일정에 대한 좌석 정보
-     */
-    public List<SeatResponse> getScheduleSeatEntity(Long scheduleId) {
-        return scheduleRepository.findSeatByScheduleId(scheduleId).stream()
-                .map(SeatResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * search condition 에 맞춰 return response 판별
-     */
-    private Function<Schedule, ? extends BaseScheduleResponse> checkResponse(Boolean finalSearchCond) {
-        return finalSearchCond ? ScheduleScreenResponse::new : ScheduleSearchResponse::new;
-    }
-
-    /**
-     * 상영 일정 삭제
-     */
+    @Override
     @Transactional
-    public void removeSchedule(Long scheduleId) {
-        seatRepository.deleteAllByScheduleIdInQuery(Collections.singletonList(scheduleId));
-        scheduleRepository.deleteAllByIdInQuery(Collections.singletonList(scheduleId));
+    public void closeSchedule(LocalDateTime dateTime) {
+        scheduleRepository.updateStatusByPastDateTime(dateTime);
     }
 
+    @Override
+    @Transactional
+    public void removeSchedule(List<Long> ids) {
+        seatRepository.deleteAllByScheduleIdInQuery(ids);
+        scheduleRepository.deleteAllByIdInQuery(ids);
+    }
+
+    // MovieService로 이동해야함.
+
+    /**
+     * 상영중인 영화 차트
+     */
+    public List<SimpleMovieResponse> findAllOpenMovies() {
+        List<Movie> movies = scheduleRepository.findMovieByOpenStatus();
+        double totalCount = movies.stream().mapToDouble(Movie::getAudience).sum();
+        return movies.stream()
+                .map(movie -> SimpleMovieResponse.of(movie, totalCount))
+                .collect(Collectors.toList());
+    }
 
 }

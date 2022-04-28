@@ -1,6 +1,7 @@
 package study.movie.dto.schedule.response;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 import study.movie.domain.schedule.Schedule;
 
 import java.time.LocalDate;
@@ -15,15 +16,20 @@ import java.time.LocalDate;
  * - 상영 날짜
  */
 @Data
-public class ScheduleSearchResponse extends BaseScheduleResponse {
+@Builder
+public class ScheduleSearchResponse {
 
+    private Long id;
     private ScheduleMovieResponse movie;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate screenDate;
     private ScheduleTheaterResponse theater;
 
-    public ScheduleSearchResponse(Schedule schedule) {
-        this.movie = new ScheduleMovieResponse(schedule.getMovie());
-        this.screenDate = schedule.getScreenTime().getStartDateTime().toLocalDate();
-        this.theater = new ScheduleTheaterResponse(schedule.getScreen().getTheater());
+    public static ScheduleSearchResponse of(Schedule schedule) {
+        return ScheduleSearchResponse.builder()
+                .movie(ScheduleMovieResponse.of(schedule.getMovie()))
+                .screenDate(schedule.getScreenTime().getStartDateTime().toLocalDate())
+                .theater(ScheduleTheaterResponse.of(schedule.getScreen().getTheater()))
+                .build();
     }
 }

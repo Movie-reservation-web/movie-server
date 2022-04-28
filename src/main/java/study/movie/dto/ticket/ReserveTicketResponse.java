@@ -2,15 +2,14 @@ package study.movie.dto.ticket;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import study.movie.domain.movie.FilmRating;
 import study.movie.domain.schedule.Seat;
+import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.ticket.Ticket;
-import study.movie.global.enumMapper.EnumMapper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.stream.Collectors;
-
-import static study.movie.global.constants.EnumClassConst.*;
 
 @Data
 public class ReserveTicketResponse {
@@ -22,9 +21,9 @@ public class ReserveTicketResponse {
     /**
      * 영화 정보
      */
-    private String filmRating;
+    private FilmRating filmRating;
     private String movieTitle;
-    private String filmFormats;
+    private ScreenFormat screenFormat;
     private String movieImage;
 
     /**
@@ -58,11 +57,11 @@ public class ReserveTicketResponse {
      */
     private String paymentType;
 
-    public ReserveTicketResponse(EnumMapper enumMapper, Ticket ticket) {
+    public ReserveTicketResponse(Ticket ticket) {
         this.reserveNumber = ticket.getReserveNumber();
-        this.filmRating = enumMapper.getJsonValue(FILM_RATING.getClassName(), ticket.getMovie().getFilmRating().ordinal());
+        this.filmRating = ticket.getMovie().getFilmRating();
         this.movieTitle = ticket.getMovie().getTitle();
-        this.filmFormats = enumMapper.getJsonValue(SCREEN_FORMAT.getClassName(), ticket.getFormat().ordinal());
+        this.screenFormat = ticket.getFormat();
         this.movieImage = ticket.getMovie().getImage();
         this.theaterName = ticket.getTheaterName();
         this.screenName = ticket.getScreenName();

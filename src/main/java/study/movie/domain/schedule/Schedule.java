@@ -1,5 +1,6 @@
 package study.movie.domain.schedule;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,9 @@ import java.util.Locale;
 import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
+import static study.movie.domain.schedule.ScheduleStatus.*;
+import static study.movie.domain.schedule.SeatStatus.*;
+import static study.movie.global.constants.StringAttrConst.*;
 
 @Entity
 @Getter
@@ -36,19 +40,23 @@ public class Schedule extends BaseTimeEntity {
     @JoinColumn(name = "screen_id")
     private Screen screen;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.PERSIST)
     private final List<SeatEntity> seats = new ArrayList<>();
 
     private ScreenTime screenTime;
 
-    private Integer reservedSeatCount;
+    @Enumerated(EnumType.STRING)
+    private ScheduleStatus status;
+
+    private int totalSeatCount;
 
     //==생성 메서드==//
     @Builder
     public Schedule(Movie movie, Screen screen, ScreenTime screenTime) {
         this.screenTime = screenTime;
-        this.reservedSeatCount = 0;
         this.scheduleNumber = createScheduleNumber(screenTime.getStartDateTime());
+        this.status = OPEN;
         addMovie(movie);
         addScreen(screen);
         initializeSeats(screen);
@@ -84,6 +92,7 @@ public class Schedule extends BaseTimeEntity {
      * 좌석 초기화
      */
     public void initializeSeats(Screen screen) {
+        totalSeatCount = screen.getMaxCols() * screen.getMaxRows();
         for (int i = 1; i <= screen.getMaxRows(); i++) {
             for (int j = 1; j <= screen.getMaxCols(); j++) {
                 SeatEntity seat = SeatEntity.builder()
@@ -96,8 +105,11 @@ public class Schedule extends BaseTimeEntity {
     }
 
     //==비즈니스 로직==//
+
     /**
      * 상영일정 번호 생성
+     *
+     * @return String
      */
     private String createScheduleNumber(LocalDateTime dateTime) {
         return String.valueOf(dateTime.getYear()).substring(2) +
@@ -106,18 +118,50 @@ public class Schedule extends BaseTimeEntity {
     }
 
     //==조회 로직==//
+
     /**
      * 전체 좌석 수
+     *
+     * @return String
      */
-    public int getTotalSeatCount() {
-        return getSeats().size();
+    public String getTotalSeatCountToString() {
+        return TOTAL + getTotalSeatCount() + SEAT;
     }
 
     /**
      * 좌석 수 조회
+     *
+     * @return long
      */
-    public int getReservedSeatCount(SeatStatus status) {
-        return (int) getSeats().stream().filter(seatEntity -> seatEntity.getStatus() == status).count();
+    public int getSeatCount(SeatStatus status) {
+        return (int) getSeats().stream()
+                .filter(seatEntity -> seatEntity.getStatus() == status)
+                .count();
+    }
+
+    /**
+     * 예매된 좌석수 조회
+     *
+     * @return String
+     */
+    public String getReservedSeatValue() {
+        if (getSeatCount(EMPTY) == 0) {
+            status = ScheduleStatus.SOLD_OUT;
+            return status.getValue();
+        } else if (isClosed()) {
+            status = ScheduleStatus.CLOSED;
+            return status.getValue();
+        }
+        return status.convertSeatCount(getSeatCount(RESERVED));
+    }
+
+    /**
+     * 예매 가능 여부
+     *
+     * @return boolean
+     */
+    private boolean isClosed() {
+        return LocalDateTime.now().plusMinutes(40).isAfter(screenTime.getStartDateTime());
     }
 
 }

@@ -1,9 +1,11 @@
 package study.movie.global.dto;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import study.movie.global.exception.ErrorCode;
 
 import java.time.LocalDateTime;
@@ -13,7 +15,6 @@ import java.util.List;
 import static study.movie.global.constants.ResponseMessage.SUCCESS;
 import static study.movie.global.exception.ErrorCode.ARGUMENTS_NOT_VALID;
 
-@Component
 public class Response {
     @Data
     @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -55,9 +55,9 @@ public class ReserveTicketResponse {
 
     public ReserveTicketResponse(EnumMapper enumMapper, Ticket ticket) {
         this.reserveNumber = ticket.getReserveNumber();
-        this.filmRating = enumMapper.getJsonValue(FILM_RATING, ticket.getMovie().getFilmRating().ordinal());
+        this.filmRating = enumMapper.getJsonValue(FILM_RATING.getClassName(), ticket.getMovie().getFilmRating().ordinal());
         this.movieTitle = ticket.getMovie().getTitle();
-        this.filmFormats = enumMapper.getJsonValue(SCREEN_FORMAT, ticket.getFormat().ordinal());
+        this.filmFormats = enumMapper.getJsonValue(SCREEN_FORMAT.getClassName(), ticket.getFormat().ordinal());
         this.movieImage = ticket.getMovie().getImage();
         this.theaterName = ticket.getTheaterName();
         this.screenName = ticket.getScreenName();

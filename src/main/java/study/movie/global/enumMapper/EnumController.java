@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import study.movie.global.dto.Response;
 
 import static study.movie.global.constants.EnumClassConst.CITY_CODE;
+import static study.movie.global.constants.ResponseMessage.READ_CATEGORY;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +19,6 @@ public class EnumController {
 
     @GetMapping("/cities")
     public ResponseEntity<?> getCities() {
-        return Response.success(enumMapper.get(CITY_CODE));
+        return Response.success(CITY_CODE.getValue() + READ_CATEGORY, enumMapper.get(CITY_CODE.getClassName()));
     }
 }

@@ -37,9 +37,21 @@ public class Review extends BaseTimeEntity {
         write(movie);
     }
 
+    //연관관계 주인 쪽에서 추가, 수정, 삭제
+
     //==연관 관계 메서드==//
     public void write(Movie movie) {
         this.movie = movie;
         movie.getReviews().add(this);
     }
+
+    public void delete(){
+        this.movie.getReviews().remove(this);
+    }
+
+//    public void change(Movie movie){
+//        this.movie = movie;
+//        movie.getReviews().add(this);
+//    }
+
 }

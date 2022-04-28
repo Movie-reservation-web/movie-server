@@ -1,41 +1,69 @@
 package study.movie.global.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import study.movie.global.exception.ErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
 import static study.movie.global.constants.ResponseMessage.SUCCESS;
+import static study.movie.global.exception.ErrorCode.ARGUMENTS_NOT_VALID;
 
 @Component
 public class Response {
     @Data
-    @AllArgsConstructor
-    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     private static class Result<T> {
 
-        private HttpStatus statusCode;
+        private int status;
         private LocalDateTime timeStamp;
         private String message;
         private T data;
+        private String error;
+        private String code;
 
-        private static <T> Result<T> response(HttpStatus statusCode, String message, T t) {
-            return Result.<T>builder()
-                    .statusCode(statusCode)
-                    .timeStamp(LocalDateTime.now())
-                    .message(message)
-                    .data(t)
-                    .build();
+        @Builder(builderClassName = "ResponseBuilder", builderMethodName = "ResponseBuilder")
+        public Result(int status, LocalDateTime timeStamp, String message, T data, String code) {
+            this.status = status;
+            this.code = code;
+            this.timeStamp = timeStamp;
+            this.message = message;
+            this.data = data;
+        }
+
+        @Builder(builderClassName = "ErrorBuilder", builderMethodName = "ErrorBuilder")
+        private Result(ErrorCode errorCode) {
+            this.timeStamp = LocalDateTime.now();
+            this.status = errorCode.getStatus().value();
+            this.error = errorCode.getStatus().name();
+            this.code = errorCode.name();
+            this.message = errorCode.getDetail();
+        }
+
+        @Builder(builderClassName = "ValidationBuilder", builderMethodName = "ValidationBuilder")
+        private Result(ErrorCode errorCode, T data) {
+            this.timeStamp = LocalDateTime.now();
+            this.status = errorCode.getStatus().value();
+            this.error = errorCode.getStatus().name();
+            this.code = errorCode.name();
+            this.message = errorCode.getDetail();
+            this.data = data;
         }
     }
 
     public static <T> ResponseEntity<?> success(HttpStatus status, String message, T data) {
-        return ResponseEntity.ok(Result.response(status, message, data));
+        return ResponseEntity
+                .status(status.value())
+                .body(Result.<T>ResponseBuilder()
+                        .timeStamp(LocalDateTime.now())
+                        .status(status.value())
+                        .message(message)
+                        .data(data)
+                        .build());
     }
 
     /**
@@ -67,6 +95,7 @@ public class Response {
 
     /**
      * 데이터, 메시지 리턴
+     *
      * @return data, message
      */
     public static <T> ResponseEntity<?> success(String message, T data) {
@@ -74,7 +103,24 @@ public class Response {
     }
 
 
-    public static <T> ResponseEntity<?> fail(HttpStatus status, String message, T data) {
-        return new ResponseEntity(Result.response(status, message, data), status);
+    public static ResponseEntity<Object> fail(ErrorCode errorCode) {
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(Result.ErrorBuilder()
+                        .errorCode(errorCode)
+                        .build()
+                );
+
+    }
+
+    public static ResponseEntity<Object> validationFail(List<ValidationResponse> detail) {
+        return ResponseEntity
+                .status(ARGUMENTS_NOT_VALID.getStatus())
+                .body(Result.ValidationBuilder()
+                        .errorCode(ARGUMENTS_NOT_VALID)
+                        .data(detail)
+                        .build()
+                );
+
     }
 }

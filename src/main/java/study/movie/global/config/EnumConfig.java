@@ -18,12 +18,12 @@ public class EnumConfig {
     @Bean
     public EnumMapper enumMapper(){
         EnumMapper enumMapper = new EnumMapper();
-        enumMapper.put(FILM_RATING, FilmRating.class);
-        enumMapper.put(FILM_FORMAT, FilmFormat.class);
-        enumMapper.put(MOVIE_GENRE, MovieGenre.class);
-        enumMapper.put(CITY_CODE, CityCode.class);
-        enumMapper.put(SCREEN_FORMAT, ScreenFormat.class);
-        enumMapper.put(GENDER_TYPE, GenderType.class);
+        enumMapper.put(FILM_RATING.getClassName(), FilmRating.class);
+        enumMapper.put(FILM_FORMAT.getClassName(), FilmFormat.class);
+        enumMapper.put(MOVIE_GENRE.getClassName(), MovieGenre.class);
+        enumMapper.put(CITY_CODE.getClassName(), CityCode.class);
+        enumMapper.put(SCREEN_FORMAT.getClassName(), ScreenFormat.class);
+        enumMapper.put(GENDER_TYPE.getClassName(), GenderType.class);
         return enumMapper;
     }
 }

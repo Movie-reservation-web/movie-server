@@ -49,9 +49,17 @@ public class Review extends BaseTimeEntity {
         this.movie.getReviews().remove(this);
     }
 
-//    public void change(Movie movie){
-//        this.movie = movie;
-//        movie.getReviews().add(this);
-//    }
+    public void update(Float score, String comment) {
+        this.updateScore(score);
+        this.comment(comment);
+    }
+
+    private void updateScore(Float score) {
+        this.score = score;
+    }
+
+    private void comment(String comment) {
+        this.comment = comment;
+    }
 
 }

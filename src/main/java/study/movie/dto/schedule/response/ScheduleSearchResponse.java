@@ -1,6 +1,7 @@
 package study.movie.dto.schedule.response;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import study.movie.domain.schedule.Schedule;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
  * <p>
  * - 상영 날짜
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ScheduleSearchResponse extends BaseScheduleResponse {
 

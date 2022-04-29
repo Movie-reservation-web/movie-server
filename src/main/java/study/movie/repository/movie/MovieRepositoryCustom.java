@@ -1,6 +1,7 @@
 package study.movie.repository.movie;
 
 import study.movie.domain.movie.Movie;
+import study.movie.domain.movie.Review;
 import study.movie.dto.movie.MovieCondition;
 
 import java.util.Arrays;

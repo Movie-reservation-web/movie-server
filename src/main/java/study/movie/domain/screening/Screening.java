@@ -4,8 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.movie.Movie;
-import study.movie.domain.screen.Screen;
 import study.movie.domain.seat.Seat;
+import study.movie.domain.theater.Screen;
 import study.movie.domain.ticket.Ticket;
 
 import javax.persistence.*;
@@ -42,8 +42,8 @@ public class Screening {
     @OneToMany(mappedBy = "screening")
     private List<Seat> seats = new ArrayList<>();
 
-    @OneToMany(mappedBy = "screening")
-    private List<Ticket> tickets = new ArrayList<>();
+//    @OneToMany(mappedBy = "screening")
+//    private List<Ticket> tickets = new ArrayList<>();
 
     @Builder
     public Screening(LocalDateTime startTime, Movie movie, Screen screen) {
@@ -57,7 +57,7 @@ public class Screening {
             return;
         }
         this.movie = movie;
-        movie.getScreenings().add(this);
+        //movie.getScreenings().add(this);
     }
 
     public void setScreen(Screen screen) {
@@ -65,7 +65,7 @@ public class Screening {
             return;
         }
         this.screen = screen;
-        screen.getScreenings().add(this);
+        //screen.getScreen().add(this);
     }
 
     public void addSeat(Seat seat) {

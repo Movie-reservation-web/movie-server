@@ -7,7 +7,7 @@ import study.movie.domain.movie.Review;
 
 @Data
 @AllArgsConstructor
-public class ReviewResponse {
+public class CreateReviewResponse {
 
     private Long id;
     private Movie movie;
@@ -15,10 +15,21 @@ public class ReviewResponse {
     private Float score;
     private String comment;
 
-    public ReviewResponse(Review review) {
+    public CreateReviewResponse(Review review) {
         this.movie = review.getMovie();
         this.writer = review.getWriter();
         this.score = review.getScore();
         this.comment = review.getComment();
     }
+
+    public Review toEntity(Movie findMovie) {
+        return Review.builder()
+                .movie(findMovie)
+                .writer(this.getWriter())
+                .score(this.getScore())
+                .comment(this.getComment())
+                .build();
+    }
+
+
 }

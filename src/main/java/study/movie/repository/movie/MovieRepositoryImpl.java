@@ -51,11 +51,11 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
     }
 
     private BooleanExpression titleEq(String titleCon) {
-        return titleCon != null ? movie.title.eq(titleCon) : null;
+        return hasText(titleCon) ? movie.title.eq(titleCon) : null;
     }
 
     private BooleanExpression actorEq(String actorCon) {
-        return actorCon != null ? movie.actors.contains(actorCon)  : null;
+        return hasText(actorCon) ? movie.actors.contains(actorCon)  : null;
     }
 
     //상영중, 상영예정

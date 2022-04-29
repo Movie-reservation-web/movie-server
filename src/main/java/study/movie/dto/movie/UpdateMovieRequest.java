@@ -18,21 +18,9 @@ import java.util.List;
 public class UpdateMovieRequest {
 
     private Long id;
-    private String title;
-    private Integer runningTime;
-    private String director;
-    @Convert(converter = StringArrayConverter.class)
-    private List<String> actors;
-    @Convert(converter = MovieGenreConverter.class)
-    private List<MovieGenre> genres;
-    @Convert(converter = FilmFormatConverter.class)
-    private List<FilmFormat> formats;
     private FilmRating filmRating;
-    private String nation;
     private LocalDate releaseDate;
     private String info;
-    private Integer audience;
     private String image;
-    private List<Review> reviews;
 
 }

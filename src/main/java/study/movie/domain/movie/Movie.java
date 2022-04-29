@@ -104,4 +104,27 @@ public class Movie extends BaseTimeEntity {
                 .mapToDouble(Review::getScore)
                 .average().getAsDouble());
     }
+
+    public void update(FilmRating filmRating, LocalDate releaseDate, String info, String image) {
+        this.updateFilmRating(filmRating);
+        this.updateReleaseDate(releaseDate);
+        this.updateInfo(info);
+        this.updateImage(image);
+    }
+
+    private void updateReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    private void updateFilmRating(FilmRating filmRating) {
+        this.filmRating = filmRating;
+    }
+
+    private void updateInfo(String info) {
+        this.info = info;
+    }
+
+    private void updateImage(String image) {
+        this.image = image;
+    }
 }

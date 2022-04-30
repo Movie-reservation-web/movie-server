@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
-import study.movie.dto.schedule.response.CreateScheduleResponse;
 import study.movie.dto.schedule.response.ScheduleResponse;
 import study.movie.global.dto.CustomResponse;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.global.page.PageableDTO;
 import study.movie.service.schedule.ScheduleService;
 
@@ -26,7 +26,7 @@ public class ScheduleAdminController {
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody CreateScheduleRequest request) {
-        CreateScheduleResponse result = scheduleService.save(request);
+        PostIdResponse result = scheduleService.save(request);
         return CustomResponse.success(CREATED, CREATE_SCHEDULE, result);
     }
 

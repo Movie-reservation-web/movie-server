@@ -7,6 +7,7 @@ import study.movie.dto.ticket.request.ReserveTicketRequest;
 import study.movie.dto.ticket.response.ReserveTicketResponse;
 import study.movie.global.dto.CustomResponse;
 import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.service.ticket.TicketService;
 
 import javax.validation.Valid;
@@ -28,7 +29,7 @@ public class TicketController {
      */
     @PostMapping
     public ResponseEntity<?> reserveTicket(@Valid @RequestBody ReserveTicketRequest request) {
-        ReserveTicketResponse result = ticketService.reserve(request);
+        PostIdResponse result = ticketService.reserve(request);
         return CustomResponse.success(CREATED, RESERVE_TICKET, result);
     }
 

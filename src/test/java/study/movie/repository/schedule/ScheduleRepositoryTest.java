@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
 import study.movie.domain.movie.FilmFormat;
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @Transactional
 @Slf4j
-@Commit
+@Rollback
 class ScheduleRepositoryTest {
     @Autowired
     EntityManager em;
@@ -103,71 +103,6 @@ class ScheduleRepositoryTest {
         // then
         assertEquals(totalSeatCount, findSchedule.getSeatCount(SeatStatus.EMPTY));
         assertEquals(totalSeatCount, findSchedule.getTotalSeatCount());
-    }
-
-    @Test
-    void 상영중인_영화_차트_중복_제거() {
-        // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
-        movie.addAudience(10);
-
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.now().plusDays(5), movie.getRunningTime());
-        ScreenTime screenTime1 = new ScreenTime(LocalDateTime.now().plusDays(4), movie.getRunningTime());
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie)
-                .build();
-        Schedule savedSchedule2 = Schedule.builder()
-                .screenTime(screenTime1)
-                .screen(screen)
-                .movie(movie)
-                .build();
-
-        em.flush();
-
-        // when
-        List<Movie> movieCharts = scheduleRepository.findMovieByOpenStatus();
-
-        // then
-        assertThat(movieCharts.size()).isEqualTo(1);
-        assertThat(movieCharts.get(0)).isEqualTo(movie);
-    }
-
-    @Test
-    void 상영중인_영화_차트_내림차순_정렬() {
-        // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
-        movie.addAudience(10);
-        Movie movie1 = init.createMovie("영화2", "홍길동", Arrays.asList(FilmFormat.TWO_D));
-        movie1.addAudience(20);
-
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.now().plusDays(5), movie.getRunningTime());
-        ScreenTime screenTime1 = new ScreenTime(LocalDateTime.now().plusDays(4), movie.getRunningTime());
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie)
-                .build();
-        Schedule savedSchedule2 = Schedule.builder()
-                .screenTime(screenTime1)
-                .screen(screen)
-                .movie(movie1)
-                .build();
-
-        em.flush();
-
-        // when
-        List<Movie> movieCharts = scheduleRepository.findMovieByOpenStatus();
-
-        // then
-        assertThat(movieCharts.size()).isEqualTo(2);
-        assertThat(movieCharts.get(0)).isEqualTo(movie1);
-        assertThat(movieCharts.get(1)).isEqualTo(movie);
     }
 
 }

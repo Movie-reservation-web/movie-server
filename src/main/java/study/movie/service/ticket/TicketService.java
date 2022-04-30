@@ -8,6 +8,7 @@ import study.movie.dto.ticket.request.ReserveTicketRequest;
 import study.movie.dto.ticket.response.ReserveTicketResponse;
 import study.movie.dto.ticket.response.TicketResponse;
 import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.global.page.PageableDTO;
 
 import java.util.List;
@@ -17,8 +18,9 @@ public interface TicketService {
      * Api Server
      * <p>
      * 티켓 예매
+     * @return
      */
-    ReserveTicketResponse reserve(ReserveTicketRequest request);
+    PostIdResponse reserve(ReserveTicketRequest request);
 
     /**
      * Api Server

@@ -1,6 +1,5 @@
 package study.movie.service.schedule;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,11 @@ import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
 import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.repository.movie.ReviewRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -45,43 +44,43 @@ import static study.movie.domain.theater.ScreenFormat.*;
 class ScheduleServiceTest {
     @Autowired
     EntityManager em;
-
     @Autowired
     ScheduleServiceImpl scheduleService;
-
     @Autowired
     ScheduleRepository scheduleRepository;
-
     @Autowired
     InitService init;
-
     @Autowired
     ReviewRepository reviewRepository;
 
-    @Autowired
-    EntityManagerFactory emf;
-    @Autowired
-    JPAQueryFactory queryFactory;
 
     @Test
     public void 상영일정_저장() throws Exception {
         // given
-        Theater theater = init.createTheater("용산 CGV", CityCode.SEL);
+        String theaterName = "용산 CGV";
+        Theater theater = init.createTheater(theaterName, CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        String movieTitle = "영화1";
+        Movie movie = init.createMovie(movieTitle, "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDateTime startTime = LocalDateTime.now().plusDays(10);
         em.flush();
+        Long movieId = movie.getId();
+        Long screenId = screen.getId();
+        em.clear();
+
         // when
         CreateScheduleRequest request = new CreateScheduleRequest();
-        request.setMovieId(movie.getId());
-        request.setScreenId(screen.getId());
+        request.setMovieId(movieId);
+        request.setScreenId(screenId);
         request.setStartTime(startTime);
-        CreateScheduleResponse response = scheduleService.save(request);
+
+        PostIdResponse response = scheduleService.save(request);
 
         // then
-        assertEquals(theater.getName(), response.getTheaterName());
-        assertEquals(movie.getTitle(), response.getMovieTitle());
-        assertEquals(startTime, response.getScreenTime().getStartDateTime());
+        Schedule schedule = scheduleRepository.findById(response.getId()).get();
+        assertEquals(theaterName, schedule.getScreen().getTheater().getName());
+        assertEquals(movieTitle, schedule.getMovie().getTitle());
+        assertEquals(startTime, schedule.getScreenTime().getStartDateTime());
     }
 
     @Test
@@ -390,49 +389,6 @@ class ScheduleServiceTest {
         assertFalse(em.find(Screen.class, screen.getId()).getSchedules().contains(savedSchedule));
         assertFalse(em.find(Movie.class, movie.getId()).getSchedules().contains(savedSchedule));
     }
-
-    @Test
-    void 상영중인_영화_차트() {
-        // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie1 = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
-        Movie movie2 = init.createMovie("영화2", "홍길동", Arrays.asList(FilmFormat.TWO_D));
-
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.now().plusDays(5), movie1.getRunningTime());
-        ScreenTime screenTime1 = new ScreenTime(LocalDateTime.now().plusDays(4), movie1.getRunningTime());
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie1)
-                .build();
-        Schedule savedSchedule2 = Schedule.builder()
-                .screenTime(screenTime1)
-                .screen(screen)
-                .movie(movie2)
-                .build();
-
-        // when
-        int movie1View = 10;
-        int movie2View = 20;
-        movie1.addAudience(movie1View);
-        movie2.addAudience(movie2View);
-        em.flush();
-
-        String movie1Rate = String.format("%.1f", (double) movie1View / (double) 30 * 100.0) + "%";
-        String movie2Rate = String.format("%.1f", (double) movie2View / (double) 30 * 100.0) + "%";
-
-        List<SimpleMovieResponse> movieCharts = scheduleService.findAllOpenMovies();
-
-        // then
-        log.info("movieCharts={}", movieCharts);
-        assertThat(movieCharts.size()).isEqualTo(2);
-        assertThat(movieCharts.get(0).getId()).isEqualTo(movie2.getId());
-        assertThat(movieCharts.get(0).getReservationRate()).isEqualTo(movie2Rate);
-        assertThat(movieCharts.get(1).getId()).isEqualTo(movie1.getId());
-        assertThat(movieCharts.get(1).getReservationRate()).isEqualTo(movie1Rate);
-    }
-
 
     @Test
     public void 리뷰삭제() throws Exception {

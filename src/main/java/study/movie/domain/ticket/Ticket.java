@@ -4,13 +4,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.movie.converter.ticket.SeatArrayConverter;
 import study.movie.domain.member.Member;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
-import study.movie.domain.schedule.Seat;
 import study.movie.domain.theater.ScreenFormat;
+import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
 import study.movie.global.exception.CustomException;
 
@@ -43,8 +42,8 @@ public class Ticket extends BaseTimeEntity {
 
     private ScreenTime screenTime;
 
-    @Convert(converter = SeatArrayConverter.class)
-    private List<Seat> seats = new ArrayList<>();
+    @Convert(converter = StringArrayConverter.class)
+    private List<String> seats = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private TicketStatus ticketStatus;
@@ -59,17 +58,17 @@ public class Ticket extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder(builderClassName = "reserveTicket", builderMethodName = "reserveTicket")
-    public Ticket(Member member, Schedule schedule, List<Seat> seats) {
-        this.reserveNumber = createReserveNumber(schedule.getScreenTime().getStartDateTime());
-        this.scheduleNumber = schedule.getScheduleNumber();
+    public Ticket(Member member, Schedule schedule, List<String> seats) {
         this.theaterName = schedule.getScreen().getTheater().getName();
         this.screenName = schedule.getScreen().getName();
         this.screenTime = schedule.getScreenTime();
+        this.reserveNumber = createReserveNumber(schedule.getScreenTime().getStartDateTime());
         this.seats = seats;
         this.ticketStatus = TicketStatus.RESERVED;
         this.format = schedule.getScreen().getFormat();
         setMember(member);
         setMovie(schedule);
+        setScheduleNumber(schedule);
     }
 
     //==연관관계 메서드==//
@@ -83,17 +82,23 @@ public class Ticket extends BaseTimeEntity {
         schedule.getMovie().getTickets().add(this);
     }
 
+    public void setScheduleNumber(Schedule schedule) {
+        this.scheduleNumber = schedule.getScheduleNumber();
+        // 예약된 좌석수 추가
+        schedule.addReservedSeatCount(seats.size());
+    }
 
     //==조회 로직==//
-    public int getReservedMemberCount(){
+    public int getReservedMemberCount() {
         return seats.size();
     }
 
     //==비즈니스 로직==//
+
     /**
      * 예매 취소
      */
-    public void cancelReservation(){
+    public void cancelReservation() {
         if (this.ticketStatus != TicketStatus.RESERVED) throw new CustomException(ALREADY_CANCELLED_TICKET);
         getMember().getTickets().remove(this);
         getMovie().getTickets().remove(this);
@@ -103,7 +108,7 @@ public class Ticket extends BaseTimeEntity {
     /**
      * 내가 본 영화 삭제
      */
-    public void deleteReserveHistory(){
+    public void deleteReserveHistory() {
         if (this.ticketStatus != TicketStatus.RESERVED) throw new CustomException(ALREADY_CANCELLED_TICKET);
         getMember().getTickets().remove(this);
         this.ticketStatus = TicketStatus.DELETE;
@@ -112,10 +117,9 @@ public class Ticket extends BaseTimeEntity {
     /**
      * 예매 번호 생성
      */
-    private String createReserveNumber(LocalDateTime dateTime){
+    private String createReserveNumber(LocalDateTime dateTime) {
         return String.valueOf(dateTime.getYear()).substring(2) +
                 String.format("%02d", dateTime.getMonthValue()) +
                 UUID.randomUUID().toString().substring(8, 23).toUpperCase(Locale.ROOT);
     }
-
 }

@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScheduleStatus;
 import study.movie.domain.schedule.Seat;
@@ -21,7 +20,7 @@ import study.movie.domain.schedule.SeatEntity;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
-import study.movie.dto.schedule.condition.UpdateSeatCond;
+import study.movie.dto.schedule.condition.UpdateSeatRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 
 import java.time.LocalDate;
@@ -102,7 +101,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public void updateSeatStatus(UpdateSeatCond cond) {
+    public void updateSeatStatus(UpdateSeatRequest cond) {
         queryFactory.update(seatEntity)
                 .set(seatEntity.status, cond.getStatus())
                 .where(
@@ -170,19 +169,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         startDateTimeBefore(dateTime),
                         scheduleStatusNotEq(CLOSED)
                 );
-    }
-
-    @Override
-    public List<Movie> findMovieByOpenStatus() {
-        return queryFactory.select(movie)
-                .from(schedule)
-                .join(schedule.movie, movie).fetchJoin()
-                .where(
-                        scheduleStatusEq(OPEN)
-                )
-                .groupBy(movie.id)
-                .orderBy(movie.audience.desc())
-                .fetch();
     }
 
     private BooleanExpression scheduleAtSeatEntityEq(Long scheduleId) {

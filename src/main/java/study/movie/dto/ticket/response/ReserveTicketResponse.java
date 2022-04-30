@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import study.movie.domain.movie.FilmRating;
-import study.movie.domain.schedule.Seat;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.ticket.Ticket;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -76,7 +74,7 @@ public class ReserveTicketResponse {
                 .startTime(ticket.getScreenTime().getStartDateTime().toLocalTime())
                 .endTime(ticket.getScreenTime().getEndDateTime().toLocalTime())
                 .reservedMemberCount(ticket.getReservedMemberCount())
-                .seats(ticket.getSeats().stream().map(Seat::seatToString).collect(Collectors.joining(",")))
+                .seats(String.join(",", ticket.getSeats()))
                 .build();
     }
 }

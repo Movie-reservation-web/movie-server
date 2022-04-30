@@ -9,12 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
+import study.movie.domain.theater.Screen;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
 import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.global.page.DomainSpec;
 import study.movie.global.page.PageableDTO;
 import study.movie.global.utils.BasicServiceUtils;
@@ -79,20 +81,22 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
 
     @Override
     @Transactional
-    public CreateScheduleResponse save(CreateScheduleRequest request) {
+    public PostIdResponse save(CreateScheduleRequest request) {
         // 영화 조회
         Movie findMovie = movieRepository
                 .findById(request.getMovieId())
                 .orElseThrow(getExceptionSupplier(MOVIE_NOT_FOUND));
-        Schedule savedSchedule = Schedule.builder()
+        Screen screen = screenRepository
+                .findById(request.getScreenId())
+                .orElseThrow(getExceptionSupplier(SCHEDULE_NOT_FOUND));
+        Schedule schedule = Schedule.builder()
                 .movie(findMovie)
-                .screen(screenRepository
-                        .findById(request.getScreenId())
-                        .orElseThrow(getExceptionSupplier(SCHEDULE_NOT_FOUND)))
+                .screen(screen)
                 .screenTime(new ScreenTime(request.getStartTime(), findMovie.getRunningTime()))
                 .build();
+        Schedule savedSchedule = scheduleRepository.save(schedule);
 
-        return CreateScheduleResponse.of(savedSchedule);
+        return PostIdResponse.of(savedSchedule.getId());
     }
 
     @Override
@@ -113,18 +117,4 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
         seatRepository.deleteAllByScheduleIdInQuery(request.getIds());
         scheduleRepository.deleteAllByIdInQuery(request.getIds());
     }
-
-    // MovieService로 이동해야함.
-
-    /**
-     * 상영중인 영화 차트
-     */
-    public List<SimpleMovieResponse> findAllOpenMovies() {
-        List<Movie> movies = scheduleRepository.findMovieByOpenStatus();
-        double totalCount = movies.stream().mapToDouble(Movie::getAudience).sum();
-        return movies.stream()
-                .map(movie -> SimpleMovieResponse.of(movie, totalCount))
-                .collect(Collectors.toList());
-    }
-
 }

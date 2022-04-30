@@ -36,7 +36,7 @@ public class Screen extends BaseTimeEntity {
     private Theater theater;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "screen")
     private List<Schedule> schedules = new ArrayList<>();
 
     //==생성 메서드==//

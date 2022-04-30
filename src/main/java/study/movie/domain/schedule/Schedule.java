@@ -65,7 +65,6 @@ public class Schedule extends BaseTimeEntity {
     }
 
     //==연관 관계 메서드==//
-
     /**
      * 영화 등록
      */
@@ -166,4 +165,7 @@ public class Schedule extends BaseTimeEntity {
         return LocalDateTime.now().plusMinutes(40).isAfter(screenTime.getStartDateTime());
     }
 
+    public void addReservedSeatCount(int size) {
+        this.reservedSeatCount += size;
+    }
 }

@@ -1,6 +1,5 @@
 package study.movie.converter.ticket;
 
-import org.springframework.stereotype.Component;
 import study.movie.domain.schedule.Seat;
 
 import javax.persistence.AttributeConverter;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Converter
-@Component
 public class SeatArrayConverter implements AttributeConverter<List<Seat>, String> {
     private static final String SEPARATOR = ",";
 
@@ -26,7 +24,7 @@ public class SeatArrayConverter implements AttributeConverter<List<Seat>, String
         return convertToStringSeat(Arrays.stream(dbData.split(SEPARATOR)).collect(Collectors.toList()));
     }
 
-    public List<Seat> convertToStringSeat(List<String> data) {
+    public static List<Seat> convertToStringSeat(List<String> data) {
         return data.stream().map(Seat::stringToSeat)
                 .collect(Collectors.toList());
     }

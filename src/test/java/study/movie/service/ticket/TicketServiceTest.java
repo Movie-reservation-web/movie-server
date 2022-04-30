@@ -4,14 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.member.GenderType;
+import study.movie.InitService;
 import study.movie.domain.member.Member;
 import study.movie.domain.movie.FilmFormat;
-import study.movie.domain.movie.FilmRating;
 import study.movie.domain.movie.Movie;
-import study.movie.domain.movie.MovieGenre;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.theater.CityCode;
@@ -21,9 +19,10 @@ import study.movie.domain.theater.Theater;
 import study.movie.domain.ticket.Ticket;
 import study.movie.domain.ticket.TicketStatus;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
-import study.movie.dto.ticket.response.ReserveTicketResponse;
 import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.global.exception.CustomException;
+import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.ticket.TicketRepository;
 
 import javax.persistence.EntityManager;
@@ -40,113 +39,59 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest
 @Transactional
 @Slf4j
-@Rollback
-//@Commit
+//@Rollback
+@Commit
 class TicketServiceTest {
     @Autowired
     EntityManager em;
-
     @Autowired
     TicketServiceImpl ticketService;
-
     @Autowired
     TicketRepository ticketRepository;
+    @Autowired
+    ScheduleRepository scheduleRepository;
+    @Autowired
+    InitService init;
 
-
-    private Member createMember() {
-        Member member = Member.builder()
-                .name("홍길동")
-                .nickname("홍길동")
-                .email("aaa@naver.com")
-                .gender(GenderType.MALE)
-                .birth(LocalDate.now())
-                .build();
-        em.persist(member);
-        em.flush();
-        return member;
-
-    }
-
-    private Theater createTheater(String theaterName, CityCode city, String phone) {
-        Theater theater = Theater.builder()
-                .name(theaterName)
-                .city(CityCode.SEL)
-                .phone(phone)
-                .build();
-        em.persist(theater);
-        em.flush();
-        return theater;
-    }
-
-    private Screen registerScreen(String screenName, ScreenFormat format, Theater theater, int maxCols, int maxRows) {
-        return Screen.builder()
-                .name(screenName)
-                .format(format)
-                .theater(theater)
-                .maxCols(maxCols)
-                .maxRows(maxRows)
-                .build();
-    }
-
-    private Movie createMovie(String title, String director) {
-        Movie movie = Movie.builder()
-                .title(title)
-                .director(director)
-                .actors(Arrays.asList("aa", "bb"))
-                .formats(Arrays.asList(FilmFormat.TWO_D, FilmFormat.FOUR_D_FLEX))
-                .filmRating(FilmRating.G_RATED)
-                .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
-                .image("abc.jpg")
-                .info("information")
-                .nation("korea")
-                .runningTime(160)
-                .releaseDate(LocalDate.now())
-                .build();
-        em.persist(movie);
-        em.flush();
-        return movie;
-    }
 
     @Test
     public void 티켓_예매() throws Exception {
         // given
-        Member member = createMember();
-        Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Member member = init.createMember();
+        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
+        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
-
-        Schedule savedSchedule = Schedule.builder()
+        Schedule schedule = Schedule.builder()
                 .screenTime(screenTime)
                 .screen(screen)
                 .movie(movie)
                 .build();
-        em.flush();
+        scheduleRepository.save(schedule);
         List<String> seats = Arrays.asList("A2", "C2");
 
         // when
         ReserveTicketRequest request = new ReserveTicketRequest();
         request.setMemberId(member.getId());
-        request.setScheduleId(savedSchedule.getId());
+        request.setScheduleId(schedule.getId());
         request.setSeats(seats);
 
-        ReserveTicketResponse response = ticketService.reserve(request);
+        PostIdResponse response = ticketService.reserve(request);
 
-        Ticket findTicket = ticketRepository.findByReserveNumber(response.getReserveNumber()).orElseThrow();
-
+        Ticket findTicket = ticketRepository.findById(response.getId()).orElseThrow();
+        log.info("findTicket={}", findTicket);
         // then
-        assertEquals(response.getReservedMemberCount(), findTicket.getReservedMemberCount());
-        assertEquals(response.getReserveNumber(), findTicket.getReserveNumber());
+        assertEquals(request.getSeats().size(), findTicket.getReservedMemberCount());
     }
 
     @Test
     public void 티켓_예매_취소() throws Exception {
         // given
-        Member member = createMember();
-        Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Member member = init.createMember();
+        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
+        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
 
@@ -162,9 +107,9 @@ class TicketServiceTest {
         request.setMemberId(member.getId());
         request.setScheduleId(savedSchedule.getId());
         request.setSeats(seats);
-        ReserveTicketResponse response = ticketService.reserve(request);
+        PostIdResponse response = ticketService.reserve(request);
 
-        Ticket savedTicket = ticketRepository.findByReserveNumber(response.getReserveNumber()).orElseThrow();
+        Ticket savedTicket = ticketRepository.findById(response.getId()).orElseThrow();
 
         // when
         ticketService.cancelReservation(savedTicket.getReserveNumber());
@@ -180,10 +125,10 @@ class TicketServiceTest {
     @Test
     public void 취소되지_않은_티켓_데이터_삭제() throws Exception {
         // given
-        Member member = createMember();
-        Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Member member = init.createMember();
+        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
+        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
 
@@ -199,9 +144,9 @@ class TicketServiceTest {
         request.setMemberId(member.getId());
         request.setScheduleId(savedSchedule.getId());
         request.setSeats(seats);
-        ReserveTicketResponse response = ticketService.reserve(request);
+        PostIdResponse response = ticketService.reserve(request);
 
-        Ticket savedTicket = ticketRepository.findByReserveNumber(response.getReserveNumber()).orElseThrow();
+        Ticket savedTicket = ticketRepository.findById(response.getId()).orElseThrow();
         IdListRequest idRequest = new IdListRequest();
         idRequest.setIds(Collections.singletonList(savedTicket.getId()));
 
@@ -209,13 +154,14 @@ class TicketServiceTest {
         assertThatThrownBy(() -> ticketService.delete(idRequest))
                 .isInstanceOf(CustomException.class);
     }
+
     @Test
     public void 취소된_티켓_데이터_삭제() throws Exception {
         // given
-        Member member = createMember();
-        Theater theater = createTheater("CGV 용산", CityCode.SEL, "000-000");
-        Screen screen = registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = createMovie("영화1", "홍길동");
+        Member member = init.createMember();
+        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
+        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
+        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
 
@@ -231,9 +177,9 @@ class TicketServiceTest {
         request.setMemberId(member.getId());
         request.setScheduleId(savedSchedule.getId());
         request.setSeats(seats);
-        ReserveTicketResponse response = ticketService.reserve(request);
+        PostIdResponse response = ticketService.reserve(request);
 
-        Ticket savedTicket = ticketRepository.findByReserveNumber(response.getReserveNumber()).orElseThrow();
+        Ticket savedTicket = ticketRepository.findById(response.getId()).orElseThrow();
         Long id = savedTicket.getId();
         IdListRequest idRequest = new IdListRequest();
         idRequest.setIds(Collections.singletonList(id));

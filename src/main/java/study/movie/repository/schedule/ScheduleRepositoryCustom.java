@@ -2,13 +2,12 @@ package study.movie.repository.schedule;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.SeatEntity;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
-import study.movie.dto.schedule.condition.UpdateSeatCond;
+import study.movie.dto.schedule.condition.UpdateSeatRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 
 import java.time.LocalDateTime;
@@ -49,7 +48,7 @@ public interface ScheduleRepositoryCustom {
      *
      * @param cond scheduleId, seats, status
      */
-    void updateSeatStatus(UpdateSeatCond cond);
+    void updateSeatStatus(UpdateSeatRequest cond);
 
     /**
      * 상영일정의 좌석엔티티 조회
@@ -72,7 +71,7 @@ public interface ScheduleRepositoryCustom {
     /**
      * 상영일정 조회
      *
-     * @param cond movieTitle, movieNation, theaterName, screenDate, screenFormat, scheduleStatus, scheduleNumber, orderBy
+     * @param cond          movieTitle, movieNation, theaterName, screenDate, screenFormat, scheduleStatus, scheduleNumber, orderBy
      * @param pageable
      * @param totalElements
      * @return List
@@ -86,14 +85,4 @@ public interface ScheduleRepositoryCustom {
      */
     void updateStatusByPastDateTime(LocalDateTime dateTime);
 
-
-
-    // movie Repository로 이동해야됨
-
-    /**
-     * 상영중인 영화 조회 (관객 수 내림차순 정렬)
-     *
-     * @return List
-     */
-    List<Movie> findMovieByOpenStatus();
 }

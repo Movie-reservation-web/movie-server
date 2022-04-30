@@ -3,6 +3,8 @@ package study.movie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.member.GenderType;
+import study.movie.domain.member.Member;
 import study.movie.domain.movie.*;
 import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
@@ -71,7 +73,7 @@ public class InitService {
         }
         return savedMovies;
     }
-
+    @Transactional
     public Theater createTheater(String theaterName, CityCode city) {
         Theater theater = Theater.builder()
                 .name(theaterName)
@@ -79,10 +81,10 @@ public class InitService {
                 .phone("0000-0000")
                 .build();
         em.persist(theater);
-        em.flush();
         return theater;
     }
 
+    @Transactional
     public Screen registerScreen(String screenName, ScreenFormat format, Theater theater, int maxCols, int maxRows) {
         return Screen.builder()
                 .name(screenName)
@@ -91,9 +93,8 @@ public class InitService {
                 .maxCols(maxCols)
                 .maxRows(maxRows)
                 .build();
-
     }
-
+    @Transactional
     public Movie createMovie(String title, String director, List<FilmFormat> formats) {
         Movie movie = Movie.builder()
                 .title(title)
@@ -111,6 +112,7 @@ public class InitService {
         em.persist(movie);
         return movie;
     }
+    @Transactional
     public Review writeReview(Movie movie) {
         Review review = Review.builder()
                 .writer("홍길동")
@@ -118,8 +120,18 @@ public class InitService {
                 .score(10F)
                 .movie(movie)
                 .build();
-        em.flush();
         return review;
     }
-
+    @Transactional
+    public Member createMember() {
+        Member member = Member.builder()
+                .name("홍길동")
+                .nickname("홍길동")
+                .email("aaa@naver.com")
+                .gender(GenderType.MALE)
+                .birth(LocalDate.now())
+                .build();
+        em.persist(member);
+        return member;
+    }
 }

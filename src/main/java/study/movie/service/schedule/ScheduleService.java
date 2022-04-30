@@ -7,6 +7,7 @@ import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
 import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.global.page.PageableDTO;
 
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ public interface ScheduleService {
      * <p>
      * 상영일정 저장
      */
-    CreateScheduleResponse save(CreateScheduleRequest request);
+    PostIdResponse save(CreateScheduleRequest request);
 
     /**
      * Admin Server

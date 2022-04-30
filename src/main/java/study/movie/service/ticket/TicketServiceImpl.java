@@ -4,20 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.converter.ticket.SeatArrayConverter;
+import study.movie.domain.member.Member;
 import study.movie.domain.payment.PaymentServiceUtil;
 import study.movie.domain.schedule.Schedule;
-import study.movie.domain.schedule.Seat;
 import study.movie.domain.schedule.SeatStatus;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.ticket.Ticket;
-import study.movie.dto.schedule.condition.UpdateSeatCond;
+import study.movie.dto.schedule.condition.UpdateSeatRequest;
 import study.movie.dto.ticket.TicketSearchCond;
 import study.movie.dto.ticket.request.PaymentRequest;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
 import study.movie.dto.ticket.response.ReserveTicketResponse;
 import study.movie.dto.ticket.response.TicketResponse;
 import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.global.page.PageableDTO;
 import study.movie.global.utils.BasicServiceUtils;
 import study.movie.repository.member.MemberRepository;
@@ -35,7 +35,6 @@ import static study.movie.global.exception.ErrorCode.*;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TicketServiceImpl extends BasicServiceUtils implements TicketService {
-    private final SeatArrayConverter converter;
     private final TicketRepository ticketRepository;
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
@@ -43,32 +42,30 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
 
     @Override
     @Transactional
-    public ReserveTicketResponse reserve(ReserveTicketRequest request) {
-        // 상영일정, 좌석 조회
+    public PostIdResponse reserve(ReserveTicketRequest request) {
+        // 상영일정, 사용자 조회
         Schedule schedule = scheduleRepository
                 .findById(request.getScheduleId())
                 .orElseThrow(getExceptionSupplier(SCHEDULE_NOT_FOUND));
-        List<Seat> seats = converter.convertToStringSeat(request.getSeats());
+
+        Member member = memberRepository
+                .findById(request.getMemberId())
+                .orElseThrow(getExceptionSupplier(MEMBER_NOT_FOUND));
 
         // 티켓 생성
-        Ticket savedTicket = Ticket.reserveTicket()
-                .member(
-                        memberRepository
-                                .findById(request.getMemberId())
-                                .orElseThrow(getExceptionSupplier(MEMBER_NOT_FOUND))
-                )
-                .seats(seats)
+        Ticket ticket = Ticket.reserveTicket()
+                .member(member)
+                .seats(request.getSeats())
                 .schedule(schedule)
                 .build();
 
+        // 티켓  저장
+        ticketRepository.save(ticket);
+
         // 좌석 정보 변경
-        UpdateSeatCond condition = createUpdateSeatStatusCond(schedule, seats, SeatStatus.RESERVED);
-        scheduleRepository.updateSeatStatus(condition);
+        scheduleRepository.updateSeatStatus(UpdateSeatRequest.from(schedule.getId(), request.getSeats(), SeatStatus.RESERVED));
 
-        // 영화 관람객 추가
-        savedTicket.getMovie().addAudience(savedTicket.getSeats().size());
-
-        return ReserveTicketResponse.of(savedTicket);
+        return PostIdResponse.of(ticket.getId());
     }
 
     @Override
@@ -86,8 +83,7 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
         ticket.cancelReservation();
 
         // 좌석 상태 변경 -> EMPTY
-        UpdateSeatCond condition = createUpdateSeatStatusCond(schedule, ticket.getSeats(), SeatStatus.EMPTY);
-        scheduleRepository.updateSeatStatus(condition);
+        scheduleRepository.updateSeatStatus(UpdateSeatRequest.from(schedule.getId(), ticket.getSeats(), SeatStatus.EMPTY));
     }
 
     @Override
@@ -126,17 +122,4 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
     public void delete(IdListRequest request) {
         ticketRepository.deleteAllByIdInQuery(request.getIds());
     }
-
-    /**
-     * 좌석 상태 변경 condition 생성
-     */
-    private UpdateSeatCond createUpdateSeatStatusCond(Schedule schedule, List<Seat> seats, SeatStatus status) {
-        UpdateSeatCond condition = new UpdateSeatCond();
-        condition.setScheduleId(schedule.getId());
-        condition.setStatus(status);
-        condition.setSeats(seats);
-        return condition;
-    }
-
-
 }

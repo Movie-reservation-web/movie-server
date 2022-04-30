@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.member.GenderType;
 import study.movie.domain.member.Member;
@@ -20,14 +20,16 @@ import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.theater.Theater;
 import study.movie.domain.ticket.Ticket;
 import study.movie.domain.ticket.TicketStatus;
-import study.movie.dto.ticket.ReserveTicketRequest;
-import study.movie.dto.ticket.ReserveTicketResponse;
+import study.movie.dto.ticket.request.ReserveTicketRequest;
+import study.movie.dto.ticket.response.ReserveTicketResponse;
+import study.movie.global.dto.IdListRequest;
 import study.movie.global.exception.CustomException;
 import study.movie.repository.ticket.TicketRepository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -38,8 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest
 @Transactional
 @Slf4j
-//@Rollback
-@Commit
+@Rollback
+//@Commit
 class TicketServiceTest {
     @Autowired
     EntityManager em;
@@ -200,10 +202,11 @@ class TicketServiceTest {
         ReserveTicketResponse response = ticketService.reserve(request);
 
         Ticket savedTicket = ticketRepository.findByReserveNumber(response.getReserveNumber()).orElseThrow();
-        Long id = savedTicket.getId();
+        IdListRequest idRequest = new IdListRequest();
+        idRequest.setIds(Collections.singletonList(savedTicket.getId()));
 
         // then
-        assertThatThrownBy(() -> ticketService.delete(id))
+        assertThatThrownBy(() -> ticketService.delete(idRequest))
                 .isInstanceOf(CustomException.class);
     }
     @Test
@@ -232,11 +235,12 @@ class TicketServiceTest {
 
         Ticket savedTicket = ticketRepository.findByReserveNumber(response.getReserveNumber()).orElseThrow();
         Long id = savedTicket.getId();
+        IdListRequest idRequest = new IdListRequest();
+        idRequest.setIds(Collections.singletonList(id));
 
         // when
         ticketService.cancelReservation(savedTicket.getReserveNumber());
-
-        ticketService.delete(id);
+        ticketService.delete(idRequest);
 
         // then
         assertThatThrownBy(() -> ticketRepository.findById(id).orElseThrow())

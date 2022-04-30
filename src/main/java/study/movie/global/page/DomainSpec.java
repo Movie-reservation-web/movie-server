@@ -58,7 +58,7 @@ public class DomainSpec<T extends Enum<T>> {
             try {
                 column = Enum.valueOf(this.clazz, o.getColumn().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new CustomException(INVALID_SORT_OPTION, e);
+                throw new CustomException(e, INVALID_SORT_OPTION);
             }
 
             final Sort.Order order = sortStrategy.getSortOrder(column, o.getSortOption());

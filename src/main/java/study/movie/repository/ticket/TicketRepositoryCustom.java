@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface TicketRepositoryCustom {
 
-    List<Ticket> findAllTicketByMember(Long memberId);
+    List<Ticket> findAllTicketByMember(Long ticketId, Long memberId);
+
+    Long findReservedTicketCountByMember(Long memberId, int year);
 }

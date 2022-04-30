@@ -8,7 +8,7 @@ import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.payment.DateTimeType;
 import study.movie.domain.payment.DayWeekType;
 import study.movie.domain.payment.PaymentServiceUtil;
-import study.movie.dto.ticket.PaymentRequest;
+import study.movie.dto.ticket.request.PaymentRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

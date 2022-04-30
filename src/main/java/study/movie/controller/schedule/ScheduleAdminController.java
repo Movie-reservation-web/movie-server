@@ -8,7 +8,7 @@ import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.response.CreateScheduleResponse;
 import study.movie.dto.schedule.response.ScheduleResponse;
-import study.movie.global.dto.Response;
+import study.movie.global.dto.CustomResponse;
 import study.movie.global.page.PageableDTO;
 import study.movie.service.schedule.ScheduleService;
 
@@ -27,12 +27,12 @@ public class ScheduleAdminController {
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody CreateScheduleRequest request) {
         CreateScheduleResponse result = scheduleService.save(request);
-        return Response.success(CREATED, CREATE_SCHEDULE, result);
+        return CustomResponse.success(CREATED, CREATE_SCHEDULE, result);
     }
 
     @GetMapping
     public ResponseEntity<?> findAll(@RequestBody ScheduleSearchCond cond, PageableDTO pageableDTO) {
         Page<ScheduleResponse> result = scheduleService.search(cond, pageableDTO);
-        return Response.success(READ_SCHEDULE, result);
+        return CustomResponse.success(READ_SCHEDULE, result);
     }
 }

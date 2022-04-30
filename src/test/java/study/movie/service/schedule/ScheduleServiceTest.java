@@ -21,6 +21,7 @@ import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
+import study.movie.global.dto.IdListRequest;
 import study.movie.repository.movie.ReviewRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 
@@ -71,7 +72,10 @@ class ScheduleServiceTest {
         LocalDateTime startTime = LocalDateTime.now().plusDays(10);
         em.flush();
         // when
-        CreateScheduleRequest request = new CreateScheduleRequest(startTime, movie.getId(), screen.getId());
+        CreateScheduleRequest request = new CreateScheduleRequest();
+        request.setMovieId(movie.getId());
+        request.setScreenId(screen.getId());
+        request.setStartTime(startTime);
         CreateScheduleResponse response = scheduleService.save(request);
 
         // then
@@ -378,7 +382,9 @@ class ScheduleServiceTest {
 
         // when
         long count = scheduleRepository.count();
-        scheduleService.removeSchedule(Collections.singletonList(savedSchedule.getId()));
+        IdListRequest request = new IdListRequest();
+        request.setIds(Collections.singletonList(savedSchedule.getId()));
+        scheduleService.removeSchedule(request);
         // then
         assertEquals(count - 1, scheduleRepository.count());
         assertFalse(em.find(Screen.class, screen.getId()).getSchedules().contains(savedSchedule));

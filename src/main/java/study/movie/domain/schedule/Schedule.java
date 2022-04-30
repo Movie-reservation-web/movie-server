@@ -50,6 +50,7 @@ public class Schedule extends BaseTimeEntity {
     private ScheduleStatus status;
 
     private int totalSeatCount;
+    private int reservedSeatCount;
 
     //==생성 메서드==//
     @Builder
@@ -57,6 +58,7 @@ public class Schedule extends BaseTimeEntity {
         this.screenTime = screenTime;
         this.scheduleNumber = createScheduleNumber(screenTime.getStartDateTime());
         this.status = OPEN;
+        this.reservedSeatCount = 0;
         addMovie(movie);
         addScreen(screen);
         initializeSeats(screen);

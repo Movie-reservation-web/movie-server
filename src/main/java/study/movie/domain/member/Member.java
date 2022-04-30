@@ -34,7 +34,7 @@ public class Member extends BaseTimeEntity {
     private GenderType gender;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member")
     private List<Ticket> tickets = new ArrayList<>();
 
     //==생성 메서드==//

@@ -14,6 +14,7 @@ import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
+import study.movie.global.dto.IdListRequest;
 import study.movie.global.page.DomainSpec;
 import study.movie.global.page.PageableDTO;
 import study.movie.global.utils.BasicServiceUtils;
@@ -108,9 +109,9 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
 
     @Override
     @Transactional
-    public void removeSchedule(List<Long> ids) {
-        seatRepository.deleteAllByScheduleIdInQuery(ids);
-        scheduleRepository.deleteAllByIdInQuery(ids);
+    public void removeSchedule(IdListRequest request) {
+        seatRepository.deleteAllByScheduleIdInQuery(request.getIds());
+        scheduleRepository.deleteAllByIdInQuery(request.getIds());
     }
 
     // MovieService로 이동해야함.

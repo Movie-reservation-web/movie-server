@@ -15,7 +15,7 @@ import java.util.List;
 import static study.movie.global.constants.ResponseMessage.SUCCESS;
 import static study.movie.global.exception.ErrorCode.ARGUMENTS_NOT_VALID;
 
-public class Response {
+public class CustomResponse {
     @Data
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     private static class Result<T> {

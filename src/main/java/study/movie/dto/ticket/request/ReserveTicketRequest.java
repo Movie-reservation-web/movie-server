@@ -1,4 +1,4 @@
-package study.movie.dto.ticket;
+package study.movie.dto.ticket.request;
 
 import lombok.Data;
 
@@ -7,7 +7,6 @@ import java.util.List;
 
 @Data
 public class ReserveTicketRequest {
-
 
     @NotNull
     private Long scheduleId;

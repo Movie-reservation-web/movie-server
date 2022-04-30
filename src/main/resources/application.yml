@@ -1,21 +1,23 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/movie
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/moviedb?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 1234
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create # 자동으로 테이블 생성
+
     properties:
       hibernate:
-        show_sql: true
+        #        show_sql: true
         format_sql: true
+        default_batch_fetch_size: 100
+    open-in-view: true # db 커넥션을 트랜잭션에서만 하고 끝냄..
 
-  output:
-    ansi:
-      enabled: always
 
-logging.level:
-  org.hibernate.SQL: debug
+logging:
+  level:
+    org.hibernate.SQL: debug # 하이버네이트가 생성하는 SQL 이 다보인다.
+#    org.hibernate.type: trace

@@ -58,7 +58,7 @@ public class Ticket extends BaseTimeEntity {
     private Movie movie;
 
     //==생성 메서드==//
-    @Builder
+    @Builder(builderClassName = "reserveTicket", builderMethodName = "reserveTicket")
     public Ticket(Member member, Schedule schedule, List<Seat> seats) {
         this.reserveNumber = createReserveNumber(schedule.getScreenTime().getStartDateTime());
         this.scheduleNumber = schedule.getScheduleNumber();
@@ -94,10 +94,19 @@ public class Ticket extends BaseTimeEntity {
      * 예매 취소
      */
     public void cancelReservation(){
-        if (this.ticketStatus == TicketStatus.CANCEL) throw new CustomException(ALREADY_CANCELLED_TICKET);
+        if (this.ticketStatus != TicketStatus.RESERVED) throw new CustomException(ALREADY_CANCELLED_TICKET);
         getMember().getTickets().remove(this);
         getMovie().getTickets().remove(this);
         this.ticketStatus = TicketStatus.CANCEL;
+    }
+
+    /**
+     * 내가 본 영화 삭제
+     */
+    public void deleteReserveHistory(){
+        if (this.ticketStatus != TicketStatus.RESERVED) throw new CustomException(ALREADY_CANCELLED_TICKET);
+        getMember().getTickets().remove(this);
+        this.ticketStatus = TicketStatus.DELETE;
     }
 
     /**

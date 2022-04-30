@@ -18,6 +18,4 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long>, Sched
     @Modifying
     @Query("delete from Schedule s where s.id in :ids")
     void deleteAllByIdInQuery(@Param("ids") List<Long> ids);
-
-
 }

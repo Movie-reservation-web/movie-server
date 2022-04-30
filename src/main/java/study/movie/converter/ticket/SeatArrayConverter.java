@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Converter(autoApply = true)
+@Converter
 @Component
 public class SeatArrayConverter implements AttributeConverter<List<Seat>, String> {
     private static final String SEPARATOR = ",";

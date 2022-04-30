@@ -1,6 +1,7 @@
-package study.movie.dto.ticket;
+package study.movie.dto.ticket.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 import study.movie.domain.movie.FilmRating;
 import study.movie.domain.schedule.Seat;
@@ -12,7 +13,11 @@ import java.time.LocalTime;
 import java.util.stream.Collectors;
 
 @Data
+@Builder
 public class ReserveTicketResponse {
+
+    private Long id;
+
     /**
      * 예매 번호
      */
@@ -57,18 +62,21 @@ public class ReserveTicketResponse {
      */
     private String paymentType;
 
-    public ReserveTicketResponse(Ticket ticket) {
-        this.reserveNumber = ticket.getReserveNumber();
-        this.filmRating = ticket.getMovie().getFilmRating();
-        this.movieTitle = ticket.getMovie().getTitle();
-        this.screenFormat = ticket.getFormat();
-        this.movieImage = ticket.getMovie().getImage();
-        this.theaterName = ticket.getTheaterName();
-        this.screenName = ticket.getScreenName();
-        this.date = ticket.getScreenTime().getStartDateTime().toLocalDate();
-        this.startTime = ticket.getScreenTime().getStartDateTime().toLocalTime();
-        this.endTime = ticket.getScreenTime().getEndDateTime().toLocalTime();
-        this.reservedMemberCount = ticket.getReservedMemberCount();
-        this.seats = ticket.getSeats().stream().map(Seat::seatToString).collect(Collectors.joining(","));
+    public static ReserveTicketResponse of(Ticket ticket) {
+        return ReserveTicketResponse.builder()
+                .id(ticket.getId())
+                .reserveNumber(ticket.getReserveNumber())
+                .filmRating(ticket.getMovie().getFilmRating())
+                .movieTitle(ticket.getMovie().getTitle())
+                .screenFormat(ticket.getFormat())
+                .movieImage(ticket.getMovie().getImage())
+                .theaterName(ticket.getTheaterName())
+                .screenName(ticket.getScreenName())
+                .date(ticket.getScreenTime().getStartDateTime().toLocalDate())
+                .startTime(ticket.getScreenTime().getStartDateTime().toLocalTime())
+                .endTime(ticket.getScreenTime().getEndDateTime().toLocalTime())
+                .reservedMemberCount(ticket.getReservedMemberCount())
+                .seats(ticket.getSeats().stream().map(Seat::seatToString).collect(Collectors.joining(",")))
+                .build();
     }
 }

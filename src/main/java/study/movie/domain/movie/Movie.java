@@ -59,11 +59,11 @@ public class Movie extends BaseTimeEntity {
     private List<Review> reviews = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "movie")
     private List<Schedule> schedules = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "movie")
     private List<Ticket> tickets = new ArrayList<>();
 
     //==생성 메서드==//

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.movie.global.constants.EnumClassConst;
-import study.movie.global.dto.Response;
+import study.movie.global.dto.CustomResponse;
 
 import static study.movie.global.constants.EnumClassConst.*;
 import static study.movie.global.constants.ResponseMessage.READ_CATEGORY;
@@ -73,7 +73,7 @@ public class EnumController {
      * @param category
      */
     private ResponseEntity<?> getCategories(EnumClassConst category) {
-        return Response.success(category.getValue() + READ_CATEGORY, enumMapper.get(category.getClassName()));
+        return CustomResponse.success(category.getValue() + READ_CATEGORY, enumMapper.get(category.getClassName()));
 
     }
 }

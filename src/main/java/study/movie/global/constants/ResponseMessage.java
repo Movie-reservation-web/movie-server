@@ -30,7 +30,9 @@ public abstract class ResponseMessage {
     public static final String RESERVE_TICKET = "티켓 예메 성공";
     public static final String CANCEL_TICKET = "예매 티켓 취소";
     public static final String DELETE_TICKET = "티켓 데이터 삭제 성공";
+    public static final String DELETE_TICKET_HISTORY = "티켓 기록 지우기 성공";
     public static final String READ_TICKET = "티켓 조회 성공";
+    public static final String READ_TICKET_COUNT = "티켓 수 조회 성공";
 
     /**
      * Domain: Screen

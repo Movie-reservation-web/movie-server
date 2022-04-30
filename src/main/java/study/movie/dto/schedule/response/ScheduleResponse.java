@@ -13,7 +13,7 @@ public class ScheduleResponse {
     private String scheduleNumber;
     private MovieResponse movie;
     private ScreenResponse screen;
-//    private int totalSeatCount;
+    private int totalSeatCount;
 //    private int reservedSeatCount;
     private ScreenTime screenTime;
     private ScheduleStatus status;
@@ -24,7 +24,7 @@ public class ScheduleResponse {
                 .scheduleNumber(schedule.getScheduleNumber())
                 .movie(MovieResponse.of(schedule.getMovie()))
                 .screen(ScreenResponse.of(schedule.getScreen()))
-//                .totalSeatCount(schedule.getTotalSeatCount())
+                .totalSeatCount(schedule.getTotalSeatCount())
 //                .reservedSeatCount(schedule.getSeatCount(RESERVED))
                 .screenTime(schedule.getScreenTime())
                 .status(schedule.getStatus())

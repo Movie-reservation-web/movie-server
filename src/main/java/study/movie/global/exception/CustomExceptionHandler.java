@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import study.movie.global.dto.Response;
+import study.movie.global.dto.CustomResponse;
 import study.movie.global.dto.ValidationResponse;
 
 import java.util.List;
@@ -28,22 +28,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = CustomException.class)
     public final ResponseEntity<?> handleCustomExceptions(CustomException e) {
-        return Response.fail(e.getErrorCode());
+        return CustomResponse.fail(e.getErrorCode());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public final ResponseEntity<?> handleIllegalArgumentExceptions() {
-        return Response.fail(ILLEGAL_ARGUMENT);
+        return CustomResponse.fail(ILLEGAL_ARGUMENT);
     }
 
     @ExceptionHandler(value = { ConstraintViolationException.class, DataIntegrityViolationException.class})
     public final ResponseEntity<?> handleDataException() {
-        return Response.fail(DUPLICATED_RESOURCE);
+        return CustomResponse.fail(DUPLICATED_RESOURCE);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return Response.validationFail(createValidationDetails(ex));
+        return CustomResponse.validationFail(createValidationDetails(ex));
     }
 
     private List<ValidationResponse> createValidationDetails(MethodArgumentNotValidException ex) {

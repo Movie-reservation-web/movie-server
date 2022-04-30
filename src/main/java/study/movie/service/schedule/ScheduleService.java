@@ -6,6 +6,7 @@ import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
+import study.movie.global.dto.IdListRequest;
 import study.movie.global.page.PageableDTO;
 
 import java.time.LocalDateTime;
@@ -75,5 +76,5 @@ public interface ScheduleService {
      * <p>
      * 상영 일정 삭제
      */
-    void removeSchedule(List<Long> ids);
+    void removeSchedule(IdListRequest request);
 }

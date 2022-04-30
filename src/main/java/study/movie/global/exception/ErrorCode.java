@@ -36,6 +36,7 @@ public enum ErrorCode{
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다"),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     ALREADY_CANCELLED_TICKET(BAD_REQUEST, "이미 취소된 티켓입니다."),
+    NOT_ALLOW_RESERVED_STATUS(BAD_REQUEST, "예약 상태로 변경할 수 없습니다."),
     NOT_CANCELLED_TICKET(BAD_REQUEST, "취소되지 않은 티켓입니다."),
     ILLEGAL_ARGUMENT(BAD_REQUEST, "적절하지 않은 인자입니다."),
 

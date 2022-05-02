@@ -19,7 +19,8 @@ public enum EnumClassConst implements EnumMapperType {
     CITY_CODE("CityCode", "도시"),
     SCREEN_FORMAT("ScreenFormat", "상영관 포멧"),
     GENDER_TYPE("GenderType", "성별"),
-    SCHEDULE_SORT_TYPE("ScheduleMetaType", "상영일정 정렬 방식");
+    SCHEDULE_SORT_TYPE("ScheduleMetaType", "상영일정 정렬 방식"),
+    TICKET_SORT_TYPE("TicketMetaType", "티켓 정렬 방식");
     private String className;
     private String value;
 

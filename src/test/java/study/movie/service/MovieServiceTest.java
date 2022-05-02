@@ -21,6 +21,7 @@ import study.movie.dto.schedule.response.SimpleMovieResponse;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
 import study.movie.repository.movie.ReviewRepository;
 import study.movie.repository.schedule.ScheduleRepository;
+import study.movie.service.movie.MovieService;
 import study.movie.service.ticket.TicketService;
 
 import javax.persistence.EntityManager;
@@ -136,7 +137,8 @@ class MovieServiceTest {
         String movie1Rate = String.format("%.1f", (double) movie1View / (double) 30 * 100.0) + "%";
         String movie2Rate = String.format("%.1f", (double) movie2View / (double) 30 * 100.0) + "%";
 
-        List<SimpleMovieResponse> movieCharts = movieService.findAllOpenMovies();
+        List<SimpleMovieResponse> movieCharts = movieService.
+                findAllOpenMovies();
 
         // then
         log.info("movieCharts={}", movieCharts);

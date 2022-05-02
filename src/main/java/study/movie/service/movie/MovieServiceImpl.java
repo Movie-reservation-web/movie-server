@@ -1,4 +1,4 @@
-package study.movie.service;
+package study.movie.service.movie;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +36,5 @@ public class MovieServiceImpl implements MovieService {
             movie.addAudience(
                     movie.getTickets().stream().mapToInt(Ticket::getReservedMemberCount).sum());
         }
-
     }
 }

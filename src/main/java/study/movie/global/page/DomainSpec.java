@@ -56,7 +56,7 @@ public class DomainSpec<T extends Enum<T>> {
         for (var o : sorts) {
             T column;
             try {
-                column = Enum.valueOf(this.clazz, o.getColumn().toUpperCase());
+                column = Enum.valueOf(this.clazz, o.getColumn());
             } catch (IllegalArgumentException e) {
                 throw new CustomException(e, INVALID_SORT_OPTION);
             }

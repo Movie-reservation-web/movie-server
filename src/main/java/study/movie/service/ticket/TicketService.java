@@ -60,11 +60,9 @@ public interface TicketService {
     /**
      * Admin Server
      * <p>
-     * 티켓 데이터 삭제(물리 삭제)
+     * 모든 예매 내역 조회
      */
     Page<TicketResponse> search(TicketSearchCond cond, PageableDTO pageableDTO);
-
-
 
     /**
      * Admin Server

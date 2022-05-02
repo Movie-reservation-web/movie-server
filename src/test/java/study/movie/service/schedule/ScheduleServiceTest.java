@@ -178,7 +178,7 @@ class ScheduleServiceTest {
         ScreenFormat screenFormat = ScreenFormat.TWO_D;
         // 검색 조건 -> 영화1(2D)
         ScheduleBasicSearchCond cond = new ScheduleBasicSearchCond();
-        cond.setFormat(screenFormat);
+        cond.setScreenFormat(screenFormat);
         cond.setMovieTitle(savedMovie.getTitle());
 
         // when

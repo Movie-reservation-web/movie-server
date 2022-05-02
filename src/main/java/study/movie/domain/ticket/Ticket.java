@@ -42,6 +42,8 @@ public class Ticket extends BaseTimeEntity {
 
     private ScreenTime screenTime;
 
+    private Integer price;
+
     @Convert(converter = StringArrayConverter.class)
     private List<String> seats = new ArrayList<>();
 

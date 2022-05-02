@@ -9,8 +9,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static study.movie.global.page.SortOption.*;
-
 public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
     private final String PAGE = "page";
     private final String SIZE = "size";
@@ -25,18 +23,18 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         List<SortPair<String, SortOption>> sorts = new ArrayList<>();
         final var sortArr = webRequest.getParameterMap().get("sort");
-
         if (sortArr != null) {
             for (var v : sortArr) {
                 String[] keywords = v.split(",");
-                sorts.add(SortPair.of(keywords[0], (keywords.length < 2 || keywords[1].equals("asc")) ? ASC : DESC));
+                sorts.add(SortPair.of(
+                        (keywords[0] + "_" + keywords[1]).toUpperCase(),
+                        SortOption.valueOf(keywords[1].toUpperCase())
+                ));
             }
         }
-
         return PageableDTO.builder()
                 .page(getValue(webRequest.getParameter(PAGE)))
                 .size(getValue(webRequest.getParameter(SIZE)))
-                .totalElements(getValue(webRequest.getParameter(TOTAL_ELEMENTS)))
                 .sorts(sorts)
                 .build();
     }

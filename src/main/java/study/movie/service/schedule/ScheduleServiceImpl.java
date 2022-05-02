@@ -24,8 +24,8 @@ import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.schedule.SeatRepository;
 import study.movie.repository.theater.ScreenRepository;
-import study.movie.sortStrategy.schedule.ScheduleMetaType;
-import study.movie.sortStrategy.schedule.ScheduleSortStrategy;
+import study.movie.entitySearchStrategy.schedule.ScheduleMetaType;
+import study.movie.entitySearchStrategy.schedule.ScheduleSortStrategy;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -102,13 +102,20 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
     @Override
     public Page<ScheduleResponse> search(ScheduleSearchCond cond, PageableDTO pageableDTO) {
         Pageable pageable = spec.getPageable(pageableDTO);
-        return scheduleRepository.search(cond, pageable, pageableDTO.getTotalElements()).map(ScheduleResponse::of);
+        return scheduleRepository.search(cond, pageable)
+                .map(ScheduleResponse::of);
+    }
+    @Override
+    public Page<ScheduleResponse> search2(ScheduleSearchCond cond, PageableDTO pageableDTO) {
+        Pageable pageable = spec.getPageable(pageableDTO);
+        return scheduleRepository.search2(cond, pageable);
+
     }
 
     @Override
     @Transactional
     public void closeSchedule(LocalDateTime dateTime) {
-        scheduleRepository.updateStatusByPastDateTime(dateTime);
+        scheduleRepository.updateStatusByPastDaysStatus(dateTime);
     }
 
     @Override

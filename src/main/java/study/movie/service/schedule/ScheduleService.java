@@ -62,6 +62,8 @@ public interface ScheduleService {
      * 상영 일정 조회 - 영화, 극장, 날짜,
      */
     Page<ScheduleResponse> search(ScheduleSearchCond cond, PageableDTO pageableDTO);
+    Page<ScheduleResponse> search2(ScheduleSearchCond cond, PageableDTO pageableDTO);
+
 
     /**
      * Batch Server

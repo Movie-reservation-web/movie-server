@@ -16,7 +16,7 @@ public class ScheduleBasicSearchCond {
 
     private String movieTitle;
 
-    private ScreenFormat format;
+    private ScreenFormat screenFormat;
 
     private String theaterName;
 }

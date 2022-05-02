@@ -68,6 +68,14 @@ public class EnumController {
     }
 
     /**
+     * 티켓 검색 정렬 방식
+     */
+    @GetMapping("/sort-type/ticket")
+    public ResponseEntity<?> getTicketSortTypes() {
+        return getCategories(TICKET_SORT_TYPE);
+    }
+
+    /**
      * EnumClassConst 에 있는 카테고리 조회
      *
      * @param category

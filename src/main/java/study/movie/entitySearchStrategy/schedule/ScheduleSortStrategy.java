@@ -1,4 +1,4 @@
-package study.movie.sortStrategy.schedule;
+package study.movie.entitySearchStrategy.schedule;
 
 import org.springframework.data.domain.Sort;
 import study.movie.global.page.SortOption;
@@ -9,10 +9,10 @@ public class ScheduleSortStrategy extends SortStrategyImpl<ScheduleMetaType> imp
     @Override
     public Sort.Order getSortOrder(ScheduleMetaType domainKey, SortOption order) {
         switch (domainKey) {
-            case MOVIE_TITLE:
-            case THEATER_NAME:
-            case SCREEN_DATE:
-            case AUDIENCE:
+            case ID_ASC:
+            case ID_DESC:
+            case AUDIENCE_ASC:
+            case AUDIENCE_DESC:
                 return super.getOrder(domainKey, order);
         }
         return null;

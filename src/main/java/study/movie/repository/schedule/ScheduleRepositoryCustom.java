@@ -9,6 +9,7 @@ import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.condition.UpdateSeatRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
+import study.movie.dto.schedule.response.ScheduleResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -76,13 +77,14 @@ public interface ScheduleRepositoryCustom {
      * @param totalElements
      * @return List
      */
-    Page<Schedule> search(ScheduleSearchCond cond, Pageable pageable, Integer totalElements);
+    Page<Schedule> search(ScheduleSearchCond cond, Pageable pageable);
+    Page<ScheduleResponse> search2(ScheduleSearchCond cond, Pageable pageable);
 
     /**
      * 지난 시각의 상영일정 상태 변경
      *
      * @param dateTime
      */
-    void updateStatusByPastDateTime(LocalDateTime dateTime);
+    void updateStatusByPastDaysStatus(LocalDateTime dateTime);
 
 }

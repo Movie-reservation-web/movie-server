@@ -30,8 +30,8 @@ public class ScheduleAdminController {
         return CustomResponse.success(CREATED, CREATE_SCHEDULE, result);
     }
 
-    @GetMapping
-    public ResponseEntity<?> findAll(@RequestBody ScheduleSearchCond cond, PageableDTO pageableDTO) {
+    @GetMapping("/search")
+    public ResponseEntity<?> findAll(@RequestBody(required = false) ScheduleSearchCond cond, PageableDTO pageableDTO) {
         Page<ScheduleResponse> result = scheduleService.search(cond, pageableDTO);
         return CustomResponse.success(READ_SCHEDULE, result);
     }

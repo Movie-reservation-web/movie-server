@@ -18,11 +18,14 @@ import study.movie.dto.ticket.response.ReserveTicketResponse;
 import study.movie.dto.ticket.response.TicketResponse;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
+import study.movie.global.page.DomainSpec;
 import study.movie.global.page.PageableDTO;
 import study.movie.global.utils.BasicServiceUtils;
 import study.movie.repository.member.MemberRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.ticket.TicketRepository;
+import study.movie.entitySearchStrategy.ticket.TicketMetaType;
+import study.movie.entitySearchStrategy.ticket.TicketSortStrategy;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +42,7 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
     private final PaymentServiceUtil paymentService;
+    private final DomainSpec<TicketMetaType> spec = new DomainSpec<>(TicketMetaType.class, new TicketSortStrategy());
 
     @Override
     @Transactional
@@ -84,6 +88,7 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
 
         // 좌석 상태 변경 -> EMPTY
         scheduleRepository.updateSeatStatus(UpdateSeatRequest.from(schedule.getId(), ticket.getSeats(), SeatStatus.EMPTY));
+
     }
 
     @Override
@@ -114,7 +119,8 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
 
     @Override
     public Page<TicketResponse> search(TicketSearchCond cond, PageableDTO pageableDTO) {
-        return null;
+        return ticketRepository.search(cond, spec.getPageable(pageableDTO))
+                .map(TicketResponse::of);
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.util.List;
 public interface ScheduleRepositoryCustom {
 
     // API
+
     /**
      * 모든 상영일정 조회
      *
@@ -78,7 +79,6 @@ public interface ScheduleRepositoryCustom {
      * @return List
      */
     Page<Schedule> search(ScheduleSearchCond cond, Pageable pageable);
-    Page<ScheduleResponse> search2(ScheduleSearchCond cond, Pageable pageable);
 
     /**
      * 지난 시각의 상영일정 상태 변경

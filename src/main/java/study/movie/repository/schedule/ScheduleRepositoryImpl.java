@@ -1,11 +1,9 @@
 package study.movie.repository.schedule;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -17,20 +15,17 @@ import org.springframework.stereotype.Repository;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.Seat;
 import study.movie.domain.schedule.SeatEntity;
-import study.movie.domain.schedule.SeatStatus;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.condition.UpdateSeatRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
-import study.movie.dto.schedule.response.ScheduleResponse;
 import study.movie.global.utils.BasicRepositoryUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
@@ -138,34 +133,6 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
                 content,
                 pageable,
                 countQuery::fetchOne);
-    }
-
-    public Page<ScheduleResponse> search2(ScheduleSearchCond cond, Pageable pageable) {
-        List<Tuple> fetch = queryFactory
-                .select(schedule,
-                        JPAExpressions
-                                .select(seatEntity.count())
-                                .from(schedule)
-                                .leftJoin(schedule.seats, seatEntity)
-                                .where(
-                                        seatEntity.status.eq(SeatStatus.EMPTY)
-                                )
-                )
-                .from(schedule)
-//                .join(schedule.movie, movie).fetchJoin()
-//                .join(schedule.screen, screen).fetchJoin()
-//                .join(screen.theater, theater).fetchJoin()
-//                .where(getSearchPredicts(cond))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(scheduleSort(pageable))
-                .fetch();
-        JPAQuery<Long> countQuery = getScheduleJPAQueryCount(cond);
-
-        return PageableExecutionUtils.getPage(
-                fetch,
-                pageable,
-                countQuery::fetchOne).map(tuple -> ScheduleResponse.of(Objects.requireNonNull(tuple.get(0, Schedule.class)), tuple.get(1, Long.class)));
     }
 
     private JPAQuery<Schedule> getScheduleJPAQueryPaging(ScheduleSearchCond cond) {

@@ -105,12 +105,6 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
         return scheduleRepository.search(cond, pageable)
                 .map(ScheduleResponse::of);
     }
-    @Override
-    public Page<ScheduleResponse> search2(ScheduleSearchCond cond, PageableDTO pageableDTO) {
-        Pageable pageable = spec.getPageable(pageableDTO);
-        return scheduleRepository.search2(cond, pageable);
-
-    }
 
     @Override
     @Transactional

@@ -92,11 +92,6 @@ public class Movie extends BaseTimeEntity {
     }
 
     /**
-     * 리뷰 삭제
-     */
-//    public void deleteReview(Review review) { reviews.remove(review); }
-
-    /**
      * 평점 계산
      */
     public String getAverageScore() {

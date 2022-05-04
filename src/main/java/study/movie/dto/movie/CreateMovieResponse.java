@@ -30,9 +30,9 @@ public class CreateMovieResponse {
     private String info;
     private Integer audience;
     private String image;
-    private String score;
 
     public CreateMovieResponse(Movie movie) {
+        this.id = movie.getId();
         this.title = movie.getTitle();
         this.runningTime = movie.getRunningTime();
         this.director = movie.getDirector();
@@ -45,6 +45,5 @@ public class CreateMovieResponse {
         this.info = movie.getInfo();
         this.audience = movie.getAudience();
         this.image = movie.getImage();
-        this.score = movie.getAverageScore();
     }
 }

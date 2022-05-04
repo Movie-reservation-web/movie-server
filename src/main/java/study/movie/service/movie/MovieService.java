@@ -35,8 +35,8 @@ public class MovieService {
                 .findById(reviewRequest.getMovieId())
                 .orElseThrow(() -> new Exception("noMovie"));
         //.orElseThrow(getExceptionSupplier());
-
         Review createReview = reviewRequest.toEntity(findMovie);
+        reviewRepository.save(createReview);
 
         return new CreateReviewResponse(createReview);
     }
@@ -83,10 +83,10 @@ public class MovieService {
     }
 
     //findOneMovie
-    public CreateMovieResponse findOneMovie(MovieRequest movieRequest) throws Exception {
+    public CreateMovieResponse findOneMovie(Long movieId) throws Exception {
         return new CreateMovieResponse(
                 movieRepository
-                .findById(movieRequest.getId())
+                .findById(movieId)
                 .orElseThrow(() -> new Exception("noMovie")));
     }
 

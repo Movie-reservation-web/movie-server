@@ -15,6 +15,13 @@ public class CreateReviewRequest {
     private Float score;
     private String comment;
 
+    public CreateReviewRequest(Review review, Long movieId) {
+        this.movieId = movieId;
+        this.writer = review.getWriter();
+        this.score = review.getScore();
+        this.comment = review.getComment();
+    }
+
     public Review toEntity(Movie findMovie) {
         return Review.builder()
                 .movie(findMovie)

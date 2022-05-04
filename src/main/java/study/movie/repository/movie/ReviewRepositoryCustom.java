@@ -6,5 +6,5 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface ReviewRepositoryCustom {
-    List<Review> findByMovieId(Long id);
+
 }

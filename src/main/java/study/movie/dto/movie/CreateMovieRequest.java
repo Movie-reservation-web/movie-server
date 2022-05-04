@@ -34,7 +34,6 @@ public class CreateMovieRequest {
     private String info;
     private Integer audience;
     private String image;
-    private String score;
 
     public CreateMovieRequest(Movie movie) {
         this.title = movie.getTitle();
@@ -49,7 +48,6 @@ public class CreateMovieRequest {
         this.info = movie.getInfo();
         this.audience = movie.getAudience();
         this.image = movie.getImage();
-        this.score = movie.getAverageScore();
     }
 
     public Movie toEntity() {

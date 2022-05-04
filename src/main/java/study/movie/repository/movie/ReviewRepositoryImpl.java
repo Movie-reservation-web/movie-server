@@ -10,9 +10,4 @@ import java.util.List;
 public class ReviewRepositoryImpl implements  ReviewRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
-
-    @Override
-    public List<Review> findByMovieId(Long id) {
-        return null;
-    }
 }

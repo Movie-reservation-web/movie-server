@@ -16,6 +16,7 @@ public class CreateReviewResponse {
     private String comment;
 
     public CreateReviewResponse(Review review) {
+        this.id = review.getId();
         this.movie = review.getMovie();
         this.writer = review.getWriter();
         this.score = review.getScore();

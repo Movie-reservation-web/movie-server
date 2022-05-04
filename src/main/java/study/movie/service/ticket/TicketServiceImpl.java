@@ -11,7 +11,7 @@ import study.movie.domain.schedule.SeatStatus;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.ticket.Ticket;
 import study.movie.dto.schedule.condition.UpdateSeatRequest;
-import study.movie.dto.ticket.TicketSearchCond;
+import study.movie.dto.ticket.condition.TicketSearchCond;
 import study.movie.dto.ticket.request.PaymentRequest;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
 import study.movie.dto.ticket.response.ReserveTicketResponse;
@@ -24,7 +24,7 @@ import study.movie.global.utils.BasicServiceUtils;
 import study.movie.repository.member.MemberRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.ticket.TicketRepository;
-import study.movie.entitySearchStrategy.ticket.TicketMetaType;
+import study.movie.entitySearchStrategy.ticket.TicketSortType;
 import study.movie.entitySearchStrategy.ticket.TicketSortStrategy;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
     private final PaymentServiceUtil paymentService;
-    private final DomainSpec<TicketMetaType> spec = new DomainSpec<>(TicketMetaType.class, new TicketSortStrategy());
+    private final DomainSpec<TicketSortType> spec = new DomainSpec<>(TicketSortType.class, new TicketSortStrategy());
 
     @Override
     @Transactional

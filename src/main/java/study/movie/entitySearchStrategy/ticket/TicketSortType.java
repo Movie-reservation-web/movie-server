@@ -9,7 +9,7 @@ import static study.movie.global.metaModel.MetaModelUtil.getColumn;
 
 @Getter
 @AllArgsConstructor
-public enum TicketMetaType implements MetaModelType {
+public enum TicketSortType implements MetaModelType {
     ID_ASC("오래된 순", "id,ASC", getColumn(ticket.id)),
     ID_DESC("최근 순", "id,DESC", getColumn(ticket.id)),
     PRICE_ASC("낮은 가격 순", "price,ASC", getColumn(ticket.price)),

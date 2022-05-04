@@ -14,10 +14,10 @@ public class ScheduleBasicSearchCond {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate screenDate;
 
-    private String movieTitle;
+    private Long movieId;
 
     private ScreenFormat screenFormat;
 
-    private String theaterName;
+    private Long theaterId;
 }
 

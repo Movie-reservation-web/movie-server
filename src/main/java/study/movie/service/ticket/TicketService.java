@@ -2,7 +2,7 @@ package study.movie.service.ticket;
 
 import org.springframework.data.domain.Page;
 import study.movie.domain.theater.ScreenFormat;
-import study.movie.dto.ticket.TicketSearchCond;
+import study.movie.dto.ticket.condition.TicketSearchCond;
 import study.movie.dto.ticket.request.PaymentRequest;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
 import study.movie.dto.ticket.response.ReserveTicketResponse;

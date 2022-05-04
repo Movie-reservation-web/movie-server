@@ -60,19 +60,30 @@ public class EnumController {
     }
 
     /**
-     * 상영일정 검색 정렬 방식
+     * 엔티티 상태 코드
      */
-    @GetMapping("/sort-type/schedule")
-    public ResponseEntity<?> getScheduleSortTypes() {
-        return getCategories(SCHEDULE_SORT_TYPE);
+    @GetMapping("/status/{entityName}")
+    public ResponseEntity<?> getEntityStatus(@PathVariable String entityName) {
+        EnumClassConst eStatus = getEnumClassConst(entityName, EnumMapper.STATUS_PATH);
+        return getCategories(eStatus);
     }
 
     /**
-     * 티켓 검색 정렬 방식
+     * 엔티티 검색 방식 타입
      */
-    @GetMapping("/sort-type/ticket")
-    public ResponseEntity<?> getTicketSortTypes() {
-        return getCategories(TICKET_SORT_TYPE);
+    @GetMapping("/search-conditions/{entityName}")
+    public ResponseEntity<?> getEntitySearchCondTypes(@PathVariable String entityName) {
+        EnumClassConst eSearchCondType = getEnumClassConst(entityName, EnumMapper.SEARCH_COND_TYPE_PATH);
+        return getCategories(eSearchCondType);
+    }
+
+    /**
+     * 엔티티 검색 정렬 타입
+     */
+    @GetMapping("/sort-types/{entityName}")
+    public ResponseEntity<?> getEntitySortTypes(@PathVariable String entityName) {
+        EnumClassConst eSortType = getEnumClassConst(entityName, EnumMapper.SORT_TYPE_PATH);
+        return getCategories(eSortType);
     }
 
     /**
@@ -82,6 +93,9 @@ public class EnumController {
      */
     private ResponseEntity<?> getCategories(EnumClassConst category) {
         return CustomResponse.success(category.getValue() + READ_CATEGORY, enumMapper.get(category.getClassName()));
+    }
 
+    private EnumClassConst getEnumClassConst(String entityName, String path) {
+        return EnumClassConst.valueOf(entityName.toUpperCase() + path);
     }
 }

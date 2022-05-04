@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static org.springframework.util.StringUtils.hasText;
-import static study.movie.domain.member.QMember.member;
 import static study.movie.domain.movie.QMovie.movie;
 import static study.movie.domain.schedule.QSchedule.schedule;
 import static study.movie.domain.theater.QTheater.theater;
@@ -28,10 +27,6 @@ public abstract class BasicRepositoryUtils {
         ) : null;
     }
 
-    protected BooleanExpression dateTimeBefore(DateTimePath<LocalDateTime> dateTimePath, LocalDateTime dateTime) {
-        return dateTime != null ? dateTimePath.before(dateTime) : null;
-    }
-
     protected BooleanExpression dateTimeAfter(DateTimePath<LocalDateTime> dateTimePath, LocalDateTime dateTime) {
         return dateTime != null ? dateTimePath.after(dateTime) : null;
     }
@@ -40,17 +35,10 @@ public abstract class BasicRepositoryUtils {
         return path.eq(data);
     }
 
-    protected BooleanExpression movieTitleEq(String data) {
-        return hasText(data) ? stringPathEq(movie.title, data) : null;
+    protected BooleanExpression movieTitleEq(String title) {
+        return hasText(title) ? movie.title.eq(title) : null;
     }
 
-    protected BooleanExpression theaterNameEq(String data) {
-        return hasText(data) ? stringPathEq(theater.name, data) : null;
-    }
-
-    protected BooleanExpression memberNameEq(String data) {
-        return hasText(data) ? stringPathEq(member.name, data) : null;
-    }
 
     protected BooleanExpression scheduleStatusNotEq(ScheduleStatus status) {
         return status != null ? schedule.status.ne(status) : null;
@@ -68,7 +56,4 @@ public abstract class BasicRepositoryUtils {
         return id != null ? entityPath.lt(id) : null;
     }
 
-    protected BooleanExpression scheduleStatusEq(ScheduleStatus status) {
-        return status != null ? schedule.status.eq(status) : null;
-    }
 }

@@ -15,12 +15,12 @@ public class ScheduleScreenRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate screenDate;
 
-    @NotBlank
-    private String movieTitle;
+    @NotNull
+    private Long movieId;
 
     @NotBlank
     private ScreenFormat screenFormat;
 
-    @NotBlank
-    private String theaterName;
+    @NotNull
+    private Long theaterId;
 }

@@ -9,25 +9,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import study.movie.domain.schedule.Schedule;
+import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.ticket.Ticket;
 import study.movie.domain.ticket.TicketStatus;
-import study.movie.dto.ticket.TicketSearchCond;
+import study.movie.dto.ticket.condition.TicketSearchCond;
 import study.movie.global.utils.BasicRepositoryUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.member.QMember.member;
 import static study.movie.domain.movie.QMovie.movie;
-import static study.movie.domain.schedule.QSchedule.schedule;
-import static study.movie.domain.theater.QScreen.screen;
 import static study.movie.domain.theater.QTheater.theater;
 import static study.movie.domain.ticket.QTicket.ticket;
 import static study.movie.domain.ticket.TicketStatus.RESERVED;
+import static study.movie.global.utils.DateTimeUtil.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -40,9 +37,9 @@ public class TicketRepositoryImpl extends BasicRepositoryUtils implements Ticket
         return queryFactory.selectFrom(ticket)
                 .leftJoin(ticket.member, member)
                 .where(
-                        entityIdLt(ticket.id, ticketId),
-                        entityIdEq(member.id, memberId),
-                        ticketStatusEq(RESERVED)
+                        ticketIdLt(ticketId),
+                        memberIdEq(memberId),
+                        isReservedTicket()
                 )
                 .orderBy(ticket.id.desc())
                 .limit(10)
@@ -54,9 +51,9 @@ public class TicketRepositoryImpl extends BasicRepositoryUtils implements Ticket
         return queryFactory.select(ticket.count())
                 .from(ticket)
                 .where(
-                        entityIdEq(member.id, memberId),
-                        reservedYearEq(year),
-                        ticketStatusEq(RESERVED)
+                        memberIdEq(memberId),
+                        reserveYearEq(year),
+                        isReservedTicket()
                 )
                 .fetchOne();
     }
@@ -79,13 +76,6 @@ public class TicketRepositoryImpl extends BasicRepositoryUtils implements Ticket
                 countQuery::fetchOne);
     }
 
-    private JPAQuery<Schedule> getTicketJPAQueryFetch() {
-        return queryFactory.selectFrom(schedule)
-                .join(schedule.movie, movie).fetchJoin()
-                .join(schedule.screen, screen).fetchJoin()
-                .join(screen.theater, theater).fetchJoin();
-    }
-
     private JPAQuery<Ticket> getTicketJPAQueryPaging() {
         return queryFactory.selectFrom(ticket)
                 .leftJoin(ticket.movie, movie)
@@ -102,29 +92,62 @@ public class TicketRepositoryImpl extends BasicRepositoryUtils implements Ticket
     private Predicate[] getSearchPredicts(TicketSearchCond cond) {
         return new Predicate[]{
                 reserveNumberEq(cond.getReserveNumber()),
-                scheduleNumberEq(cond.getScheduleNumber()),
-                memberNameEq(cond.getMemberName()),
                 movieTitleEq(cond.getMovieTitle()),
-                ticketStatusEq(cond.getTicketStatus()),
-                screenFormatEq(ticket.format, cond.getFormat()),
-                dateAfter(ticket.screenTime.startDateTime, cond.getScreenDateStart()),
-                dateBefore(ticket.screenTime.startDateTime, cond.getScreenDateEnd()),
+                theaterNameEq(cond.getTheaterName()),
+                screenFormatEq(cond.getScreenFormat()),
+                memberNameEq(cond.getMemberName()),
+                dateTimeGoe(dailyStartDateTime(cond.getScreenStartDate())),
+                dateTimeLt(dailyEndDateTime(cond.getScreenEndDate())),
+                ticketStatusEq(cond.getStatus())
         };
+    }
+
+    private BooleanExpression ticketIdLt(Long id) {
+        return id != null ? ticket.id.lt(id) : null;
+    }
+
+    private BooleanExpression memberIdEq(Long id) {
+        return id != null ? member.id.eq(id) : null;
+    }
+
+    private BooleanExpression memberNameEq(String title) {
+        return hasText(title) ? member.name.eq(title) : null;
+    }
+
+    private BooleanExpression theaterNameEq(String name) {
+        return hasText(name) ? theater.name.eq(name) : null;
     }
 
     private BooleanExpression reserveNumberEq(String reserveNumber) {
         return hasText(reserveNumber) ? ticket.reserveNumber.eq(reserveNumber) : null;
     }
 
-    private BooleanExpression scheduleNumberEq(String scheduleNumber) {
-        return hasText(scheduleNumber) ? ticket.scheduleNumber.eq(scheduleNumber) : null;
+    private BooleanExpression reserveYearEq(Integer year) {
+        return dateTimeGoe(year).and(dateTimeLt(year));
     }
 
-    private BooleanExpression reservedYearEq(Integer year) {
-        return year != null ? ticket.screenTime.startDateTime.between(
-                LocalDateTime.of(LocalDate.ofYearDay(year, LocalDate.MIN.getDayOfYear()), LocalTime.MIN).withNano(0),
-                LocalDateTime.of(LocalDate.ofYearDay(year, LocalDate.MAX.getDayOfYear()), LocalTime.MAX).withNano(0)
-        ) : null;
+    private BooleanExpression dateTimeGoe(Integer year) {
+        return year != null ? ticket.screenTime.startDateTime.goe(yearlyStartDateTime(year)) : null;
+    }
+
+    private BooleanExpression dateTimeLt(Integer year) {
+        return year != null ? ticket.screenTime.startDateTime.lt(yearlyEndDateTime(year)) : null;
+    }
+
+    private BooleanExpression dateTimeLt(LocalDateTime dateTime) {
+        return dateTime != null ? ticket.screenTime.startDateTime.lt(dateTime) : null;
+    }
+
+    private BooleanExpression dateTimeGoe(LocalDateTime dateTime) {
+        return dateTime != null ? ticket.screenTime.startDateTime.goe(dateTime) : null;
+    }
+
+    private BooleanExpression screenFormatEq(ScreenFormat format) {
+        return format != null ? ticket.format.eq(format) : null;
+    }
+
+    private BooleanExpression isReservedTicket() {
+        return ticketStatusEq(RESERVED);
     }
 
     private BooleanExpression ticketStatusEq(TicketStatus status) {

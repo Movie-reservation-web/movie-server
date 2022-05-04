@@ -19,7 +19,6 @@ import java.time.LocalDate;
 @Builder
 public class ScheduleSearchResponse {
 
-    private Long id;
     private ScheduleMovieResponse movie;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate screenDate;

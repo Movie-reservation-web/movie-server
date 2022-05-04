@@ -5,9 +5,9 @@ import study.movie.global.page.SortOption;
 import study.movie.global.page.SortStrategy;
 import study.movie.global.page.SortStrategyImpl;
 
-public class ScheduleSortStrategy extends SortStrategyImpl<ScheduleMetaType> implements SortStrategy<ScheduleMetaType> {
+public class ScheduleSortStrategy extends SortStrategyImpl<ScheduleSortType> implements SortStrategy<ScheduleSortType> {
     @Override
-    public Sort.Order getSortOrder(ScheduleMetaType domainKey, SortOption order) {
+    public Sort.Order getSortOrder(ScheduleSortType domainKey, SortOption order) {
         switch (domainKey) {
             case ID_ASC:
             case ID_DESC:

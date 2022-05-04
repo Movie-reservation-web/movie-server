@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.ScheduleStatus;
 import study.movie.domain.schedule.Seat;
 import study.movie.domain.schedule.SeatEntity;
 import study.movie.domain.theater.ScreenFormat;
@@ -22,14 +23,11 @@ import study.movie.dto.schedule.condition.UpdateSeatRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.global.utils.BasicRepositoryUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
-import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.movie.QMovie.movie;
 import static study.movie.domain.schedule.QSchedule.schedule;
 import static study.movie.domain.schedule.QSeatEntity.seatEntity;
@@ -37,6 +35,8 @@ import static study.movie.domain.schedule.ScheduleStatus.CLOSED;
 import static study.movie.domain.schedule.ScheduleStatus.OPEN;
 import static study.movie.domain.theater.QScreen.screen;
 import static study.movie.domain.theater.QTheater.theater;
+import static study.movie.global.utils.DateTimeUtil.dailyEndDateTime;
+import static study.movie.global.utils.DateTimeUtil.dailyStartDateTime;
 
 
 @Repository
@@ -62,11 +62,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
     public List<Schedule> searchBasicSchedules(ScheduleBasicSearchCond cond) {
         return getScheduleJPAQueryFetch()
                 .where(
-                        dateTimeAfter(schedule.screenTime.startDateTime, LocalDateTime.now()),
-                        movieTitleEq(cond.getMovieTitle()),
-                        screenFormatEq(screen.format, cond.getScreenFormat()),
-                        theaterNameEq(cond.getTheaterName()),
-                        reserveDateBetween(cond.getScreenDate())
+                        dateTimeGoe(LocalDateTime.now()),
+                        dateTimeLt(dailyEndDateTime(cond.getScreenDate())),
+                        movie.id.eq(cond.getMovieId()),
+                        screen.format.eq(cond.getScreenFormat()),
+                        theater.id.eq(cond.getTheaterId())
                 )
                 .fetch();
     }
@@ -76,11 +76,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
         return queryFactory.selectFrom(schedule)
                 .join(schedule.screen, screen).fetchJoin()
                 .where(
-                        dateTimeAfter(schedule.screenTime.startDateTime, LocalDateTime.now()),
-                        movieTitleEq(request.getMovieTitle()),
-                        screenFormatEq(screen.format, request.getScreenFormat()),
-                        theaterNameEq(request.getTheaterName()),
-                        reserveDateBetween(request.getScreenDate())
+                        dateTimeGoe(LocalDateTime.now()),
+                        dateTimeLt(dailyEndDateTime(request.getScreenDate())),
+                        movie.id.eq(request.getMovieId()),
+                        screen.format.eq(request.getScreenFormat()),
+                        theater.id.eq(request.getTheaterId())
                 )
                 .fetch();
     }
@@ -92,7 +92,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
                 .set(seatEntity.status, cond.getStatus())
                 .where(
                         seatsIn(cond.getSeats()),
-                        scheduleAtSeatEntityEq(cond.getScheduleId()))
+                        scheduleIdEq(cond.getScheduleId()))
                 .execute();
     }
 
@@ -100,7 +100,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
     public List<SeatEntity> findSeatByScheduleId(Long scheduleId) {
         return queryFactory.selectFrom(seatEntity)
                 .join(seatEntity.schedule, schedule).fetchJoin()
-                .where(schedule.id.eq(scheduleId))
+                .where(scheduleIdEq(scheduleId))
                 .fetch();
     }
 
@@ -135,6 +135,16 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
                 countQuery::fetchOne);
     }
 
+    @Override
+    public void updateStatusByPastDaysStatus(LocalDateTime dateTime) {
+        queryFactory.update(schedule)
+                .set(schedule.status, CLOSED)
+                .where(
+                        dateTimeLt(dateTime),
+                        scheduleStatusNe(CLOSED)
+                );
+    }
+
     private JPAQuery<Schedule> getScheduleJPAQueryPaging(ScheduleSearchCond cond) {
         return queryFactory.selectFrom(schedule)
                 .join(schedule.movie, movie).fetchJoin()
@@ -155,40 +165,44 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
     private Predicate[] getSearchPredicts(ScheduleSearchCond cond) {
         return new Predicate[]{
                 movieTitleEq(cond.getMovieTitle()),
-                theaterNameEq(cond.getTheaterName()),
-                reserveDateBetween(cond.getScreenDate()),
-                screenFormatEq(screen.format, cond.getScreenFormat()),
-                scheduleStatusEq(cond.getScheduleStatus()),
-                scheduleNumberEq(cond.getScheduleNumber())};
+                dateTimeGoe(dailyStartDateTime(cond.getScreenStartDate())),
+                dateTimeLt(dailyEndDateTime(cond.getScreenEndDate())),
+                screenFormatEq(cond.getScreenFormat()),
+                scheduleStatusEq(cond.getStatus())
+        };
     }
 
-    private BooleanExpression scheduleNumberEq(String scheduleNumber) {
-        return hasText(scheduleNumber) ? schedule.scheduleNumber.eq(scheduleNumber) : null;
+    protected BooleanExpression scheduleStatusEq(ScheduleStatus status) {
+        return status != null ? schedule.status.eq(status) : null;
     }
 
-    @Override
-    public void updateStatusByPastDaysStatus(LocalDateTime dateTime) {
-        queryFactory.update(schedule)
-                .set(schedule.status, CLOSED)
-                .where(
-                        dateTimeBefore(schedule.screenTime.startDateTime, dateTime),
-                        scheduleStatusNotEq(CLOSED)
-                );
+    protected BooleanExpression scheduleStatusNe(ScheduleStatus status) {
+        return status != null ? schedule.status.ne(status) : null;
     }
 
-    private BooleanExpression scheduleAtSeatEntityEq(Long scheduleId) {
+    private BooleanExpression screenFormatEq(ScreenFormat format) {
+        return format != null ? screen.format.eq(format) : null;
+    }
+
+    private BooleanExpression scheduleIdEq(Long scheduleId) {
         return scheduleId != null ? seatEntity.schedule.id.eq(scheduleId) : null;
+    }
+
+    private BooleanExpression isOpenSchedule(LocalDateTime endDateTime) {
+        return dateTimeGoe(LocalDateTime.now())
+                .and(dateTimeLt(endDateTime));
+    }
+
+    private BooleanExpression dateTimeLt(LocalDateTime dateTime) {
+        return dateTime != null ? schedule.screenTime.startDateTime.lt(dateTime) : null;
+    }
+
+    private BooleanExpression dateTimeGoe(LocalDateTime dateTime) {
+        return dateTime != null ? schedule.screenTime.startDateTime.goe(dateTime) : null;
     }
 
     private BooleanExpression seatsIn(List<Seat> seats) {
         return seats != null ? seatEntity.seat.in(seats) : null;
-    }
-
-    private BooleanExpression reserveDateBetween(LocalDate date) {
-        return date != null ? schedule.screenTime.startDateTime.between(
-                LocalDateTime.of(date, LocalTime.now().withMinute(0).withSecond(0).withNano(0)),
-                LocalDateTime.of(date, LocalTime.MAX).withNano(0)
-        ) : null;
     }
 
     private OrderSpecifier<?>[] scheduleSort(Pageable pageable) {

@@ -10,15 +10,14 @@ import java.time.LocalDate;
 @Data
 public class ScheduleSearchCond {
 
-    private String movieTitle;
-    private String movieNation;
-
     private String theaterName;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate screenDate;
+    private String movieTitle;
     private ScreenFormat screenFormat;
 
-    private ScheduleStatus scheduleStatus;
-    private String scheduleNumber;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate screenStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate screenEndDate;
+
+    private ScheduleStatus status;
 }

@@ -24,7 +24,7 @@ import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.schedule.SeatRepository;
 import study.movie.repository.theater.ScreenRepository;
-import study.movie.entitySearchStrategy.schedule.ScheduleMetaType;
+import study.movie.entitySearchStrategy.schedule.ScheduleSortType;
 import study.movie.entitySearchStrategy.schedule.ScheduleSortStrategy;
 
 import java.time.LocalDateTime;
@@ -43,7 +43,7 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     private final SeatRepository seatRepository;
-    private final DomainSpec<ScheduleMetaType> spec = new DomainSpec<>(ScheduleMetaType.class, new ScheduleSortStrategy());
+    private final DomainSpec<ScheduleSortType> spec = new DomainSpec<>(ScheduleSortType.class, new ScheduleSortStrategy());
 
     @Override
     public List<ScheduleSearchResponse> findAllSchedules() {

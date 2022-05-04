@@ -8,13 +8,12 @@ import study.movie.global.enumMapper.EnumMapperType;
 @Getter
 @AllArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum ScheduleSearchOrderByState implements EnumMapperType {
-    MOVIE_TITLE("영화 제목","movieTitle"),
-    SCREEN_DATE("상영 시간","screenDate"),
-    THEATER_NAME("극장 이름","theaterName"),
-    AUDIENCE_COUNT("관객 수","audience");
-
-    private String title;
+public enum ScheduleSearchCondType implements EnumMapperType {
+    MOVIE_TITLE("영화 제목"),
+    THEATER_NAME("극장 이름"),
+    SCREEN_FORMAT("상영관 포멧"),
+    SCREEN_START_TIME("시작 날짜"),
+    SCREEN_END_TIME("끝 날짜");
     private String value;
 
     @Override

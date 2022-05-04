@@ -59,7 +59,7 @@ public interface ScheduleService {
     /**
      * Admin Server
      * <p>
-     * 상영 일정 조회 - 영화, 극장, 날짜,
+     * 상영 일정 조회 - 영화, 상영관 포멧, 극장, 날짜, 스케줄 상태
      */
     Page<ScheduleResponse> search(ScheduleSearchCond cond, PageableDTO pageableDTO);
 

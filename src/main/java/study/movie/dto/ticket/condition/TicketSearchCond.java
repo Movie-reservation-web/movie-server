@@ -1,4 +1,4 @@
-package study.movie.dto.ticket;
+package study.movie.dto.ticket.condition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -11,14 +11,15 @@ import java.time.LocalDate;
 public class TicketSearchCond {
 
     private String reserveNumber;
-    private String scheduleNumber;
-    private String theaterName;
-    private ScreenFormat format;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate screenDateStart;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate screenDateEnd;
-    private TicketStatus ticketStatus;
-    private String memberName;
     private String movieTitle;
+    private String theaterName;
+    private ScreenFormat screenFormat;
+    private String memberName;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate screenStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate screenEndDate;
+
+    private TicketStatus status;
 }

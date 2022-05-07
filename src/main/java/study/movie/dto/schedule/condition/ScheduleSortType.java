@@ -1,4 +1,4 @@
-package study.movie.entitySearchStrategy.schedule;
+package study.movie.dto.schedule.condition;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

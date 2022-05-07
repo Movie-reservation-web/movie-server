@@ -3,10 +3,9 @@ package study.movie.global.enumMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import study.movie.global.constants.EnumClassConst;
 import study.movie.global.dto.CustomResponse;
 
-import static study.movie.global.constants.EnumClassConst.*;
+import static study.movie.global.enumMapper.EnumClassConst.*;
 import static study.movie.global.constants.ResponseMessage.READ_CATEGORY;
 
 /**

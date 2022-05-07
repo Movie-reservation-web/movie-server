@@ -12,10 +12,10 @@ import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.ticket.TicketStatus;
 import study.movie.dto.schedule.condition.ScheduleSearchCondType;
 import study.movie.dto.ticket.condition.TicketSearchCondType;
-import study.movie.entitySearchStrategy.schedule.ScheduleSortType;
-import study.movie.entitySearchStrategy.ticket.TicketSortType;
+import study.movie.dto.schedule.condition.ScheduleSortType;
+import study.movie.dto.ticket.condition.TicketSortType;
 
-import static study.movie.global.constants.EnumClassConst.*;
+import static study.movie.global.enumMapper.EnumClassConst.*;
 
 @Configuration
 public class EnumConfig {

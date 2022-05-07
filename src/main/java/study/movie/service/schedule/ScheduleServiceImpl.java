@@ -12,27 +12,26 @@ import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.theater.Screen;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
+import study.movie.dto.schedule.condition.ScheduleSortType;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.global.page.DomainSpec;
-import study.movie.global.page.PageableDTO;
+import study.movie.global.exception.CustomException;
+import study.movie.global.paging.DomainSpec;
+import study.movie.global.paging.PageableDTO;
 import study.movie.global.utils.BasicServiceUtils;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.schedule.SeatRepository;
 import study.movie.repository.theater.ScreenRepository;
-import study.movie.entitySearchStrategy.schedule.ScheduleSortType;
-import study.movie.entitySearchStrategy.schedule.ScheduleSortStrategy;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static study.movie.global.exception.ErrorCode.MOVIE_NOT_FOUND;
-import static study.movie.global.exception.ErrorCode.SCHEDULE_NOT_FOUND;
+import static study.movie.global.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +42,7 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     private final SeatRepository seatRepository;
-    private final DomainSpec<ScheduleSortType> spec = new DomainSpec<>(ScheduleSortType.class, new ScheduleSortStrategy());
+    private final DomainSpec<ScheduleSortType> spec = new DomainSpec<>(ScheduleSortType.class);
 
     @Override
     public List<ScheduleSearchResponse> findAllSchedules() {
@@ -89,6 +88,12 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
         Screen screen = screenRepository
                 .findById(request.getScreenId())
                 .orElseThrow(getExceptionSupplier(SCHEDULE_NOT_FOUND));
+
+        // 상영관 검증
+        screen.checkAllowedMovieFormat(findMovie.getFormats());
+        // 중복 스케줄 검증
+        checkDuplicateScreenSchedule(screen.getId(), request.getStartTime(), findMovie.getRunningTime());
+
         Schedule schedule = Schedule.builder()
                 .movie(findMovie)
                 .screen(screen)
@@ -117,5 +122,13 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
     public void removeSchedule(IdListRequest request) {
         seatRepository.deleteAllByScheduleIdInQuery(request.getIds());
         scheduleRepository.deleteAllByIdInQuery(request.getIds());
+    }
+
+    private void checkDuplicateScreenSchedule(Long screenId, LocalDateTime startTime, Integer runningTime) {
+        scheduleRepository
+                .findDuplicatedSchedule(screenId, startTime, startTime.plusMinutes(runningTime + 20))
+                .ifPresent(schedule -> {
+                    throw new CustomException(DUPLICATED_SCHEDULE_TIME);
+                });
     }
 }

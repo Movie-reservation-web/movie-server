@@ -1,6 +1,8 @@
-package study.movie.global.page;
+package study.movie.global.paging;
 
 import lombok.*;
+import study.movie.global.paging.sort.SortOption;
+import study.movie.global.paging.sort.SortPair;
 
 import java.util.List;
 

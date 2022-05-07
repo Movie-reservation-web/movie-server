@@ -9,7 +9,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode{
+public enum ErrorCode {
 
     /**
      * <p>
@@ -38,9 +38,10 @@ public enum ErrorCode{
     ALREADY_CANCELLED_TICKET(BAD_REQUEST, "이미 취소된 티켓입니다."),
     NOT_ALLOW_RESERVED_STATUS(BAD_REQUEST, "예약 상태로 변경할 수 없습니다."),
     NOT_CANCELLED_TICKET(BAD_REQUEST, "취소되지 않은 티켓입니다."),
-    ILLEGAL_ARGUMENT(BAD_REQUEST, "적절하지 않은 인자입니다."),
+    NOT_ALLOW_SCREEN_FORMAT(BAD_REQUEST, "상영관에서 지원하지 않는 영화 포멧입니다."),
 
     INVALID_SORT_OPTION(BAD_REQUEST, "정렬 조건이 올바르지 않습니다."),
+    ILLEGAL_ARGUMENT(BAD_REQUEST, "적절하지 않은 인자입니다."),
 
     /**
      * <p>
@@ -61,7 +62,8 @@ public enum ErrorCode{
      * <p>
      * Detail: Resource 충돌, 중복 데이터 존재
      */
-    DUPLICATED_RESOURCE(CONFLICT, "DB에 해당 데이터가 이미 존재합니다.");
+    DUPLICATED_RESOURCE(CONFLICT, "DB에 해당 데이터가 이미 존재합니다."),
+    DUPLICATED_SCHEDULE_TIME(CONFLICT, "해당 상영관에 이미 상영일정이 있습니다.");
 
     private final HttpStatus status;
     private final String detail;

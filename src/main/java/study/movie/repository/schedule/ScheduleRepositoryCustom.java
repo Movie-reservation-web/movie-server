@@ -7,12 +7,12 @@ import study.movie.domain.schedule.SeatEntity;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
-import study.movie.dto.schedule.condition.UpdateSeatRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
-import study.movie.dto.schedule.response.ScheduleResponse;
+import study.movie.dto.schedule.request.UpdateSeatRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleRepositoryCustom {
 
@@ -24,6 +24,12 @@ public interface ScheduleRepositoryCustom {
      * @return
      */
     List<Schedule> findAllSchedules();
+
+    /**
+     * 해당 시간대에 상영관에 존재하는 스케줄 조회
+     * @return
+     */
+    Optional<Schedule> findDuplicatedSchedule(Long screenId, LocalDateTime startTime, LocalDateTime endTime);
 
     /**
      * 상영일정 검색

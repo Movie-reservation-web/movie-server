@@ -112,7 +112,7 @@ class TicketServiceTest {
         Ticket savedTicket = ticketRepository.findById(response.getId()).orElseThrow();
 
         // when
-        ticketService.cancelReservation(savedTicket.getReserveNumber());
+        ticketService.cancelReservation(savedTicket.getReserveNumber(), member.getId());
 
         boolean isTicketInMovie = savedTicket.getMovie().getTickets().contains(savedTicket);
         boolean isTicketInMember = savedTicket.getMember().getTickets().contains(savedTicket);
@@ -185,7 +185,8 @@ class TicketServiceTest {
         idRequest.setIds(Collections.singletonList(id));
 
         // when
-        ticketService.cancelReservation(savedTicket.getReserveNumber());
+        ticketService.cancelReservation(savedTicket.getReserveNumber(), member.getId());
+
         ticketService.delete(idRequest);
 
         // then

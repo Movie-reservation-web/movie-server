@@ -1,7 +1,6 @@
 package study.movie.global.enumMapper;
 
 import lombok.NoArgsConstructor;
-import study.movie.global.constants.EnumClassConst;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;

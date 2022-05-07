@@ -12,8 +12,6 @@ import java.util.Optional;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long>, TicketRepositoryCustom {
 
-    Optional<Ticket> findByReserveNumber(String reserveNumber);
-
     @Transactional
     @Modifying
     @Query(value = "delete from Ticket t where t.id in :ids")

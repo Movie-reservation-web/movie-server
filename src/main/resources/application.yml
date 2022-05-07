@@ -21,3 +21,8 @@ logging:
   level:
     org.hibernate.SQL: debug # 하이버네이트가 생성하는 SQL 이 다보인다.
 #    org.hibernate.type: trace
+
+
+iamport:
+  restkey: 0349213312895772
+  secret: 33cc95c0a912987164e4c8dbef320288f8da0843b93daf2cede64b6d237b9b28d0360c8b3d60108c

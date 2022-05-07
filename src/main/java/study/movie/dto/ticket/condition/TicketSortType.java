@@ -1,4 +1,4 @@
-package study.movie.entitySearchStrategy.ticket;
+package study.movie.dto.ticket.condition;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

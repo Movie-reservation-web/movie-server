@@ -21,5 +21,4 @@ public class DateTimeUtil {
         return year != null ? dailyEndDateTime(LocalDate.ofYearDay(year, LocalDate.MAX.getDayOfYear())) : null;
     }
 
-
 }

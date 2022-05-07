@@ -1,4 +1,4 @@
-package study.movie.global.page;
+package study.movie.global.paging.sort;
 
 import org.springframework.data.domain.Sort;
 

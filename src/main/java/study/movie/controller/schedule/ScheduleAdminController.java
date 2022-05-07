@@ -9,7 +9,7 @@ import study.movie.dto.schedule.request.CreateScheduleRequest;
 import study.movie.dto.schedule.response.ScheduleResponse;
 import study.movie.global.dto.CustomResponse;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.global.page.PageableDTO;
+import study.movie.global.paging.PageableDTO;
 import study.movie.service.schedule.ScheduleService;
 
 import javax.validation.Valid;

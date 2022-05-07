@@ -1,4 +1,4 @@
-package study.movie.global.constants;
+package study.movie.global.enumMapper;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

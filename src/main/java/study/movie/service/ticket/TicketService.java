@@ -9,7 +9,7 @@ import study.movie.dto.ticket.response.ReserveTicketResponse;
 import study.movie.dto.ticket.response.TicketResponse;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.global.page.PageableDTO;
+import study.movie.global.paging.PageableDTO;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface TicketService {
      * <p>
      * 티켓 예매 취소
      */
-    void cancelReservation(String reserveNumber);
+    void cancelReservation(String reserveNumber, Long memberId);
 
     /**
      * Api Server

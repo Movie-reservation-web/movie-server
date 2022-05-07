@@ -1,10 +1,12 @@
-package study.movie.global.page;
+package study.movie.global.paging;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import study.movie.global.paging.sort.SortOption;
+import study.movie.global.paging.sort.SortPair;
 
 import java.util.ArrayList;
 import java.util.List;

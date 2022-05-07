@@ -93,4 +93,8 @@ public enum ScreenFormat implements EnumMapperType {
     public boolean isFixRate() {
         return isFixRate;
     }
+
+    public boolean isAllowedFilmFormat(FilmFormat filmFormat){
+        return filmFormats.contains(filmFormat);
+    }
 }

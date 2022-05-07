@@ -1,4 +1,4 @@
-package study.movie.dto.schedule.condition;
+package study.movie.dto.schedule.request;
 
 import lombok.Builder;
 import lombok.Data;

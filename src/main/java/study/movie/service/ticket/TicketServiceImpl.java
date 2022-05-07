@@ -10,22 +10,21 @@ import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.SeatStatus;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.ticket.Ticket;
-import study.movie.dto.schedule.condition.UpdateSeatRequest;
+import study.movie.dto.schedule.request.UpdateSeatRequest;
 import study.movie.dto.ticket.condition.TicketSearchCond;
+import study.movie.dto.ticket.condition.TicketSortType;
 import study.movie.dto.ticket.request.PaymentRequest;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
 import study.movie.dto.ticket.response.ReserveTicketResponse;
 import study.movie.dto.ticket.response.TicketResponse;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.global.page.DomainSpec;
-import study.movie.global.page.PageableDTO;
+import study.movie.global.paging.DomainSpec;
+import study.movie.global.paging.PageableDTO;
 import study.movie.global.utils.BasicServiceUtils;
 import study.movie.repository.member.MemberRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.ticket.TicketRepository;
-import study.movie.entitySearchStrategy.ticket.TicketSortType;
-import study.movie.entitySearchStrategy.ticket.TicketSortStrategy;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +41,7 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
     private final PaymentServiceUtil paymentService;
-    private final DomainSpec<TicketSortType> spec = new DomainSpec<>(TicketSortType.class, new TicketSortStrategy());
+    private final DomainSpec<TicketSortType> spec = new DomainSpec<>(TicketSortType.class);
 
     @Override
     @Transactional
@@ -74,11 +73,12 @@ public class TicketServiceImpl extends BasicServiceUtils implements TicketServic
 
     @Override
     @Transactional
-    public void cancelReservation(String reserveNumber) {
+    public void cancelReservation(String reserveNumber, Long memberId) {
         // 티켓, 스케줄 조회
         Ticket ticket = ticketRepository
-                .findByReserveNumber(reserveNumber)
+                .findByReserveNumber(reserveNumber, memberId)
                 .orElseThrow(getExceptionSupplier(TICKET_NOT_FOUND));
+
         Schedule schedule = scheduleRepository
                 .findByScheduleNumber(ticket.getScheduleNumber())
                 .orElseThrow(getExceptionSupplier(SCHEDULE_NOT_FOUND));

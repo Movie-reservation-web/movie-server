@@ -5,14 +5,17 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.schedule.Schedule;
 import study.movie.global.entity.BaseTimeEntity;
+import study.movie.global.exception.CustomException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
+import static study.movie.global.exception.ErrorCode.NOT_ALLOW_SCREEN_FORMAT;
 
 @Entity
 @Getter
@@ -55,4 +58,9 @@ public class Screen extends BaseTimeEntity {
         theater.getScreens().add(this);
     }
 
+    //==비즈니스 로직==//
+    public void checkAllowedMovieFormat(List<FilmFormat> filmFormats){
+        if (!filmFormats.stream().allMatch(value -> format.isAllowedFilmFormat(value)))
+            throw new CustomException(NOT_ALLOW_SCREEN_FORMAT);
+    }
 }

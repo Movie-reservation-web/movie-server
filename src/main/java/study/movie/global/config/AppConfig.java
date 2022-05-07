@@ -3,7 +3,7 @@ package study.movie.global.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import study.movie.global.page.PageableArgumentResolver;
+import study.movie.global.paging.PageableArgumentResolver;
 
 import java.util.List;
 

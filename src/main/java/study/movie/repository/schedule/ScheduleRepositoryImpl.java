@@ -19,15 +19,16 @@ import study.movie.domain.schedule.SeatEntity;
 import study.movie.domain.theater.ScreenFormat;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
-import study.movie.dto.schedule.condition.UpdateSeatRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
-import study.movie.global.utils.BasicRepositoryUtils;
+import study.movie.dto.schedule.request.UpdateSeatRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
+import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.movie.QMovie.movie;
 import static study.movie.domain.schedule.QSchedule.schedule;
 import static study.movie.domain.schedule.QSeatEntity.seatEntity;
@@ -42,7 +43,7 @@ import static study.movie.global.utils.DateTimeUtil.dailyStartDateTime;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements ScheduleRepositoryCustom {
+public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -56,6 +57,20 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
     @Override
     public List<Schedule> findAllSchedules() {
         return getScheduleJPAQueryFetch().fetch();
+    }
+
+    @Override
+    public Optional<Schedule> findDuplicatedSchedule(Long screenId, LocalDateTime startTime, LocalDateTime endTime) {
+        return Optional.ofNullable(
+                queryFactory.selectFrom(schedule)
+                        .join(schedule.screen, screen).fetchJoin()
+                        .where(
+                                screen.id.eq(screenId),
+                                startDateTimeBetween(startTime, endTime),
+                                endDateTimeBetween(startTime, endTime)
+                        )
+                        .fetchFirst()
+        );
     }
 
     @Override
@@ -121,13 +136,13 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
 
     @Override
     public Page<Schedule> search(ScheduleSearchCond cond, Pageable pageable) {
-        List<Schedule> content = getScheduleJPAQueryPaging(cond)
+        List<Schedule> content = getSearchQueryPaging(cond)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(scheduleSort(pageable))
                 .fetch();
 
-        JPAQuery<Long> countQuery = getScheduleJPAQueryCount(cond);
+        JPAQuery<Long> countQuery = getSearchQueryCount(cond);
 
         return PageableExecutionUtils.getPage(
                 content,
@@ -145,7 +160,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
                 );
     }
 
-    private JPAQuery<Schedule> getScheduleJPAQueryPaging(ScheduleSearchCond cond) {
+    private JPAQuery<Schedule> getSearchQueryPaging(ScheduleSearchCond cond) {
         return queryFactory.selectFrom(schedule)
                 .join(schedule.movie, movie).fetchJoin()
                 .join(schedule.screen, screen).fetchJoin()
@@ -153,7 +168,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
                 .where(getSearchPredicts(cond));
     }
 
-    private JPAQuery<Long> getScheduleJPAQueryCount(ScheduleSearchCond cond) {
+    private JPAQuery<Long> getSearchQueryCount(ScheduleSearchCond cond) {
         return queryFactory.select(schedule.count())
                 .from(schedule)
                 .leftJoin(schedule.movie, movie)
@@ -172,12 +187,16 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
         };
     }
 
-    protected BooleanExpression scheduleStatusEq(ScheduleStatus status) {
+    private BooleanExpression scheduleStatusEq(ScheduleStatus status) {
         return status != null ? schedule.status.eq(status) : null;
     }
 
-    protected BooleanExpression scheduleStatusNe(ScheduleStatus status) {
+    private BooleanExpression scheduleStatusNe(ScheduleStatus status) {
         return status != null ? schedule.status.ne(status) : null;
+    }
+
+    private BooleanExpression movieTitleEq(String title) {
+        return hasText(title) ? movie.title.eq(title) : null;
     }
 
     private BooleanExpression screenFormatEq(ScreenFormat format) {
@@ -188,17 +207,22 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtils implements Sche
         return scheduleId != null ? seatEntity.schedule.id.eq(scheduleId) : null;
     }
 
-    private BooleanExpression isOpenSchedule(LocalDateTime endDateTime) {
-        return dateTimeGoe(LocalDateTime.now())
-                .and(dateTimeLt(endDateTime));
-    }
-
     private BooleanExpression dateTimeLt(LocalDateTime dateTime) {
         return dateTime != null ? schedule.screenTime.startDateTime.lt(dateTime) : null;
     }
 
     private BooleanExpression dateTimeGoe(LocalDateTime dateTime) {
         return dateTime != null ? schedule.screenTime.startDateTime.goe(dateTime) : null;
+    }
+
+    private BooleanExpression startDateTimeBetween(LocalDateTime startTime, LocalDateTime endTime) {
+        return startTime != null && endTime != null ? dateTimeGoe(startTime).and(dateTimeLt(endTime)) : null;
+    }
+    private BooleanExpression endDateTimeBetween(LocalDateTime startTime, LocalDateTime endTime) {
+        return startTime != null && endTime != null ?
+                schedule.screenTime.endDateTime.goe(startTime).and(
+                        schedule.screenTime.endDateTime.lt(endTime))
+                : null;
     }
 
     private BooleanExpression seatsIn(List<Seat> seats) {

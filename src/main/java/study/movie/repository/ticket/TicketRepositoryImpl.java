@@ -1,7 +1,9 @@
 package study.movie.repository.ticket;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +15,13 @@ import study.movie.domain.theater.ScreenFormat;
 import study.movie.domain.ticket.Ticket;
 import study.movie.domain.ticket.TicketStatus;
 import study.movie.dto.ticket.condition.TicketSearchCond;
-import study.movie.global.utils.BasicRepositoryUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import static com.querydsl.core.types.Order.ASC;
+import static com.querydsl.core.types.Order.DESC;
 import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.member.QMember.member;
 import static study.movie.domain.movie.QMovie.movie;
@@ -28,7 +32,7 @@ import static study.movie.global.utils.DateTimeUtil.*;
 
 @Repository
 @RequiredArgsConstructor
-public class TicketRepositoryImpl extends BasicRepositoryUtils implements TicketRepositoryCustom {
+public class TicketRepositoryImpl implements TicketRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -59,16 +63,24 @@ public class TicketRepositoryImpl extends BasicRepositoryUtils implements Ticket
     }
 
     @Override
+    public Optional<Ticket> findByReserveNumber(String reserveNumber, Long memberId) {
+        return Optional.ofNullable(queryFactory.selectFrom(ticket)
+                .where(
+                        memberIdEq(memberId),
+                        reserveNumberEq(reserveNumber)
+                )
+                .fetchOne());
+    }
+
+    @Override
     public Page<Ticket> search(TicketSearchCond cond, Pageable pageable) {
-        List<Ticket> content = getTicketJPAQueryPaging()
-                .where(getSearchPredicts(cond))
+        List<Ticket> content = getSearchQueryPaging(cond)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(ticket.id.desc())
+                .orderBy(ticketSort(pageable))
                 .fetch();
 
-        JPAQuery<Long> countQuery = getTicketJPAQueryCount()
-                .where(getSearchPredicts(cond));
+        JPAQuery<Long> countQuery = getSearchQueryCount(cond);
 
         return PageableExecutionUtils.getPage(
                 content,
@@ -76,17 +88,19 @@ public class TicketRepositoryImpl extends BasicRepositoryUtils implements Ticket
                 countQuery::fetchOne);
     }
 
-    private JPAQuery<Ticket> getTicketJPAQueryPaging() {
+    private JPAQuery<Ticket> getSearchQueryPaging(TicketSearchCond cond) {
         return queryFactory.selectFrom(ticket)
-                .leftJoin(ticket.movie, movie)
-                .leftJoin(ticket.member, member);
+                .join(ticket.movie, movie).fetchJoin()
+                .join(ticket.member, member).fetchJoin()
+                .where(getSearchPredicts(cond));
     }
 
-    private JPAQuery<Long> getTicketJPAQueryCount() {
+    private JPAQuery<Long> getSearchQueryCount(TicketSearchCond cond) {
         return queryFactory.select(ticket.count())
                 .from(ticket)
                 .leftJoin(ticket.movie, movie)
-                .leftJoin(ticket.member, member);
+                .leftJoin(ticket.member, member)
+                .where(getSearchPredicts(cond));
     }
 
     private Predicate[] getSearchPredicts(TicketSearchCond cond) {
@@ -108,6 +122,10 @@ public class TicketRepositoryImpl extends BasicRepositoryUtils implements Ticket
 
     private BooleanExpression memberIdEq(Long id) {
         return id != null ? member.id.eq(id) : null;
+    }
+
+    private BooleanExpression movieTitleEq(String title) {
+        return hasText(title) ? movie.title.eq(title) : null;
     }
 
     private BooleanExpression memberNameEq(String title) {
@@ -152,5 +170,12 @@ public class TicketRepositoryImpl extends BasicRepositoryUtils implements Ticket
 
     private BooleanExpression ticketStatusEq(TicketStatus status) {
         return status != null ? ticket.ticketStatus.eq(status) : null;
+    }
+
+    private OrderSpecifier<?>[] ticketSort(Pageable pageable) {
+        return pageable.getSort().stream().map(order -> new OrderSpecifier(
+                order.getDirection().isAscending() ? ASC : DESC,
+                Expressions.path(Ticket.class, ticket, order.getProperty()))
+        ).toArray(OrderSpecifier[]::new);
     }
 }

@@ -8,7 +8,7 @@ import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.global.page.PageableDTO;
+import study.movie.global.paging.PageableDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

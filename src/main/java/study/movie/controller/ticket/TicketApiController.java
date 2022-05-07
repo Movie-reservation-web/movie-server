@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
 import study.movie.dto.ticket.response.ReserveTicketResponse;
 import study.movie.global.dto.CustomResponse;
-import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.service.ticket.TicketService;
 
 import javax.validation.Valid;
-
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -21,7 +19,7 @@ import static study.movie.global.constants.ResponseMessage.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/tickets")
-public class TicketController {
+public class TicketApiController {
     private final TicketService ticketService;
 
     /**
@@ -43,6 +41,9 @@ public class TicketController {
         return CustomResponse.success(READ_TICKET, result);
     }
 
+    /**
+     * 예매 내역 조회 - 전체 갯수
+     */
     @GetMapping("/count/{memberId}")
     public ResponseEntity<?> getReservedTicketCount(@PathVariable Long memberId,
                                                     @RequestParam(required = false) int year) {
@@ -50,22 +51,22 @@ public class TicketController {
         return CustomResponse.success(READ_TICKET_COUNT, result);
     }
 
+    /**
+     * 내가 본 영화에서 삭제
+     */
     @PostMapping("/{id}")
     public ResponseEntity<?> deleteReservedTicketHistory(@PathVariable Long id) {
         ticketService.deleteTicketHistory(id);
         return CustomResponse.success(DELETE_TICKET_HISTORY);
     }
-//    @GetMapping("/cancel")
-//        public ResponseEntity<?> cancelReservation(String reservedMember) {
-//            ticketService.cancelReservation(reservedMember);
-//            return Response.success(CANCEL_TICKET);
-//    }
 
-
-    @DeleteMapping
-    public ResponseEntity<?> deleteTicketInDB(@RequestBody IdListRequest request) {
-        ticketService.delete(request);
-        return CustomResponse.success(DELETE_TICKET);
+    /**
+     * 예매 취소
+     */
+    @GetMapping("/cancel")
+    public ResponseEntity<?> cancelReservation(String reserveNumber, Long memberId) {
+        ticketService.cancelReservation(reserveNumber, memberId);
+        return CustomResponse.success(CANCEL_TICKET);
     }
 
 

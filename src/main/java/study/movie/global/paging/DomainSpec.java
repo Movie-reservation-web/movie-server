@@ -1,4 +1,4 @@
-package study.movie.global.page;
+package study.movie.global.paging;
 
 import com.mysema.commons.lang.Assert;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import study.movie.global.exception.CustomException;
+import study.movie.global.paging.sort.SortOption;
+import study.movie.global.paging.sort.SortPair;
+import study.movie.global.paging.sort.SortStrategy;
+import study.movie.global.paging.sort.SortStrategyImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +29,9 @@ public class DomainSpec<T extends Enum<T>> {
     private int defaultSize = 20;
     private SortStrategy<T> sortStrategy;
 
-    public DomainSpec(Class<T> clazz, SortStrategy<T> sortStrategy) {
+    public DomainSpec(Class<T> clazz) {
         this.clazz = clazz;
-        this.sortStrategy = sortStrategy;
+        this.sortStrategy = new SortStrategyImpl();
     }
 
     public void changeSortStrategy(SortStrategy<T> sortStrategy) {

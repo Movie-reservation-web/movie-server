@@ -52,7 +52,6 @@ public abstract class ResponseMessage {
     public static final String DELETE_REVIEW = "리뷰 삭제 성공";
     public static final String READ_ALL_REVIEW = "모든 리뷰 조회 성공";
 
-    public static final String READ_CATEGORY = "카테고리 조회 성공";
     /**
      * Domain: Theater
      */

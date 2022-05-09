@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.movie.ReviewRepository;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,8 @@ class ReviewRepositoryTest {
     ReviewRepository reviewRepository;
     @Autowired
     MovieRepository movieRepository;
-
+    @Autowired
+    EntityManager em;
     @Test
     public void 리뷰_생성_사이즈체크() {
         // given
@@ -103,10 +105,12 @@ class ReviewRepositoryTest {
                 .score((float) 2.8)
                 .comment("평가좋음")
                 .build();
-
+        em.flush();
         //when
+        em.clear();
+
         Movie findMovie = movieRepository.findById(savedMovie.getId()).get();
-        List<Review> reviewList = reviewRepository.findByMovieId(findMovie.getId());
+        List<Review> reviewList = findMovie.getReviews();
 
         //then
         Assertions.assertThat(reviewList.get(0).getWriter()).isEqualTo("홍길동");

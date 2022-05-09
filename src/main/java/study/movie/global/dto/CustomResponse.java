@@ -111,7 +111,6 @@ public class CustomResponse {
                         .errorCode(errorCode)
                         .build()
                 );
-
     }
 
     public static ResponseEntity<Object> validationFail(List<ValidationResponse> detail) {

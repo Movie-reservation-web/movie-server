@@ -1,5 +1,7 @@
 package study.movie.repository.movie;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -7,11 +9,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.ScheduleStatus;
+import study.movie.dto.movie.MovieCondition;
 
-import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.movie.QMovie.movie;
+import static study.movie.domain.movie.QReview.review;
 import static study.movie.domain.schedule.QSchedule.schedule;
 import static study.movie.domain.schedule.ScheduleStatus.OPEN;
 
@@ -21,7 +26,14 @@ import static study.movie.domain.schedule.ScheduleStatus.OPEN;
 public class MovieRepositoryImpl implements MovieRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final EntityManager em;
+
+    public Movie findMovieWithReview() {
+        return queryFactory.selectFrom(movie)
+                .join(review.movie, movie).fetchJoin()
+                .fetchOne();
+    }
+
+
 
     @Override
     public List<Movie> findByCondition(MovieCondition condition) {
@@ -32,6 +44,7 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
                 .orderBy(movie.releaseDate.desc())
                 .fetch();
     }
+
     @Override
     public List<Movie> findMovieByOpenStatus() {
         return queryFactory.select(movie)
@@ -67,7 +80,7 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
         return status != null ? schedule.status.eq(status) : null;
     }
 
-    private OrderSpecifier<String> orderExpress(String orderCondition){
+    private OrderSpecifier<String> orderExpress(String orderCondition) {
         switch (orderCondition) {
 //            case "Ratings":
 //                return new OrderSpecifier(Order.DESC,);

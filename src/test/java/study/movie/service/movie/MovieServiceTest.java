@@ -81,7 +81,7 @@ class MovieServiceTest {
     public void saveMovie() throws Exception {
         //when
         CreateMovieRequest movieRequest = new CreateMovieRequest(movie);
-        CreateMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
+        BasicMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
 
         //then
         assertEquals(movieRequest.getTitle(), createMovieResponse.getTitle());
@@ -91,7 +91,7 @@ class MovieServiceTest {
     public void saveReview() throws Exception {
         //when
         CreateMovieRequest movieRequest = new CreateMovieRequest(movie);
-        CreateMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
+        BasicMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
         CreateReviewRequest reviewRequest = new CreateReviewRequest();
 //        reviewRequest.setMovieId(createMovieResponse.getId());
 //        reviewRequest.setWriter(reviewRequest.getWriter());
@@ -108,7 +108,7 @@ class MovieServiceTest {
     public void updateMovie_filmRating() throws Exception{
         //given
         CreateMovieRequest movieRequest = new CreateMovieRequest(movie);
-        CreateMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
+        BasicMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
 
         UpdateMovieRequest updateMovieRequest = new UpdateMovieRequest(
                 createMovieResponse.getId(),
@@ -129,7 +129,7 @@ class MovieServiceTest {
     public void updateMovie_releaseDate_image() throws Exception{
         //given
         CreateMovieRequest movieRequest = new CreateMovieRequest(movie);
-        CreateMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
+        BasicMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
 
         UpdateMovieRequest updateMovieRequest = new UpdateMovieRequest(
                 createMovieResponse.getId(),
@@ -206,10 +206,10 @@ class MovieServiceTest {
     public void findOneMovie() throws Exception{
         //given
         CreateMovieRequest movieRequest = new CreateMovieRequest(movie);
-        CreateMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
+        BasicMovieResponse createMovieResponse = movieService.saveMovie(movieRequest);
 
         //when
-        CreateMovieResponse findMovie = movieService.findOneMovie(createMovieResponse.getId());
+        BasicMovieResponse findMovie = movieService.findOneMovie(createMovieResponse.getId());
 
         //then
         assertEquals(createMovieResponse.getId(), findMovie.getId());
@@ -257,7 +257,7 @@ class MovieServiceTest {
                 .build();
 
         CreateMovieRequest movieRequest1 = new CreateMovieRequest(movie1);
-        CreateMovieResponse createMovieResponse1 = movieService.saveMovie(movieRequest1);
+        BasicMovieResponse createMovieResponse1 = movieService.saveMovie(movieRequest1);
 
         //movie2
         List<String> actors2 = Arrays.asList("로버트 패틴슨", "레이첼");
@@ -279,7 +279,7 @@ class MovieServiceTest {
                 .build();
 
         CreateMovieRequest movieRequest2 = new CreateMovieRequest(movie2);
-        CreateMovieResponse createMovieResponse2 = movieService.saveMovie(movieRequest2);
+        BasicMovieResponse createMovieResponse2 = movieService.saveMovie(movieRequest2);
 
         //movie3
         List<String> actors3 = Arrays.asList("찰스 자비에", "울버린");
@@ -301,7 +301,7 @@ class MovieServiceTest {
                 .build();
 
         CreateMovieRequest movieRequest3 = new CreateMovieRequest(movie3);
-        CreateMovieResponse createMovieResponse3 = movieService.saveMovie(movieRequest3);
+        BasicMovieResponse createMovieResponse3 = movieService.saveMovie(movieRequest3);
 
         //movie4
         List<String> actors4 = Arrays.asList("찰스 자비에", "로건", "폴 다노");
@@ -323,7 +323,7 @@ class MovieServiceTest {
                 .build();
 
         CreateMovieRequest movieRequest4 = new CreateMovieRequest(movie4);
-        CreateMovieResponse createMovieResponse4 = movieService.saveMovie(movieRequest4);
+        BasicMovieResponse createMovieResponse4 = movieService.saveMovie(movieRequest4);
 
         //제목_더 배트맨
         MovieCondition movieCondition1 = new MovieCondition(null, "더 배트맨", null);
@@ -387,7 +387,7 @@ class MovieServiceTest {
                 .build();
 
         CreateMovieRequest movieRequest1 = new CreateMovieRequest(movie1);
-        CreateMovieResponse createMovieResponse1 = movieService.saveMovie(movieRequest1);
+        BasicMovieResponse createMovieResponse1 = movieService.saveMovie(movieRequest1);
 
         //movie2
         List<String> actors2 = Arrays.asList("로버트 패틴슨", "레이첼");
@@ -409,7 +409,7 @@ class MovieServiceTest {
                 .build();
 
         CreateMovieRequest movieRequest2 = new CreateMovieRequest(movie2);
-        CreateMovieResponse createMovieResponse2 = movieService.saveMovie(movieRequest2);
+        BasicMovieResponse createMovieResponse2 = movieService.saveMovie(movieRequest2);
 
         //movie3
         List<String> actors3 = Arrays.asList("찰스 자비에", "울버린");
@@ -431,7 +431,7 @@ class MovieServiceTest {
                 .build();
 
         CreateMovieRequest movieRequest3 = new CreateMovieRequest(movie3);
-        CreateMovieResponse createMovieResponse3 = movieService.saveMovie(movieRequest3);
+        BasicMovieResponse createMovieResponse3 = movieService.saveMovie(movieRequest3);
 
         //when
         List<FindMovieResponse> list = movieService.findUnreleasedMovies();

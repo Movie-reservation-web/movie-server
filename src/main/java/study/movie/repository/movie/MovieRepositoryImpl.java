@@ -23,28 +23,15 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final EntityManager em;
 
-//    public List<Movie> findByCondition(MovieCondition condition) {
-//        return queryFactory
-//                .selectFrom(movie)
-//                .where(directorEq(condition.getDirector()), titleEq(condition.getTitle()),
-//                        actorEq(condition.getActor()))
-//                //.orderBy(new OrderSpecifier(Order.DESC, condition.getDirector()))
-//                .fetch();
-//        //releaseDateThan(condition.getReleaseDate()
-//    }
-//
-//    private BooleanExpression directorEq(String directorCon) {
-//        return hasText(directorCon) ? movie.director.eq(directorCon) : null;
-//    }
-//
-//    private BooleanExpression titleEq(String titleCon) {
-//        return titleCon != null ? movie.title.eq(titleCon) : null;
-//    }
-//
-//    private BooleanExpression actorEq(String actorCon) {
-//        return actorCon != null ? movie.actors.contains(actorCon)  : null;
-//    }
-
+    @Override
+    public List<Movie> findByCondition(MovieCondition condition) {
+        return queryFactory
+                .selectFrom(movie)
+                .where(directorEq(condition.getDirector()),
+                        titleEq(condition.getTitle()))
+                .orderBy(movie.releaseDate.desc())
+                .fetch();
+    }
     @Override
     public List<Movie> findMovieByOpenStatus() {
         return queryFactory.select(movie)
@@ -58,18 +45,46 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
                 .fetch();
     }
 
-    @Override
-    public void updateMovieAudience() {
+    private BooleanExpression directorEq(String directorCon) {
+        return hasText(directorCon) ? movie.director.eq(directorCon) : null;
+    }
 
+    private BooleanExpression titleEq(String titleCon) {
+        return hasText(titleCon) ? movie.title.eq(titleCon) : null;
+    }
+
+    //영화 차트 보기_orderBy Ratings,Score,Audience
+    @Override
+    public List<Movie> findByOrderBy(String orderCondition) {
+        return queryFactory
+                .selectFrom(movie)
+                .where(movie.releaseDate.before(LocalDate.now()))
+                .orderBy(orderExpress(orderCondition))
+                .fetch();
     }
 
     private BooleanExpression scheduleStatusEq(ScheduleStatus status) {
         return status != null ? schedule.status.eq(status) : null;
     }
 
-    //상영중, 상영예정
-//    private BooleanExpression releaseDateThan(LocalDate releaseDateCon) {
-//        return releaseDateCon != null ? QMovie.movie.releaseDate. : null;
-//    }
+    private OrderSpecifier<String> orderExpress(String orderCondition){
+        switch (orderCondition) {
+//            case "Ratings":
+//                return new OrderSpecifier(Order.DESC,);
+//            case "Score":
+//                return new OrderSpecifier(Order.DESC, movie.score);
+            case "Audience":
+                return new OrderSpecifier(Order.DESC, movie.audience);
+        }
+        return null;
+    }
 
+    @Override
+    public List<Movie> findUnreleasedMovies() {
+        return queryFactory
+                .selectFrom(movie)
+                .where(movie.releaseDate.after(LocalDate.now()))
+                .orderBy(movie.releaseDate.desc())
+                .fetch();
+    }
 }

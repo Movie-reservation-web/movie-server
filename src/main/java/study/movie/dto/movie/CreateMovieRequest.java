@@ -1,21 +1,22 @@
 package study.movie.dto.movie;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import study.movie.converter.movie.FilmFormatConverter;
 import study.movie.converter.movie.MovieGenreConverter;
-import study.movie.domain.movie.*;
-import study.movie.domain.schedule.Schedule;
+import study.movie.domain.movie.FilmFormat;
+import study.movie.domain.movie.FilmRating;
+import study.movie.domain.movie.Movie;
+import study.movie.domain.movie.MovieGenre;
 import study.movie.global.converter.StringArrayConverter;
 
-import javax.persistence.*;
+import javax.persistence.Convert;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Data
 @AllArgsConstructor
-public class MovieResponse {
+public class CreateMovieRequest {
 
     private Long id;
     private String title;
@@ -34,11 +35,7 @@ public class MovieResponse {
     private Integer audience;
     private String image;
 
-    private List<Review> reviews = new ArrayList<>();
-
-    private String score;
-
-    public MovieResponse(Movie movie) {
+    public CreateMovieRequest(Movie movie) {
         this.title = movie.getTitle();
         this.runningTime = movie.getRunningTime();
         this.director = movie.getDirector();
@@ -51,9 +48,21 @@ public class MovieResponse {
         this.info = movie.getInfo();
         this.audience = movie.getAudience();
         this.image = movie.getImage();
-        //check
-        this.reviews = movie.getReviews();
-        this.score = movie.getAverageScore();
     }
 
+    public Movie toEntity() {
+        return Movie.builder()
+                .title(this.getTitle())
+                .director(this.getDirector())
+                .actors(this.getActors())
+                .genres(this.getGenres())
+                .filmRating(this.getFilmRating())
+                .runningTime(this.getRunningTime())
+                .nation(this.getNation())
+                .releaseDate(this.getReleaseDate())
+                .formats(this.getFormats())
+                .info(this.getInfo())
+                .image(this.getImage())
+                .build();
+    }
 }

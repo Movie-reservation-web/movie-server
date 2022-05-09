@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
+import study.movie.dto.schedule.request.ReservationScreenRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
-import study.movie.dto.schedule.response.MovieFormatResponse;
-import study.movie.dto.schedule.response.ScheduleScreenResponse;
-import study.movie.dto.schedule.response.ScheduleSearchResponse;
-import study.movie.dto.schedule.response.SeatResponse;
+import study.movie.dto.schedule.response.*;
 import study.movie.global.dto.CustomResponse;
 import study.movie.service.schedule.ScheduleService;
 
@@ -40,9 +38,9 @@ public class ScheduleApiController {
         return CustomResponse.success(READ_MOVIE_FORMATS, result);
     }
 
-    @GetMapping("/seats/{id}")
-    public ResponseEntity<?> getScheduleSeatInfo(@PathVariable Long id) {
-        List<SeatResponse> result = scheduleService.getScheduleSeatEntity(id);
+    @GetMapping("/selected")
+    public ResponseEntity<?> getScheduleSeatInfo(@Valid @RequestBody ReservationScreenRequest request) {
+        ReservationScreenResponse result = scheduleService.getSelectedScreenInfo(request);
         return CustomResponse.success(READ_SCHEDULE_SEATS, result);
     }
 }

@@ -58,16 +58,16 @@ class ScheduleRepositoryTest {
 
         // when
         ScheduleBasicSearchCond cond1 = new ScheduleBasicSearchCond();
-        cond1.setTheaterName(theaterName);
+        cond1.setTheaterId(theater.getId());
 
         ScheduleBasicSearchCond cond2 = new ScheduleBasicSearchCond();
         cond2.setScreenDate(screenTime.getStartDateTime().toLocalDate());
-        cond2.setMovieTitle(title);
+        cond2.setMovieId(movie.getId());
 
         ScheduleBasicSearchCond cond3 = new ScheduleBasicSearchCond();
-        cond3.setTheaterName(theaterName);
+        cond3.setTheaterId(theater.getId());
         cond3.setScreenDate(screenTime.getStartDateTime().toLocalDate());
-        cond3.setMovieTitle(title);
+        cond3.setMovieId(movie.getId());
 
 
         List<Schedule> schedules1 = scheduleRepository.searchBasicSchedules(cond1);

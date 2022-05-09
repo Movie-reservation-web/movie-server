@@ -1,7 +1,6 @@
 package study.movie.service.ticket;
 
 import org.springframework.data.domain.Page;
-import study.movie.domain.theater.ScreenFormat;
 import study.movie.dto.ticket.condition.TicketSearchCond;
 import study.movie.dto.ticket.request.PaymentRequest;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
@@ -28,13 +27,6 @@ public interface TicketService {
      * 티켓 예매 취소
      */
     void cancelReservation(String reserveNumber, Long memberId);
-
-    /**
-     * Api Server
-     * <p>
-     * 결제 서비스
-     */
-    int calcPayment(PaymentRequest request, ScreenFormat screenFormat);
 
     /**
      * Api Server

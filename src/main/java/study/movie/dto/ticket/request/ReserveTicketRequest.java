@@ -14,4 +14,6 @@ public class ReserveTicketRequest {
     private Long memberId;
     @NotNull
     private List<String> seats;
+    @NotNull
+    private Integer price;
 }

@@ -1,24 +1,20 @@
-package study.movie.dto.ticket.request;
+package study.movie.dto.schedule.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import study.movie.domain.payment.AgeType;
 import study.movie.domain.theater.ScreenFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Data
-public class PaymentRequest {
+public class ReservationScreenRequest {
 
     @NotNull
-    private Map<AgeType, Integer> peopleInfo;
-
+    private Long id;
     @NotNull
-    private ScreenFormat screenFormat;
-
+    private ScreenFormat format;
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime screenDateTime;
+    private LocalDateTime dateTime;
 }

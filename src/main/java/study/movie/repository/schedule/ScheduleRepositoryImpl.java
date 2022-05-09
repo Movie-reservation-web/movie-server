@@ -112,7 +112,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public List<SeatEntity> findSeatByScheduleId(Long scheduleId) {
+    public List<SeatEntity> findSeatsByScheduleId(Long scheduleId) {
         return queryFactory.selectFrom(seatEntity)
                 .join(seatEntity.schedule, schedule).fetchJoin()
                 .where(scheduleIdEq(scheduleId))

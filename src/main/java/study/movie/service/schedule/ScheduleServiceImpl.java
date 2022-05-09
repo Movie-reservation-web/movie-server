@@ -7,13 +7,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.Movie;
+import study.movie.domain.payment.AgeType;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.theater.Screen;
+import study.movie.domain.theater.ScreenFormat;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSortType;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
+import study.movie.dto.schedule.request.ReservationScreenRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
 import study.movie.global.dto.IdListRequest;
@@ -26,9 +29,11 @@ import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.schedule.ScheduleRepository;
 import study.movie.repository.schedule.SeatRepository;
 import study.movie.repository.theater.ScreenRepository;
+import study.movie.service.ticket.PaymentService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static study.movie.global.exception.ErrorCode.*;
@@ -42,6 +47,7 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     private final SeatRepository seatRepository;
+    private final PaymentService paymentService;
     private final DomainSpec<ScheduleSortType> spec = new DomainSpec<>(ScheduleSortType.class);
 
     @Override
@@ -68,14 +74,17 @@ public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleSe
 
     @Override
     public MovieFormatResponse searchScheduleByMovie(String movieTitle) {
-        return MovieFormatResponse.of(movieTitle, scheduleRepository.findFormatByMovie(movieTitle));
+        List<ScreenFormat> formats = scheduleRepository.findFormatByMovie(movieTitle);
+        return MovieFormatResponse.of(movieTitle, formats);
     }
 
     @Override
-    public List<SeatResponse> getScheduleSeatEntity(Long scheduleId) {
-        return scheduleRepository.findSeatByScheduleId(scheduleId).stream()
+    public ReservationScreenResponse getSelectedScreenInfo(ReservationScreenRequest request) {
+        List<SeatResponse> seats = scheduleRepository.findSeatsByScheduleId(request.getId()).stream()
                 .map(SeatResponse::of)
                 .collect(Collectors.toList());
+        Map<AgeType, Integer> priceMap = paymentService.getPriceMap(request.getFormat(), request.getDateTime());
+        return ReservationScreenResponse.of(seats, priceMap);
     }
 
     @Override

@@ -64,7 +64,7 @@ public interface ScheduleRepositoryCustom {
      * @param scheduleId
      * @return List
      */
-    List<SeatEntity> findSeatByScheduleId(Long scheduleId);
+    List<SeatEntity> findSeatsByScheduleId(Long scheduleId);
 
     /**
      * 상영중인 영화의 포멧 조회

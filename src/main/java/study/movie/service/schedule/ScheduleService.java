@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.CreateScheduleRequest;
+import study.movie.dto.schedule.request.ReservationScreenRequest;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.response.*;
 import study.movie.global.dto.IdListRequest;
@@ -45,9 +46,9 @@ public interface ScheduleService {
     /**
      * Api Sever
      * <p>
-     * 상영일정에 대한 좌석 정보
+     * 상영일정에 대한 좌석 정보 및 AgeType에 따른 가격 정보
      */
-    List<SeatResponse> getScheduleSeatEntity(Long scheduleId);
+    ReservationScreenResponse getSelectedScreenInfo(ReservationScreenRequest request);
 
     /**
      * Admin Server

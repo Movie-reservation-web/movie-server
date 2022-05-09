@@ -1,6 +1,7 @@
 package study.movie.controller.ticket;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.movie.dto.ticket.request.ReserveTicketRequest;
@@ -19,6 +20,7 @@ import static study.movie.global.constants.ResponseMessage.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/tickets")
+@Slf4j
 public class TicketApiController {
     private final TicketService ticketService;
 
@@ -29,6 +31,12 @@ public class TicketApiController {
     public ResponseEntity<?> reserveTicket(@Valid @RequestBody ReserveTicketRequest request) {
         PostIdResponse result = ticketService.reserve(request);
         return CustomResponse.success(CREATED, RESERVE_TICKET, result);
+    }
+
+    @GetMapping("/payment")
+    public ResponseEntity<?> calcPayment(@RequestParam int price) {
+        // 결제 로직 실행되어야함.
+        return CustomResponse.success(null);
     }
 
     /**

@@ -106,7 +106,7 @@ class ScheduleServiceTest {
                 .build();
 
         ScheduleBasicSearchCond cond = new ScheduleBasicSearchCond();
-        cond.setTheaterName(theaterName);
+        cond.setTheaterId(theater.getId());
 
         // when
         List<ScheduleSearchResponse> scheduleSearchResponse = scheduleService.searchBasicSchedules(cond);
@@ -179,7 +179,7 @@ class ScheduleServiceTest {
         // 검색 조건 -> 영화1(2D)
         ScheduleBasicSearchCond cond = new ScheduleBasicSearchCond();
         cond.setScreenFormat(screenFormat);
-        cond.setMovieTitle(savedMovie.getTitle());
+        cond.setMovieId(savedMovie.getId());
 
         // when
         List<ScheduleSearchResponse> searchResponses = scheduleService.searchBasicSchedules(cond);
@@ -202,11 +202,13 @@ class ScheduleServiceTest {
                 CityCode.SEL,
                 Arrays.asList("1관", "2관", "3관", "4관", "5관"),
                 Arrays.asList(TWO_D, IMAX, FOUR_D_FLEX, SCREEN_X, PREMIUM));
+        Long theaterId1 = screens1.get(0).getTheater().getId();
         List<Screen> screens2 = init.addTheaterScreen(
                 theaterName2,
                 CityCode.SEL,
                 Arrays.asList("1관", "2관", "3관", "4관"),
                 Arrays.asList(TWO_D, TWO_D, FOUR_D_FLEX, PREMIUM));
+        Long theaterId2 = screens2.get(0).getTheater().getId();
 
         List<Movie> movies = init.addMovies(
                 Arrays.asList("영화1", "영화2", "영화3", "영화4", "영화5", "영화6"),
@@ -251,8 +253,8 @@ class ScheduleServiceTest {
         ScreenFormat screenFormat = ScreenFormat.TWO_D;
         // 검색 조건 -> 영화1(전체), CGV 용산, 상영날짜 22/03/10
         ScheduleScreenRequest request = new ScheduleScreenRequest();
-        request.setTheaterName(theaterName1);
-        request.setMovieTitle(savedMovie.getTitle());
+        request.setTheaterId(theaterId1);
+        request.setMovieId(savedMovie.getId());
         request.setScreenDate(screenDate);
         request.setScreenFormat(screenFormat);
 

@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface MovieRepositoryCustom {
     List<Movie> findByCondition(MovieCondition condition);
+    List<Movie> findByOrderBy(String orderCondition);
+    List<Movie> findUnreleasedMovies();
 }

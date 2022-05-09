@@ -11,6 +11,8 @@ import study.movie.repository.movie.ReviewRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -30,15 +32,19 @@ public class MovieService {
 
     //saveReview
     @Transactional
-    public CreateReviewResponse saveReview(CreateReviewRequest reviewRequest) throws Exception {
+    public Long saveReview(CreateReviewRequest reviewRequest) throws Exception {
         Movie findMovie = movieRepository
                 .findById(reviewRequest.getMovieId())
                 .orElseThrow(() -> new Exception("noMovie"));
         //.orElseThrow(getExceptionSupplier());
-        Review createReview = reviewRequest.toEntity(findMovie);
-        reviewRepository.save(createReview);
+        Review review = Review.builder()
+                .movie(findMovie)
+                .writer(reviewRequest.getWriter())
+                .score(reviewRequest.getScore())
+                .comment(reviewRequest.getComment())
+                .build();
 
-        return new CreateReviewResponse(createReview);
+        return review.getId();
     }
 
     //updateMovie
@@ -98,11 +104,33 @@ public class MovieService {
                 .collect(Collectors.toList());
     }
 
-    // By Director,Name,Actor,Date & orderBy Ratings,Score,Audience
-    public List<CreateMovieResponse> findByCondition (MovieCondition condition){
+    // By Director,Name,Actor & orderBy Date Default
+    public List<FindMovieResponse> findByCondition (MovieCondition condition){
         return movieRepository.findByCondition(condition)
                 .stream()
-                .map(CreateMovieResponse:: new)
+                .filter(movie -> hasActor(condition.getActor(), movie.getActors()))
+                .map(FindMovieResponse:: new)
                 .collect(Collectors.toList());
     }
+
+    private boolean hasActor(String condition, List<String> actors) {
+        return !hasText(condition) || actors.contains(condition);
+    }
+    //상영예정작보기
+    public List<FindMovieResponse> findUnreleasedMovies (){
+        return movieRepository.findUnreleasedMovies()
+                .stream()
+                .map(FindMovieResponse:: new)
+                .collect(Collectors.toList());
+    }
+
+    //영화 차트 보기_orderBy Ratings,Score,Audience
+    public List<FindMovieResponse> findByOrderBy (String orderCondition){
+        return movieRepository.findByOrderBy(orderCondition)
+                .stream()
+                .map(FindMovieResponse:: new)
+                .collect(Collectors.toList());
+    }
+
+
 }

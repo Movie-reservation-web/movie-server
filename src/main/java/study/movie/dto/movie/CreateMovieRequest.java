@@ -24,9 +24,7 @@ public class CreateMovieRequest {
     private String director;
     @Convert(converter = StringArrayConverter.class)
     private List<String> actors;
-    @Convert(converter = MovieGenreConverter.class)
     private List<MovieGenre> genres;
-    @Convert(converter = FilmFormatConverter.class)
     private List<FilmFormat> formats;
     private FilmRating filmRating;
     private String nation;

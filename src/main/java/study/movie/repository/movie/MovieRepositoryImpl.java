@@ -33,14 +33,11 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
                 .fetchOne();
     }
 
-
-
     @Override
     public List<Movie> findByCondition(MovieCondition condition) {
         return queryFactory
                 .selectFrom(movie)
-                .where(directorEq(condition.getDirector()),
-                        titleEq(condition.getTitle()))
+                .where(directorEq(condition.getDirector()))
                 .orderBy(movie.releaseDate.desc())
                 .fetch();
     }
@@ -62,10 +59,6 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
         return hasText(directorCon) ? movie.director.eq(directorCon) : null;
     }
 
-    private BooleanExpression titleEq(String titleCon) {
-        return hasText(titleCon) ? movie.title.eq(titleCon) : null;
-    }
-
     //영화 차트 보기_orderBy Ratings,Score,Audience
     @Override
     public List<Movie> findByOrderBy(String orderCondition) {
@@ -77,7 +70,8 @@ public class MovieRepositoryImpl implements MovieRepositoryCustom {
     }
 
     private BooleanExpression scheduleStatusEq(ScheduleStatus status) {
-        return status != null ? schedule.status.eq(status) : null;
+        return null;
+        //return status != null ? schedule.status.eq(status) : null;
     }
 
     private OrderSpecifier<String> orderExpress(String orderCondition) {

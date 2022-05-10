@@ -10,7 +10,6 @@ import java.time.LocalDate;
 public class MovieCondition {
 
     private String director;
-    private String title;
     private String actor;
 
 }

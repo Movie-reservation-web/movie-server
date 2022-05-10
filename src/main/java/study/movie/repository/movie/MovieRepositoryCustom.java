@@ -9,8 +9,6 @@ public interface MovieRepositoryCustom {
 
     // 감독이나 배우로 영화를 찾을 때는 condition에 감독, 배우만 들어가면 됨
     List<Movie> findByCondition(MovieCondition condition);
-
-
     List<Movie> findByOrderBy(String orderCondition);
     List<Movie> findUnreleasedMovies();
 

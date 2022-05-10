@@ -62,8 +62,7 @@ public class MovieServiceImpl extends BasicServiceUtils implements MovieService 
         Movie findMovie = movieRepository
                 .findById(reviewRequest.getMovieId())
                 .orElseThrow(getExceptionSupplier(MOVIE_NOT_FOUND));
-//                .orElseThrow(() -> new RuntimeException("noMovie"));
-        //.orElseThrow(getExceptionSupplier());
+
         Review review = Review.builder()
                 .movie(findMovie)
                 .writer(reviewRequest.getWriter())

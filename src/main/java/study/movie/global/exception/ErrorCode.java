@@ -52,6 +52,7 @@ public enum ErrorCode {
     SCHEDULE_NOT_FOUND(NOT_FOUND, "해당 상영일정을 찾을 수 없습니다."),
     MEMBER_NOT_FOUND(NOT_FOUND, "해당 사용자를 찾을 수 없습니다."),
     MOVIE_NOT_FOUND(NOT_FOUND, "해당 영화를 찾을 수 없습니다."),
+    REVIEW_NOT_FOUND(NOT_FOUND, "해당 리뷰를 찾을 수 없습니다."),
     TICKET_NOT_FOUND(NOT_FOUND, "해당 티켓을 찾을 수 없습니다."),
     SCREEN_NOT_FOUND(NOT_FOUND, "해당 상영관을 찾을 수 없습니다."),
     THEATER_NOT_FOUND(NOT_FOUND, "해당 극장을 찾을 수 없습니다."),

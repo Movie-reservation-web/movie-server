@@ -1,9 +1,7 @@
 package study.movie.repository.schedule;
 
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +19,12 @@ import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 import study.movie.dto.schedule.condition.ScheduleSearchCond;
 import study.movie.dto.schedule.request.ScheduleScreenRequest;
 import study.movie.dto.schedule.request.UpdateSeatRequest;
+import study.movie.global.utils.BasicRepositoryUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.querydsl.core.types.Order.ASC;
-import static com.querydsl.core.types.Order.DESC;
 import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.movie.QMovie.movie;
 import static study.movie.domain.schedule.QSchedule.schedule;
@@ -43,7 +40,7 @@ import static study.movie.global.utils.DateTimeUtil.dailyStartDateTime;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
+public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements ScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -136,16 +133,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public Page<Schedule> search(ScheduleSearchCond cond, Pageable pageable) {
-        List<Schedule> content = getSearchQueryPaging(cond)
+        List<Schedule> elements = getSearchElementsQuery(cond)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(scheduleSort(pageable))
+                .orderBy(mapToOrderSpec(pageable.getSort(), Schedule.class, schedule))
                 .fetch();
 
-        JPAQuery<Long> countQuery = getSearchQueryCount(cond);
+        JPAQuery<Long> countQuery = getSearchCountQuery(cond);
 
         return PageableExecutionUtils.getPage(
-                content,
+                elements,
                 pageable,
                 countQuery::fetchOne);
     }
@@ -160,7 +157,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 );
     }
 
-    private JPAQuery<Schedule> getSearchQueryPaging(ScheduleSearchCond cond) {
+    private JPAQuery<Schedule> getSearchElementsQuery(ScheduleSearchCond cond) {
         return queryFactory.selectFrom(schedule)
                 .join(schedule.movie, movie).fetchJoin()
                 .join(schedule.screen, screen).fetchJoin()
@@ -168,7 +165,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .where(getSearchPredicts(cond));
     }
 
-    private JPAQuery<Long> getSearchQueryCount(ScheduleSearchCond cond) {
+    private JPAQuery<Long> getSearchCountQuery(ScheduleSearchCond cond) {
         return queryFactory.select(schedule.count())
                 .from(schedule)
                 .leftJoin(schedule.movie, movie)
@@ -218,6 +215,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     private BooleanExpression startDateTimeBetween(LocalDateTime startTime, LocalDateTime endTime) {
         return startTime != null && endTime != null ? dateTimeGoe(startTime).and(dateTimeLt(endTime)) : null;
     }
+
     private BooleanExpression endDateTimeBetween(LocalDateTime startTime, LocalDateTime endTime) {
         return startTime != null && endTime != null ?
                 schedule.screenTime.endDateTime.goe(startTime).and(
@@ -228,12 +226,4 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     private BooleanExpression seatsIn(List<Seat> seats) {
         return seats != null ? seatEntity.seat.in(seats) : null;
     }
-
-    private OrderSpecifier<?>[] scheduleSort(Pageable pageable) {
-        return pageable.getSort().stream().map(order -> new OrderSpecifier(
-                order.getDirection().isAscending() ? ASC : DESC,
-                Expressions.path(Schedule.class, schedule, order.getProperty()))
-        ).toArray(OrderSpecifier[]::new);
-    }
-
 }

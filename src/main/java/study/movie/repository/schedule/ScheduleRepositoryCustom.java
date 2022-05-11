@@ -17,7 +17,6 @@ import java.util.Optional;
 public interface ScheduleRepositoryCustom {
 
     // API
-
     /**
      * 모든 상영일정 조회
      *
@@ -75,13 +74,11 @@ public interface ScheduleRepositoryCustom {
     List<ScreenFormat> findFormatByMovie(String movieTitle);
 
     // Admin
-
     /**
      * 상영일정 조회
      *
      * @param cond          movieTitle, movieNation, theaterName, screenDate, screenFormat, scheduleStatus, scheduleNumber, orderBy
      * @param pageable
-     * @param totalElements
      * @return List
      */
     Page<Schedule> search(ScheduleSearchCond cond, Pageable pageable);

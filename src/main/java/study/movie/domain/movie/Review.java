@@ -29,7 +29,7 @@ public class Review extends BaseTimeEntity {
     private String comment;
 
     //==생성 메서드==//
-    @Builder
+    @Builder(builderClassName = "writeReview", builderMethodName = "writeReview")
     public Review(Movie movie, String writer, Float score, String comment) {
         this.writer = writer;
         this.score = score;
@@ -43,21 +43,17 @@ public class Review extends BaseTimeEntity {
         movie.getReviews().add(this);
     }
 
-    public void delete(){
-        this.movie.getReviews().remove(this);
-    }
-
-    public void update(Float score, String comment) {
+    //==비즈니스 로직==//
+    public void edit(Float score, String comment) {
         this.updateScore(score);
-        this.comment(comment);
+        this.updateComment(comment);
     }
 
     private void updateScore(Float score) {
         this.score = score;
     }
 
-    private void comment(String comment) {
+    private void updateComment(String comment) {
         this.comment = comment;
     }
-
 }

@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
-import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
@@ -20,7 +19,6 @@ import study.movie.dto.schedule.condition.ScheduleBasicSearchCond;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +45,7 @@ class ScheduleRepositoryTest {
         Theater theater = init.createTheater(theaterName, CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
         String title = "영화1";
-        Movie movie = init.createMovie(title, "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
 
         ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime());
         Schedule savedSchedule = Schedule.builder()
@@ -85,7 +83,7 @@ class ScheduleRepositoryTest {
         // given
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
 
         ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime());
         Schedule savedSchedule = Schedule.builder()

@@ -8,7 +8,6 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
 import study.movie.domain.member.Member;
-import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.schedule.Schedule;
 import study.movie.domain.schedule.ScreenTime;
@@ -60,7 +59,7 @@ class TicketServiceTest {
         Member member = init.createMember();
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
         Schedule schedule = Schedule.builder()
@@ -91,7 +90,7 @@ class TicketServiceTest {
         Member member = init.createMember();
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
 
@@ -128,7 +127,7 @@ class TicketServiceTest {
         Member member = init.createMember();
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
 
@@ -161,7 +160,7 @@ class TicketServiceTest {
         Member member = init.createMember();
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
         LocalDate screenDate = LocalDate.of(2022, 3, 10);
         ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
 

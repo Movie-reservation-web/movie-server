@@ -50,7 +50,7 @@ public abstract class ResponseMessage {
     public static final String CREATE_REVIEW = "리뷰 저장 성공";
     public static final String UPDATE_REVIEW = "리뷰 업데이트 성공";
     public static final String DELETE_REVIEW = "리뷰 삭제 성공";
-    public static final String READ_ALL_REVIEW = "모든 리뷰 조회 성공";
+    public static final String READ_REVIEW = "모든 리뷰 조회 성공";
 
     /**
      * Domain: Theater

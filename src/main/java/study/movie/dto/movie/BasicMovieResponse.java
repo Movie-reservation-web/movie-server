@@ -1,18 +1,19 @@
 package study.movie.dto.movie;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.FilmRating;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.movie.MovieGenre;
+import study.movie.dto.movie.response.ReviewResponse;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
+@Builder
 public class BasicMovieResponse {
 
     private Long id;
@@ -31,20 +32,26 @@ public class BasicMovieResponse {
 
     private List<ReviewResponse> reviews;
 
-    public BasicMovieResponse(Movie movie) {
-        this.id = movie.getId();
-        this.title = movie.getTitle();
-        this.runningTime = movie.getRunningTime();
-        this.director = movie.getDirector();
-        this.actors = movie.getActors();
-        this.genres = movie.getGenres();
-        this.formats = movie.getFormats();
-        this.filmRating = movie.getFilmRating();
-        this.nation = movie.getNation();
-        this.releaseDate = movie.getReleaseDate();
-        this.info = movie.getInfo();
-        this.audience = movie.getAudience();
-        this.image = movie.getImage();
-        this.reviews = movie.getReviews().stream().map(ReviewResponse::new).collect(Collectors.toList());
+    public static BasicMovieResponse of(Movie movie) {
+        return BasicMovieResponse.builder()
+                .id(movie.getId())
+                .title(movie.getTitle())
+                .runningTime(movie.getRunningTime())
+                .director(movie.getDirector())
+                .actors(movie.getActors())
+                .genres(movie.getGenres())
+                .formats(movie.getFormats())
+                .filmRating(movie.getFilmRating())
+                .nation(movie.getNation())
+                .releaseDate(movie.getReleaseDate())
+                .info(movie.getInfo())
+                .audience(movie.getAudience())
+                .image(movie.getImage())
+                .reviews(
+                        movie.getReviews().stream()
+                                .map(ReviewResponse::of)
+                                .collect(Collectors.toList())
+                )
+                .build();
     }
 }

@@ -7,15 +7,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.Review;
 
-import java.util.List;
-
-public interface ReviewRepository extends JpaRepository<Review, Long>,ReviewRepositoryCustom {
-
-    List<Review> findByWriter(String writer);
+public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRepositoryCustom {
 
     @Modifying
     @Transactional
     @Query("delete from Review r where r.id = :id")
     void deleteByIdEqQuery(@Param("id") Long id);
-
 }

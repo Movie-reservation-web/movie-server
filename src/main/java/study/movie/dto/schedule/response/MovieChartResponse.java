@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class SimpleMovieResponse {
+public class MovieChartResponse {
     private Long id;
     private String title;
     private FilmRating filmRating;
@@ -18,8 +18,8 @@ public class SimpleMovieResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate releaseDate;
 
-    public static SimpleMovieResponse of(Movie movie, double totalViewCount){
-        return SimpleMovieResponse.builder()
+    public static MovieChartResponse of(Movie movie, double totalViewCount){
+        return MovieChartResponse.builder()
                 .id(movie.getId())
                 .title(movie.getTitle())
                 .image(movie.getImage())

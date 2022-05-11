@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
-import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
@@ -17,7 +16,6 @@ import study.movie.repository.schedule.ScheduleRepository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.movie.domain.schedule.SeatStatus.RESERVED;
@@ -44,7 +42,7 @@ class ScheduleTest {
         // given
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
 
         // when
         ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime());
@@ -68,7 +66,7 @@ class ScheduleTest {
         // given
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
 
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime()))
@@ -91,7 +89,7 @@ class ScheduleTest {
         // given
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
         LocalDateTime now = LocalDateTime.now();
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(new ScreenTime(now.plusHours(1), movie.getRunningTime()))
@@ -115,7 +113,7 @@ class ScheduleTest {
         // given
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
 
         LocalDateTime now = LocalDateTime.now();
         Schedule savedSchedule = Schedule.builder()
@@ -137,7 +135,7 @@ class ScheduleTest {
         // given
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
+        Movie movie = init.createBasicMovie();
 
         LocalDateTime now = LocalDateTime.now();
         Schedule savedSchedule = Schedule.builder()

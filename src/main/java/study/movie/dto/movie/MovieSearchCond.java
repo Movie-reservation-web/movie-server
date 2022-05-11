@@ -1,13 +1,9 @@
 package study.movie.dto.movie;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
-@AllArgsConstructor
-public class MovieCondition {
+public class MovieSearchCond {
 
     private String director;
     private String actor;

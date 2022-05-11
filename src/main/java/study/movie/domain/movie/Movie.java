@@ -55,7 +55,9 @@ public class Movie extends BaseTimeEntity {
 
     private String image;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private double avgScore;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private List<Review> reviews = new ArrayList<>();
 
     @JsonIgnore
@@ -81,9 +83,11 @@ public class Movie extends BaseTimeEntity {
         this.info = info;
         this.image = image;
         this.audience = 0;
+        this.avgScore = 0;
     }
 
     //== 비즈니스 로직==//
+
     /**
      * 리뷰 개수
      */
@@ -94,10 +98,14 @@ public class Movie extends BaseTimeEntity {
     /**
      * 평점 계산
      */
-    public String getAverageScore() {
-        return String.format("%.2f", reviews.stream()
-                .mapToDouble(Review::getScore)
-                .average().getAsDouble());
+    public void calcAverageScore() {
+        this.avgScore = reviews.stream().
+                mapToDouble(Review::getScore)
+                .average().getAsDouble();
+    }
+
+    public String getAvgScoreToString() {
+        return String.format("%.1f", avgScore);
     }
 
     public void update(FilmRating filmRating, LocalDate releaseDate, String info, String image) {
@@ -123,10 +131,11 @@ public class Movie extends BaseTimeEntity {
         this.image = image;
     }
 
-    public void addAudience(int num){
+    public void addAudience(int num) {
         audience += num;
     }
-    public void deleteAudience(int num){
+
+    public void deleteAudience(int num) {
         audience -= num;
     }
 }

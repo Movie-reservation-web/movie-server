@@ -1,110 +1,99 @@
 package study.movie.repository.movie;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.InitService;
-import study.movie.domain.movie.FilmFormat;
-import study.movie.domain.movie.Movie;
-import study.movie.domain.schedule.Schedule;
-import study.movie.domain.schedule.ScreenTime;
-import study.movie.domain.theater.CityCode;
-import study.movie.domain.theater.Screen;
-import study.movie.domain.theater.ScreenFormat;
-import study.movie.domain.theater.Theater;
-import study.movie.repository.schedule.ScheduleRepository;
+import study.movie.domain.movie.*;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
 @Slf4j
-@Rollback
 class MovieRepositoryTest {
-    @Autowired
-    EntityManager em;
 
     @Autowired
     MovieRepository movieRepository;
-    @Autowired
-    ScheduleRepository scheduleRepository;
-
-    @Autowired
-    InitService init;
 
     @Test
-    void 상영중인_영화_차트_중복_제거() {
+    public void 영화_생성() {
         // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
-        movie.addAudience(10);
+        List<String> actors = Arrays.asList("로버트 패틴슨", "폴 다노");
 
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.now().plusDays(5), movie.getRunningTime());
-        ScreenTime screenTime1 = new ScreenTime(LocalDateTime.now().plusDays(4), movie.getRunningTime());
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie)
+        List<MovieGenre> genres = Arrays.asList(MovieGenre.ACTION, MovieGenre.ADVENTURE);
+        List<FilmFormat> types = Arrays.asList(FilmFormat.IMAX, FilmFormat.FOUR_D_FLEX);
+
+        Movie movie = Movie.builder()
+                .title("더 배트맨")
+                .runningTime(176)
+                .director("맷 리브스")
+                .actors(actors)
+                .genres(genres)
+                .formats(types)
+                .filmRating(FilmRating.UNDETERMINED)
+                .nation("한국")
+                .releaseDate(LocalDate.of(2022, 3, 1))
+                .info("영웅이 될 것인가 악당이 될 것인가")
+                .image("이미지")
                 .build();
-        Schedule savedSchedule2 = Schedule.builder()
-                .screenTime(screenTime1)
-                .screen(screen)
-                .movie(movie)
-                .build();
-        scheduleRepository.save(savedSchedule);
-        scheduleRepository.save(savedSchedule2);
+
+        Movie savedMovie = movieRepository.save(movie);
 
         // when
-        List<Movie> movieCharts = movieRepository.findMovieByOpenStatus();
+        Movie findMovie = movieRepository.findById(savedMovie.getId()).get();
 
         // then
-        assertThat(movieCharts.size()).isEqualTo(1);
-        assertThat(movieCharts.get(0)).isEqualTo(movie);
+        Assertions.assertThat(findMovie).isEqualTo(savedMovie);
     }
 
     @Test
-    void 상영중인_영화_차트_내림차순_정렬() {
+    public void 평점_계산() {
         // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createMovie("영화1", "홍길동", Arrays.asList(FilmFormat.TWO_D));
-        movie.addAudience(10);
-        Movie movie1 = init.createMovie("영화2", "홍길동", Arrays.asList(FilmFormat.TWO_D));
-        movie1.addAudience(20);
+        List<String> actors = Arrays.asList("로버트 패틴슨", "폴 다노");
+        List<MovieGenre> genres = Arrays.asList(MovieGenre.ACTION, MovieGenre.ADVENTURE);
+        List<FilmFormat> types = Arrays.asList(FilmFormat.IMAX, FilmFormat.FOUR_D_FLEX);
 
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.now().plusDays(5), movie.getRunningTime());
-        ScreenTime screenTime1 = new ScreenTime(LocalDateTime.now().plusDays(4), movie.getRunningTime());
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
+        Movie movie = Movie.builder()
+                .title("더 배트맨")
+                .runningTime(176)
+                .director("맷 리브스")
+                .actors(actors)
+                .genres(genres)
+                .formats(types)
+                .filmRating(FilmRating.UNDETERMINED)
+                .nation("한국")
+                .releaseDate(LocalDate.of(2022, 3, 1))
+                .info("영웅이 될 것인가 악당이 될 것인가")
+                .image("이미지")
+                .build();
+
+        Movie savedMovie = movieRepository.save(movie);
+
+        Review review1 = Review.writeReview()
                 .movie(movie)
-                .build();
-        Schedule savedSchedule2 = Schedule.builder()
-                .screenTime(screenTime1)
-                .screen(screen)
-                .movie(movie1)
+                .writer("홍길동")
+                .score((float) 3.2)
+                .comment("평가나쁨")
                 .build();
 
-        scheduleRepository.save(savedSchedule);
-        scheduleRepository.save(savedSchedule2);
+        Review review2 = Review.writeReview()
+                .movie(movie)
+                .writer("고길동")
+                .score((float) 2.8)
+                .comment("평가좋음")
+                .build();
 
+        //when
+        Movie findMovie = movieRepository.findById(savedMovie.getId()).get();
 
-        // when
-        List<Movie> movieCharts = movieRepository.findMovieByOpenStatus();
-
-        // then
-        assertThat(movieCharts.size()).isEqualTo(2);
-        assertThat(movieCharts.get(0)).isEqualTo(movie1);
-        assertThat(movieCharts.get(1)).isEqualTo(movie);
+        //then
+        //Assertions.assertThat(findMovie.getAverageScore()).isEqualTo((float)3);
+//        System.out.print("평점 평균     " + findMovie.getAverageScore());
+        //assertEquals(findMovie.getAverageScore(), "3");
     }
-
 }

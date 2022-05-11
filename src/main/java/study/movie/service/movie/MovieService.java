@@ -1,19 +1,12 @@
 package study.movie.service.movie;
 
 import study.movie.dto.movie.*;
-import study.movie.dto.schedule.response.SimpleMovieResponse;
+import study.movie.dto.schedule.response.MovieChartResponse;
+import study.movie.global.dto.PostIdResponse;
 
 import java.util.List;
 
 public interface MovieService {
-
-
-    /**
-     * Api Server
-     * <p>
-     * 상영중인 영화 차트 조회
-     */
-    List<SimpleMovieResponse> findAllOpenMovies();
 
     /**
      * Batch Server
@@ -24,37 +17,28 @@ public interface MovieService {
     void updateMovieAudience();
 
     //saveMovie
-    BasicMovieResponse saveMovie(CreateMovieRequest movieRequest);
+    PostIdResponse saveMovie(CreateMovieRequest request);
 
-    //saveReview
-    Long saveReview(CreateReviewRequest reviewRequest);
 
     //updateMovie
-    void updateMovie(UpdateMovieRequest updateMovieRequest);
-
-    //updateReview
-    void updateReview(UpdateReviewRequest updateReviewRequest);
+    void updateMovie(UpdateMovieRequest request);
 
     //deleteMovie
     void deleteMovie(Long movieId);
 
-    //deleteReview
-    void deleteReview(Long reviewId);
-
     //findOneMovie
     BasicMovieResponse findOneMovie(Long movieId);
 
-    //findAllReview moiveid 가져와서 찾기 querydsl  생성
-    List<ReviewResponse> findAllReviewByMovieId(Long movieId);
-
     // By Director,Name,Actor & orderBy Date Default
-    List<FindMovieResponse> findByCondition(MovieCondition condition);
+    List<FindMovieResponse> findMovieByActor(String actor);
+
+    List<FindMovieResponse> findMovieByDirector(String director);
 
     //상영예정작보기
-    List<FindMovieResponse> findUnreleasedMovies();
+    List<MovieChartResponse> findUnreleasedMovies();
 
     //영화 차트 보기_orderBy Ratings,Score,Audience
-    List<FindMovieResponse> findByOrderBy(String orderCondition);
+    List<MovieChartResponse> findMovieBySort(MovieSortType sortType, boolean isReleased);
 
 
 }

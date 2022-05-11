@@ -1,11 +1,18 @@
 package study.movie.repository.movie;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import study.movie.domain.movie.Review;
-
-import java.util.List;
+import study.movie.dto.movie.condition.ReviewSearchCond;
 
 public interface ReviewRepositoryCustom {
-    List<Review> findByMovieId(Long movieId);
 
-
+    /**
+     * 리뷰 검색
+     *
+     * @param cond     writer, movieTitle
+     * @param pageable id(asc,desc), score(asc,desc)
+     * @return List
+     */
+    Page<Review> search(ReviewSearchCond cond, Pageable pageable);
 }

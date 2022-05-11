@@ -1,9 +1,6 @@
 package study.movie.dto.movie;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import study.movie.converter.movie.FilmFormatConverter;
-import study.movie.converter.movie.MovieGenreConverter;
 import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.FilmRating;
 import study.movie.domain.movie.Movie;
@@ -15,7 +12,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class CreateMovieRequest {
 
     private Long id;
@@ -32,21 +28,6 @@ public class CreateMovieRequest {
     private String info;
     private Integer audience;
     private String image;
-
-    public CreateMovieRequest(Movie movie) {
-        this.title = movie.getTitle();
-        this.runningTime = movie.getRunningTime();
-        this.director = movie.getDirector();
-        this.actors = movie.getActors();
-        this.genres = movie.getGenres();
-        this.formats = movie.getFormats();
-        this.filmRating = movie.getFilmRating();
-        this.nation = movie.getNation();
-        this.releaseDate = movie.getReleaseDate();
-        this.info = movie.getInfo();
-        this.audience = movie.getAudience();
-        this.image = movie.getImage();
-    }
 
     public Movie toEntity() {
         return Movie.builder()

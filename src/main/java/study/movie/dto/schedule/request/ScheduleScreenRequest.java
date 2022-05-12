@@ -7,6 +7,7 @@ import study.movie.domain.theater.ScreenFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class ScheduleScreenRequest {
@@ -22,5 +23,5 @@ public class ScheduleScreenRequest {
     private ScreenFormat screenFormat;
 
     @NotNull
-    private Long theaterId;
+    private List<Long> theaterIds;
 }

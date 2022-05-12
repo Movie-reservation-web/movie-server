@@ -66,4 +66,5 @@ public class ReviewRepositoryImpl extends BasicRepositoryUtil implements ReviewR
     private BooleanExpression movieTitleEq(String movieTitle) {
         return hasText(movieTitle) ? movie.title.eq(movieTitle) : null;
     }
+
 }

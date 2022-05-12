@@ -1,4 +1,4 @@
-package study.movie.dto.movie;
+package study.movie.dto.movie.response;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,15 +6,13 @@ import study.movie.domain.movie.FilmFormat;
 import study.movie.domain.movie.FilmRating;
 import study.movie.domain.movie.Movie;
 import study.movie.domain.movie.MovieGenre;
-import study.movie.dto.movie.response.ReviewResponse;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
-public class BasicMovieResponse {
+public class MovieSearchResponse {
 
     private Long id;
     private String title;
@@ -27,13 +25,13 @@ public class BasicMovieResponse {
     private String nation;
     private LocalDate releaseDate;
     private String info;
-    private Integer audience;
+    private long audience;
     private String image;
 
-    private List<ReviewResponse> reviews;
+    private long reviewCount;
 
-    public static BasicMovieResponse of(Movie movie) {
-        return BasicMovieResponse.builder()
+    public static MovieSearchResponse of(Movie movie) {
+        return MovieSearchResponse.builder()
                 .id(movie.getId())
                 .title(movie.getTitle())
                 .runningTime(movie.getRunningTime())
@@ -47,11 +45,7 @@ public class BasicMovieResponse {
                 .info(movie.getInfo())
                 .audience(movie.getAudience())
                 .image(movie.getImage())
-                .reviews(
-                        movie.getReviews().stream()
-                                .map(ReviewResponse::of)
-                                .collect(Collectors.toList())
-                )
+                .reviewCount(movie.getReviewCount())
                 .build();
     }
 }

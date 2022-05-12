@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.member.GenderType;
 import study.movie.domain.member.Member;
 import study.movie.domain.movie.*;
+import study.movie.domain.schedule.Schedule;
+import study.movie.domain.schedule.ScreenTime;
 import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Screen;
 import study.movie.domain.theater.ScreenFormat;
@@ -13,6 +15,7 @@ import study.movie.domain.theater.Theater;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +86,6 @@ public class InitService {
         return savedMovies;
     }
 
-    @Transactional
     public Theater createTheater(String theaterName, CityCode city) {
         Theater theater = Theater.builder()
                 .name(theaterName)
@@ -94,7 +96,6 @@ public class InitService {
         return theater;
     }
 
-    @Transactional
     public Screen registerScreen(String screenName, ScreenFormat format, Theater theater, int maxCols, int maxRows) {
         return Screen.builder()
                 .name(screenName)
@@ -105,7 +106,6 @@ public class InitService {
                 .build();
     }
 
-    @Transactional
     public Movie createMovie(String title, String director, List<FilmFormat> formats, List<String> actors) {
         Movie movie = Movie.builder()
                 .title(title)
@@ -124,7 +124,6 @@ public class InitService {
         return movie;
     }
 
-    @Transactional
     public Movie createBasicMovie() {
         Movie movie = Movie.builder()
                 .title("제목1")
@@ -143,7 +142,6 @@ public class InitService {
         return movie;
     }
 
-    @Transactional
     public Review writeReview(Movie movie) {
         Review review = Review.writeReview()
                 .writer("홍길동")
@@ -154,7 +152,6 @@ public class InitService {
         return review;
     }
 
-    @Transactional
     public Review writeReview(Movie movie, String writer, float score) {
         Review review = Review.writeReview()
                 .writer(writer)
@@ -165,7 +162,6 @@ public class InitService {
         return review;
     }
 
-    @Transactional
     public Member createMember() {
         Member member = Member.builder()
                 .name("홍길동")
@@ -176,5 +172,15 @@ public class InitService {
                 .build();
         em.persist(member);
         return member;
+    }
+
+    public Schedule saveSchedule(Movie movie, Screen screen, LocalDateTime dateTime) {
+        Schedule schedule = Schedule.builder()
+                .movie(movie)
+                .screen(screen)
+                .screenTime(new ScreenTime(dateTime, movie.getRunningTime()))
+                .build();
+        em.persist(schedule);
+        return schedule;
     }
 }

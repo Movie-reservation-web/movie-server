@@ -21,7 +21,7 @@ import static study.movie.global.constants.ResponseMessage.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reviews")
-public class ReviewController {
+public class ReviewApiController {
 
     private final ReviewService reviewService;
 

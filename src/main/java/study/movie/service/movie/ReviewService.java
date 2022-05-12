@@ -10,8 +10,6 @@ import study.movie.global.paging.PageableDTO;
 
 public interface ReviewService {
 
-    // API
-
     /**
      * Api Server
      * <p>
@@ -33,10 +31,10 @@ public interface ReviewService {
      */
     void delete(Long id);
 
-    // ADMIN
 
     /**
      * Admin Server
+     * <p>
      * 해당 영화의 모든 리뷰 조회
      */
     Page<ReviewResponse> search(ReviewSearchCond cond, PageableDTO pageableDTO);

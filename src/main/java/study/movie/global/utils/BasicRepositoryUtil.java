@@ -17,4 +17,5 @@ public class BasicRepositoryUtil {
                         Expressions.path(t, s, order.getProperty()))
         ).toArray(OrderSpecifier[]::new);
     }
+
 }

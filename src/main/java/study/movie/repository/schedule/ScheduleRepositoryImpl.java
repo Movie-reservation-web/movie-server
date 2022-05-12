@@ -92,7 +92,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
                         dateTimeLt(dailyEndDateTime(request.getScreenDate())),
                         movie.id.eq(request.getMovieId()),
                         screen.format.eq(request.getScreenFormat()),
-                        theater.id.eq(request.getTheaterId())
+                        theater.id.in(request.getTheaterIds())
                 )
                 .fetch();
     }
@@ -177,8 +177,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
     private Predicate[] getSearchPredicts(ScheduleSearchCond cond) {
         return new Predicate[]{
                 movieTitleEq(cond.getMovieTitle()),
-                dateTimeGoe(dailyStartDateTime(cond.getScreenStartDate())),
-                dateTimeLt(dailyEndDateTime(cond.getScreenEndDate())),
+                dateTimeGoe(dailyStartDateTime(cond.getStartDate())),
+                dateTimeLt(dailyEndDateTime(cond.getEndDate())),
                 screenFormatEq(cond.getScreenFormat()),
                 scheduleStatusEq(cond.getStatus())
         };

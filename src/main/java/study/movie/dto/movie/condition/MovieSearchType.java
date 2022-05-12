@@ -1,4 +1,4 @@
-package study.movie.dto.schedule.condition;
+package study.movie.dto.movie.condition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,15 @@ import study.movie.global.enumMapper.EnumMapperType;
 @Getter
 @AllArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum ScheduleSearchCondType implements EnumMapperType {
-    MOVIE_TITLE("영화 제목"),
-    THEATER_NAME("극장 이름"),
-    SCREEN_FORMAT("상영관 포멧"),
-    SCREEN_START_TIME("시작 날짜"),
-    SCREEN_END_TIME("끝 날짜");
+public enum MovieSearchType implements EnumMapperType {
+    TITLE("제목"),
+    DIRECTOR("감독 이름"),
+    ACTOR("배우 이름"),
+    FILM_RATING("등급"),
+    FILM_FORMAT("영화 타입"),
+    NATION("국가"),
+    GENRE("영화 장르");
+
     private String value;
 
     @Override

@@ -269,7 +269,7 @@ class ScheduleServiceTest {
         ScreenFormat screenFormat = TWO_D;
         // 검색 조건 -> 영화1(전체), CGV 용산, 상영날짜 22/03/10
         ScheduleScreenRequest request = new ScheduleScreenRequest();
-        request.setTheaterId(theaterId1);
+        request.setTheaterIds(Arrays.asList(theaterId1));
         request.setMovieId(savedMovie.getId());
         request.setScreenDate(screenDate);
         request.setScreenFormat(screenFormat);

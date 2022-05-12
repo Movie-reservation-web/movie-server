@@ -1,4 +1,4 @@
-package study.movie.dto.movie;
+package study.movie.dto.movie.request;
 
 import lombok.Data;
 import study.movie.domain.movie.FilmFormat;

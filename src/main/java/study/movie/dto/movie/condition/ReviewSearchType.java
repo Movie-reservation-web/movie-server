@@ -8,7 +8,7 @@ import study.movie.global.enumMapper.EnumMapperType;
 @Getter
 @AllArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum ReviewSearchCondType implements EnumMapperType {
+public enum ReviewSearchType implements EnumMapperType {
     WRITER("작성자"),
     MOVIE_TITLE("영화 제목");
 

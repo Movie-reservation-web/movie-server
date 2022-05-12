@@ -1,22 +1,42 @@
 package study.movie.repository.movie;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import study.movie.domain.movie.Movie;
-import study.movie.dto.movie.MovieSortType;
+import study.movie.dto.movie.condition.MovieChartSortType;
+import study.movie.dto.movie.condition.MovieSearchCond;
 
 import java.util.List;
 
 public interface MovieRepositoryCustom {
 
-    // 감독이나 배우로 영화를 찾을 때는 condition에 감독, 배우만 들어가면 됨
-    List<Movie> findMovieBySort(MovieSortType sortType, boolean isReleased);
+    /**
+     * 영화 조회(정렬, 상영 여부)
+     * @param sortType audience/desc, avg-score/desc
+     * @param isReleased
+     * @return
+     */
+    List<Movie> findMovieBySort(MovieChartSortType sortType, boolean isReleased);
 
+    /**
+     * 미개봉 영화 조회
+     * @return List
+     */
     List<Movie> findUnreleasedMovies();
 
     /**
-     * 상영중인 영화 조회 (관객 수 내림차순 정렬)
+     * 상영중인 영화 조회
      *
      * @return List
      */
     List<Movie> findMovieByOpenStatus();
+
+    /**
+     * 영화 검색
+     * @param cond title, director, nation, filmRating
+     * @param pageable id(asc,desc), avg-score(desc), audience(desc), running-time(asc,desc)
+     * @return Page
+     */
+    Page<Movie> search(MovieSearchCond cond, Pageable pageable);
 
 }

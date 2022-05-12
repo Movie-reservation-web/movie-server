@@ -43,6 +43,7 @@ public enum ErrorCode {
     INVALID_SORT_OPTION(BAD_REQUEST, "정렬 조건이 올바르지 않습니다."),
     ILLEGAL_ARGUMENT(BAD_REQUEST, "적절하지 않은 인자입니다."),
 
+    NEGATIVE_AUDIENCE_COUNT(BAD_REQUEST, "관객 수는 음수가 될 수 없습니다."),
     /**
      * <p>
      * Status: 404 NOT_FOUND

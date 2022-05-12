@@ -12,7 +12,7 @@ public interface ReviewRepositoryCustom {
      *
      * @param cond     writer, movieTitle
      * @param pageable id(asc,desc), score(asc,desc)
-     * @return List
+     * @return Page
      */
     Page<Review> search(ReviewSearchCond cond, Pageable pageable);
 }

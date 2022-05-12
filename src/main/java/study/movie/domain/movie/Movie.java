@@ -11,11 +11,14 @@ import study.movie.domain.schedule.Schedule;
 import study.movie.domain.ticket.Ticket;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
+import study.movie.global.exception.CustomException;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static study.movie.global.exception.ErrorCode.NEGATIVE_AUDIENCE_COUNT;
 
 @Entity
 @Getter
@@ -51,7 +54,7 @@ public class Movie extends BaseTimeEntity {
     @Lob
     private String info;
 
-    private Integer audience;
+    private long audience;
 
     private String image;
 
@@ -82,19 +85,11 @@ public class Movie extends BaseTimeEntity {
         this.formats = formats;
         this.info = info;
         this.image = image;
-        this.audience = 0;
-        this.avgScore = 0;
+        this.audience = 0L;
+        this.avgScore = 0F;
     }
 
     //== 비즈니스 로직==//
-
-    /**
-     * 리뷰 개수
-     */
-    public int getReviewCount() {
-        return reviews.size();
-    }
-
     /**
      * 평점 계산
      */
@@ -131,11 +126,21 @@ public class Movie extends BaseTimeEntity {
         this.image = image;
     }
 
-    public void addAudience(int num) {
-        audience += num;
+    public void addAudience(int count) {
+        audience += count;
     }
 
-    public void deleteAudience(int num) {
-        audience -= num;
+    public void dropAudience(int count) {
+        if(audience < count) throw new CustomException(NEGATIVE_AUDIENCE_COUNT);
+        audience -= count;
     }
+
+    //== 조회 로직==//
+    /**
+     * 리뷰 개수
+     */
+    public long getReviewCount() {
+        return reviews.size();
+    }
+
 }

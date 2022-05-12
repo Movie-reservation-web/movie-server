@@ -110,8 +110,8 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
                 theaterNameEq(cond.getTheaterName()),
                 screenFormatEq(cond.getScreenFormat()),
                 memberNameEq(cond.getMemberName()),
-                dateTimeGoe(dailyStartDateTime(cond.getScreenStartDate())),
-                dateTimeLt(dailyEndDateTime(cond.getScreenEndDate())),
+                dateTimeGoe(dailyStartDateTime(cond.getStartDate())),
+                dateTimeLt(dailyEndDateTime(cond.getEndDate())),
                 ticketStatusEq(cond.getStatus())
         };
     }

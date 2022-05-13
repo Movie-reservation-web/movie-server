@@ -10,31 +10,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import study.movie.global.utils.BasicRepositoryUtil;
+import study.movie.schedule.dto.condition.ScheduleBasicSearchCond;
+import study.movie.schedule.dto.condition.ScheduleSearchCond;
+import study.movie.schedule.dto.request.ScheduleScreenRequest;
+import study.movie.schedule.dto.request.UpdateSeatRequest;
 import study.movie.schedule.entity.Schedule;
 import study.movie.schedule.entity.ScheduleStatus;
 import study.movie.schedule.entity.Seat;
 import study.movie.schedule.entity.SeatEntity;
 import study.movie.theater.entity.ScreenFormat;
-import study.movie.schedule.dto.condition.ScheduleBasicSearchCond;
-import study.movie.schedule.dto.condition.ScheduleSearchCond;
-import study.movie.schedule.dto.request.ScheduleScreenRequest;
-import study.movie.schedule.dto.request.UpdateSeatRequest;
-import study.movie.global.utils.BasicRepositoryUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.util.StringUtils.hasText;
-import static study.movie.domain.movie.QMovie.movie;
-import static study.movie.domain.schedule.QSchedule.schedule;
-import static study.movie.domain.schedule.QSeatEntity.seatEntity;
-import static study.movie.schedule.entity.ScheduleStatus.CLOSED;
-import static study.movie.schedule.entity.ScheduleStatus.OPEN;
-import static study.movie.domain.theater.QScreen.screen;
-import static study.movie.domain.theater.QTheater.theater;
 import static study.movie.global.utils.DateTimeUtil.dailyEndDateTime;
 import static study.movie.global.utils.DateTimeUtil.dailyStartDateTime;
+import static study.movie.movie.entity.QMovie.movie;
+import static study.movie.schedule.entity.QSchedule.schedule;
+import static study.movie.schedule.entity.QSeatEntity.seatEntity;
+import static study.movie.schedule.entity.ScheduleStatus.CLOSED;
+import static study.movie.schedule.entity.ScheduleStatus.OPEN;
+import static study.movie.theater.entity.QScreen.screen;
+import static study.movie.theater.entity.QTheater.theater;
 
 
 @Repository

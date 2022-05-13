@@ -12,9 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import study.movie.theater.entity.ScreenFormat;
+import study.movie.ticket.dto.condition.TicketSearchCond;
 import study.movie.ticket.entity.Ticket;
 import study.movie.ticket.entity.TicketStatus;
-import study.movie.ticket.dto.condition.TicketSearchCond;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,12 +23,12 @@ import java.util.Optional;
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
 import static org.springframework.util.StringUtils.hasText;
-import static study.movie.domain.member.QMember.member;
-import static study.movie.domain.movie.QMovie.movie;
-import static study.movie.domain.theater.QTheater.theater;
-import static study.movie.domain.ticket.QTicket.ticket;
-import static study.movie.ticket.entity.TicketStatus.RESERVED;
 import static study.movie.global.utils.DateTimeUtil.*;
+import static study.movie.member.entity.QMember.member;
+import static study.movie.movie.entity.QMovie.movie;
+import static study.movie.theater.entity.QTheater.theater;
+import static study.movie.ticket.entity.QTicket.ticket;
+import static study.movie.ticket.entity.TicketStatus.RESERVED;
 
 @Repository
 @RequiredArgsConstructor

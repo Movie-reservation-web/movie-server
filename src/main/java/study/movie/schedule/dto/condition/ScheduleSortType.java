@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import study.movie.global.metaModel.MetaModelType;
 
-import static study.movie.domain.movie.QMovie.movie;
 import static study.movie.global.metaModel.MetaModelUtil.getColumn;
+import static study.movie.movie.entity.QMovie.movie;
 
 @Getter
 @AllArgsConstructor

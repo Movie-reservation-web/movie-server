@@ -3,15 +3,15 @@ package study.movie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.member.GenderType;
-import study.movie.domain.member.Member;
-import study.movie.domain.movie.*;
-import study.movie.domain.schedule.Schedule;
-import study.movie.domain.schedule.ScreenTime;
-import study.movie.domain.theater.CityCode;
-import study.movie.domain.theater.Screen;
-import study.movie.domain.theater.ScreenFormat;
-import study.movie.domain.theater.Theater;
+import study.movie.member.entity.GenderType;
+import study.movie.member.entity.Member;
+import study.movie.schedule.entity.Schedule;
+import study.movie.schedule.entity.ScreenTime;
+import study.movie.theater.entity.CityCode;
+import study.movie.theater.entity.Screen;
+import study.movie.theater.entity.ScreenFormat;
+import study.movie.theater.entity.Theater;
+import study.movie.movie.entity.*;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static study.movie.domain.theater.ScreenFormat.*;
+import static study.movie.theater.entity.ScreenFormat.*;
 
 @Component
 @Transactional

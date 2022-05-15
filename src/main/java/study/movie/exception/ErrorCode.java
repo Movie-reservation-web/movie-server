@@ -1,4 +1,4 @@
-package study.movie.global.exception;
+package study.movie.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +33,10 @@ public enum ErrorCode {
      * <p>
      * Detail: 잘못된 요청
      */
-    INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다"),
+    INVALID_JSON_WEB_TOKEN(BAD_REQUEST, "Json Web Token 정보가 올바르지 않습니다"),
+    PERMISSION_NOT_ACCESSIBLE(BAD_REQUEST, "해당 리소스에 대한 권한이 없습니다."),
+    INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다."),
+    INVALID_ACCESS_TOKEN(BAD_REQUEST, "엑세스 토큰이 유효하지 않습니다."),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     ALREADY_CANCELLED_TICKET(BAD_REQUEST, "이미 취소된 티켓입니다."),
     NOT_ALLOW_RESERVED_STATUS(BAD_REQUEST, "예약 상태로 변경할 수 없습니다."),
@@ -44,6 +47,8 @@ public enum ErrorCode {
     ILLEGAL_ARGUMENT(BAD_REQUEST, "적절하지 않은 인자입니다."),
 
     NEGATIVE_AUDIENCE_COUNT(BAD_REQUEST, "관객 수는 음수가 될 수 없습니다."),
+    INVALID_PASSWORD(BAD_REQUEST, "비밀번호가 올바르지 않습니다."),
+
     /**
      * <p>
      * Status: 404 NOT_FOUND
@@ -57,6 +62,8 @@ public enum ErrorCode {
     TICKET_NOT_FOUND(NOT_FOUND, "해당 티켓을 찾을 수 없습니다."),
     SCREEN_NOT_FOUND(NOT_FOUND, "해당 상영관을 찾을 수 없습니다."),
     THEATER_NOT_FOUND(NOT_FOUND, "해당 극장을 찾을 수 없습니다."),
+    EMAIL_MEMBER_NOT_FOUND(NOT_FOUND, "해당 이메일에 맞는 회원을 찾을 수 없습니다"),
+    REFRESH_TOKEN_NOT_FOUND(BAD_REQUEST, "리프레시 토큰을 찾을 수 없습니다."),
 
     /**
      * <p>

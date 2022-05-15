@@ -2,6 +2,7 @@ package study.movie.schedule.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import study.movie.schedule.dto.condition.ScheduleBasicSearchCond;
 import study.movie.schedule.dto.request.ReservationScreenRequest;
@@ -26,6 +27,7 @@ public class ScheduleApiController {
         List<ScheduleSearchResponse> result = scheduleService.searchBasicSchedules(cond);
         return CustomResponse.success(READ_SCHEDULE, result);
     }
+
     @GetMapping("/screen")
     public ResponseEntity<?> searchScheduleScreens(@Valid @RequestBody ScheduleScreenRequest request) {
         List<ScheduleScreenResponse> result = scheduleService.searchScheduleScreens(request);
@@ -38,6 +40,7 @@ public class ScheduleApiController {
         return CustomResponse.success(READ_MOVIE_FORMATS, result);
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/selected")
     public ResponseEntity<?> getScheduleSeatInfo(@Valid @RequestBody ReservationScreenRequest request) {
         ReservationScreenResponse result = scheduleService.getSelectedScreenInfo(request);

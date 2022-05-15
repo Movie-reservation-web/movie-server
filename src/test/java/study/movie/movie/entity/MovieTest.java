@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
-import study.movie.global.exception.CustomException;
-import study.movie.movie.entity.*;
+import study.movie.exception.CustomException;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;

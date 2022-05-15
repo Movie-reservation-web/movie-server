@@ -15,19 +15,19 @@ import study.movie.movie.dto.response.ReviewResponse;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.DomainSpec;
 import study.movie.global.paging.PageableDTO;
-import study.movie.global.utils.BasicServiceUtils;
+import study.movie.global.utils.BasicServiceUtil;
 import study.movie.movie.repository.MovieRepository;
 import study.movie.movie.repository.ReviewRepository;
 
 import javax.persistence.EntityManager;
 
-import static study.movie.global.exception.ErrorCode.MOVIE_NOT_FOUND;
-import static study.movie.global.exception.ErrorCode.REVIEW_NOT_FOUND;
+import static study.movie.exception.ErrorCode.MOVIE_NOT_FOUND;
+import static study.movie.exception.ErrorCode.REVIEW_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ReviewServiceImpl extends BasicServiceUtils implements ReviewService {
+public class ReviewServiceImpl extends BasicServiceUtil implements ReviewService {
     private final EntityManager em;
     private final MovieRepository movieRepository;
     private final ReviewRepository reviewRepository;

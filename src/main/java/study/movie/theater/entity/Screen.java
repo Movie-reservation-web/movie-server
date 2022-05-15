@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 import study.movie.movie.entity.FilmFormat;
 import study.movie.schedule.entity.Schedule;
 import study.movie.global.entity.BaseTimeEntity;
-import study.movie.global.exception.CustomException;
+import study.movie.exception.CustomException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
-import static study.movie.global.exception.ErrorCode.NOT_ALLOW_SCREEN_FORMAT;
+import static study.movie.exception.ErrorCode.NOT_ALLOW_SCREEN_FORMAT;
 
 @Entity
 @Getter

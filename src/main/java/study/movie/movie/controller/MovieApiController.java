@@ -8,13 +8,13 @@ import study.movie.movie.dto.response.BasicMovieResponse;
 import study.movie.movie.dto.response.FindMovieResponse;
 import study.movie.schedule.dto.response.MovieChartResponse;
 import study.movie.global.dto.CustomResponse;
-import study.movie.global.exception.CustomException;
+import study.movie.exception.CustomException;
 import study.movie.movie.service.MovieService;
 
 import java.util.List;
 
 import static study.movie.global.constants.ResponseMessage.*;
-import static study.movie.global.exception.ErrorCode.ILLEGAL_ARGUMENT;
+import static study.movie.exception.ErrorCode.ILLEGAL_ARGUMENT;
 
 @RestController
 @RequiredArgsConstructor

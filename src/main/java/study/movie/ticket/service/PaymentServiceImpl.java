@@ -1,13 +1,10 @@
 package study.movie.ticket.service;
 
-import com.siot.IamportRestClient.IamportClient;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import study.movie.theater.entity.ScreenFormat;
 import study.movie.ticket.entity.payment.AgeType;
 import study.movie.ticket.entity.payment.DateTimeType;
 import study.movie.ticket.entity.payment.DayWeekType;
-import study.movie.theater.entity.ScreenFormat;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -15,12 +12,6 @@ import java.util.Map;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    @Getter
-    private final IamportClient client;
-
-    public PaymentServiceImpl(@Value("${iamport.restkey}") String key, @Value("${iamport.secret}") String secret) {
-        client = new IamportClient(key, secret);
-    }
 
     @Override
     public Map<AgeType, Integer> getPriceMap(ScreenFormat format, LocalDateTime dateTime) {

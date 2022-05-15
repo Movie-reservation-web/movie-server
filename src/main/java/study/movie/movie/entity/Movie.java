@@ -11,14 +11,14 @@ import study.movie.schedule.entity.Schedule;
 import study.movie.ticket.entity.Ticket;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
-import study.movie.global.exception.CustomException;
+import study.movie.exception.CustomException;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static study.movie.global.exception.ErrorCode.NEGATIVE_AUDIENCE_COUNT;
+import static study.movie.exception.ErrorCode.NEGATIVE_AUDIENCE_COUNT;
 
 @Entity
 @Getter

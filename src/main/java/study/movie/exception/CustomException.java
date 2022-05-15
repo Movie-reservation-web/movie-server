@@ -1,4 +1,4 @@
-package study.movie.global.exception;
+package study.movie.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

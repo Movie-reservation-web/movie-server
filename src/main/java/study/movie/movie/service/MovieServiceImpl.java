@@ -20,19 +20,19 @@ import study.movie.schedule.dto.response.MovieChartResponse;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.DomainSpec;
 import study.movie.global.paging.PageableDTO;
-import study.movie.global.utils.BasicServiceUtils;
+import study.movie.global.utils.BasicServiceUtil;
 import study.movie.movie.repository.MovieRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static study.movie.global.exception.ErrorCode.MOVIE_NOT_FOUND;
+import static study.movie.exception.ErrorCode.MOVIE_NOT_FOUND;
 
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MovieServiceImpl extends BasicServiceUtils implements MovieService {
+public class MovieServiceImpl extends BasicServiceUtil implements MovieService {
     private final MovieRepository movieRepository;
     private final DomainSpec<MovieSortType> spec = new DomainSpec<>(MovieSortType.class);
 

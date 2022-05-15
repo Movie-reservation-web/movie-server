@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.global.exception.CustomException;
+import study.movie.exception.CustomException;
 import study.movie.global.paging.DomainSpec;
 import study.movie.global.paging.PageableDTO;
-import study.movie.global.utils.BasicServiceUtils;
+import study.movie.global.utils.BasicServiceUtil;
 import study.movie.movie.entity.Movie;
 import study.movie.movie.repository.MovieRepository;
 import study.movie.schedule.dto.condition.ScheduleBasicSearchCond;
@@ -36,13 +36,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static study.movie.global.exception.ErrorCode.*;
+import static study.movie.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-public class ScheduleServiceImpl extends BasicServiceUtils implements ScheduleService {
+public class ScheduleServiceImpl extends BasicServiceUtil implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;

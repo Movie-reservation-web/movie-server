@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import study.movie.global.exception.ErrorCode;
+import study.movie.exception.ErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 import static study.movie.global.constants.ResponseMessage.SUCCESS;
-import static study.movie.global.exception.ErrorCode.ARGUMENTS_NOT_VALID;
+import static study.movie.exception.ErrorCode.ARGUMENTS_NOT_VALID;
 
 public class CustomResponse {
     @Data

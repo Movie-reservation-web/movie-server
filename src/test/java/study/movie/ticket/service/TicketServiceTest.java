@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.global.exception.CustomException;
+import study.movie.exception.CustomException;
 import study.movie.member.entity.Member;
 import study.movie.movie.entity.Movie;
 import study.movie.schedule.entity.Schedule;

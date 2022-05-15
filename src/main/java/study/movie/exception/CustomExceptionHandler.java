@@ -1,4 +1,4 @@
-package study.movie.global.exception;
+package study.movie.exception;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
@@ -18,7 +18,8 @@ import study.movie.global.dto.ValidationResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static study.movie.global.exception.ErrorCode.*;
+import static study.movie.exception.ErrorCode.DUPLICATED_RESOURCE;
+import static study.movie.exception.ErrorCode.ILLEGAL_ARGUMENT;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return CustomResponse.fail(ILLEGAL_ARGUMENT);
     }
 
-    @ExceptionHandler(value = { ConstraintViolationException.class, DataIntegrityViolationException.class})
+    @ExceptionHandler(value = {ConstraintViolationException.class, DataIntegrityViolationException.class})
     public final ResponseEntity<?> handleDataException() {
         return CustomResponse.fail(DUPLICATED_RESOURCE);
     }

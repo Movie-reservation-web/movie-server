@@ -18,7 +18,7 @@ import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.DomainSpec;
 import study.movie.global.paging.PageableDTO;
-import study.movie.global.utils.BasicServiceUtils;
+import study.movie.global.utils.BasicServiceUtil;
 import study.movie.member.repository.MemberRepository;
 import study.movie.schedule.repository.ScheduleRepository;
 import study.movie.ticket.repository.TicketRepository;
@@ -26,12 +26,12 @@ import study.movie.ticket.repository.TicketRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static study.movie.global.exception.ErrorCode.*;
+import static study.movie.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class TicketServiceImpl extends BasicServiceUtils implements TicketService {
+public class TicketServiceImpl extends BasicServiceUtil implements TicketService {
     private final TicketRepository ticketRepository;
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;

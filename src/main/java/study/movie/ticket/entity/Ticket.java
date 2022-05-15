@@ -11,7 +11,7 @@ import study.movie.schedule.entity.ScreenTime;
 import study.movie.theater.entity.ScreenFormat;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
-import study.movie.global.exception.CustomException;
+import study.movie.exception.CustomException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
-import static study.movie.global.exception.ErrorCode.ALREADY_CANCELLED_TICKET;
+import static study.movie.exception.ErrorCode.ALREADY_CANCELLED_TICKET;
 
 @Entity
 @Getter

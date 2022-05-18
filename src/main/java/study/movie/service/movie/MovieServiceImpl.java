@@ -14,6 +14,7 @@ import study.movie.repository.movie.MovieRepository;
 import study.movie.repository.movie.ReviewRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -125,6 +126,12 @@ public class MovieServiceImpl extends BasicServiceUtils implements MovieService 
 
     //findAllReview moiveid 가져와서 찾기 querydsl  생성
     public List<ReviewResponse> findAllReviewByMovieId(Long movieId) {
+       Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new RuntimeException("noMovie"));
+
+        List<Review> reviewList = movie.getReviews();
+
+
 //        return reviewRepository.findByMovieId(movieId)
 //                .stream()
 //                .map(ReviewResponse::new)

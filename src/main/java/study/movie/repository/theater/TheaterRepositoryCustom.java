@@ -5,7 +5,9 @@ import study.movie.domain.theater.CityCode;
 import study.movie.domain.theater.Theater;
 
 import java.util.Arrays;
+import java.util.List;
 
-public interface TheaterRepository extends JpaRepository<Theater, Long>, TheaterRepositoryCustom {
+public interface TheaterRepositoryCustom {
 
+    List<Theater> findByCity(CityCode cityCode);
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.global.entity.BaseTimeEntity;
 
+import javax.management.Query;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class Theater extends BaseTimeEntity {
 
     private String phone;
 
-    @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "theater", cascade = CascadeType.PERSIST)
     private List<Screen> screens = new ArrayList<>();
 
     //==생성 메서드==//
@@ -34,6 +35,10 @@ public class Theater extends BaseTimeEntity {
     public Theater(String name, CityCode city, String phone) {
         this.name = name;
         this.city = city;
+        this.phone = phone;
+    }
+
+    public void update(String phone) {
         this.phone = phone;
     }
 }

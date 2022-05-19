@@ -16,13 +16,15 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class EnumMapper {
     public static String STATUS_PATH = "_STATUS";
-    public static String SEARCH_COND_TYPE_PATH = "_SEARCH_CONDITION_TYPE";
+    public static String SEARCH_TYPE_PATH = "_SEARCH_TYPE";
     public static String SORT_TYPE_PATH = "_SORT_TYPE";
+
     private Map<String, List<EnumMapperValue>> factory = new LinkedHashMap<>();
 
     public void put(String key, Class<? extends EnumMapperType> e) {
         factory.put(key, toEnumValues(e));
     }
+
     public void put(EnumClassConst enumClazz, Class<? extends EnumMapperType> e) {
         factory.put(enumClazz.getClassName(), toEnumValues(e));
     }

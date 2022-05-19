@@ -3,22 +3,24 @@ package study.movie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.member.GenderType;
-import study.movie.domain.member.Member;
-import study.movie.domain.movie.*;
-import study.movie.domain.theater.CityCode;
-import study.movie.domain.theater.Screen;
-import study.movie.domain.theater.ScreenFormat;
-import study.movie.domain.theater.Theater;
+import study.movie.member.entity.GenderType;
+import study.movie.member.entity.Member;
+import study.movie.schedule.entity.Schedule;
+import study.movie.schedule.entity.ScreenTime;
+import study.movie.theater.entity.CityCode;
+import study.movie.theater.entity.Screen;
+import study.movie.theater.entity.ScreenFormat;
+import study.movie.theater.entity.Theater;
+import study.movie.movie.entity.*;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static study.movie.domain.theater.ScreenFormat.*;
-import static study.movie.domain.theater.ScreenFormat.PREMIUM;
+import static study.movie.theater.entity.ScreenFormat.*;
 
 @Component
 @Transactional
@@ -47,6 +49,14 @@ public class InitService {
                 Arrays.asList("영화1", "영화2", "영화3", "영화4", "영화5", "영화6"),
                 Arrays.asList("감독1", "감독2", "감독3", "감독4", "감독5", "감독6"),
                 Arrays.asList(
+                        Arrays.asList("로버트 패틴슨", "폴 다노"),
+                        Arrays.asList("찰스 자비에", "울버린"),
+                        Arrays.asList("로버트 패틴슨", "레이첼"),
+                        Arrays.asList("배우1", "배우2", "배우3"),
+                        Arrays.asList("배우1", "배우2", "배우3"),
+                        Arrays.asList("배우1", "배우2", "배우3")
+                ),
+                Arrays.asList(
                         Arrays.asList(FilmFormat.TWO_D, FilmFormat.FOUR_D_FLEX, FilmFormat.IMAX),
                         Arrays.asList(FilmFormat.TWO_D, FilmFormat.SCREEN_X),
                         Arrays.asList(FilmFormat.TWO_D, FilmFormat.FOUR_D_FLEX, FilmFormat.IMAX, FilmFormat.SCREEN_X),
@@ -66,14 +76,16 @@ public class InitService {
         return savedScreens;
     }
 
-    public List<Movie> addMovies(List<String> titles, List<String> directors, List<List<FilmFormat>> filmFormats) {
+    public List<Movie> addMovies(List<String> titles, List<String> directors, List<List<String>> actors, List<List<FilmFormat>> filmFormats) {
         List<Movie> savedMovies = new ArrayList<>();
         for (int i = 0; i < titles.size(); i++) {
-            savedMovies.add(createMovie(titles.get(i), directors.get(i), filmFormats.get(i)));
+            savedMovies.add(
+                    createMovie(titles.get(i), directors.get(i), filmFormats.get(i), actors.get(i))
+            );
         }
         return savedMovies;
     }
-    @Transactional
+
     public Theater createTheater(String theaterName, CityCode city) {
         Theater theater = Theater.builder()
                 .name(theaterName)
@@ -84,7 +96,6 @@ public class InitService {
         return theater;
     }
 
-    @Transactional
     public Screen registerScreen(String screenName, ScreenFormat format, Theater theater, int maxCols, int maxRows) {
         return Screen.builder()
                 .name(screenName)
@@ -94,12 +105,12 @@ public class InitService {
                 .maxRows(maxRows)
                 .build();
     }
-    @Transactional
-    public Movie createMovie(String title, String director, List<FilmFormat> formats) {
+
+    public Movie createMovie(String title, String director, List<FilmFormat> formats, List<String> actors) {
         Movie movie = Movie.builder()
                 .title(title)
                 .director(director)
-                .actors(Arrays.asList("배우1", "배우2", "배우3"))
+                .actors(actors)
                 .formats(formats)
                 .filmRating(FilmRating.G_RATED)
                 .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
@@ -112,9 +123,27 @@ public class InitService {
         em.persist(movie);
         return movie;
     }
-    @Transactional
+
+    public Movie createBasicMovie() {
+        Movie movie = Movie.builder()
+                .title("제목1")
+                .director("감독1")
+                .actors(List.of("배우1", "배우2", "배우3"))
+                .formats(List.of(FilmFormat.TWO_D))
+                .filmRating(FilmRating.G_RATED)
+                .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
+                .image("제목1.jpg")
+                .info("제목1 information")
+                .nation("KR")
+                .runningTime(160)
+                .releaseDate(LocalDate.now().plusDays(10))
+                .build();
+        em.persist(movie);
+        return movie;
+    }
+
     public Review writeReview(Movie movie) {
-        Review review = Review.builder()
+        Review review = Review.writeReview()
                 .writer("홍길동")
                 .comment("리뷰 내용")
                 .score(10F)
@@ -122,7 +151,17 @@ public class InitService {
                 .build();
         return review;
     }
-    @Transactional
+
+    public Review writeReview(Movie movie, String writer, float score) {
+        Review review = Review.writeReview()
+                .writer(writer)
+                .comment("리뷰 내용")
+                .score(score)
+                .movie(movie)
+                .build();
+        return review;
+    }
+
     public Member createMember() {
         Member member = Member.builder()
                 .name("홍길동")
@@ -133,5 +172,15 @@ public class InitService {
                 .build();
         em.persist(member);
         return member;
+    }
+
+    public Schedule saveSchedule(Movie movie, Screen screen, LocalDateTime dateTime) {
+        Schedule schedule = Schedule.builder()
+                .movie(movie)
+                .screen(screen)
+                .screenTime(new ScreenTime(dateTime, movie.getRunningTime()))
+                .build();
+        em.persist(schedule);
+        return schedule;
     }
 }

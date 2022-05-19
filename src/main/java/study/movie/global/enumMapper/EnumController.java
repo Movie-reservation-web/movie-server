@@ -35,6 +35,14 @@ public class EnumController {
     }
 
     /**
+     * 영화 포멧
+     */
+    @GetMapping("/film-formats")
+    public ResponseEntity<?> getFilmFormats() {
+        return getCategories(FILM_FORMAT);
+    }
+
+    /**
      * 영화 장르
      */
     @GetMapping("/movie-genre")
@@ -72,7 +80,7 @@ public class EnumController {
      */
     @GetMapping("/search-conditions/{entityName}")
     public ResponseEntity<?> getEntitySearchCondTypes(@PathVariable String entityName) {
-        EnumClassConst eSearchCondType = getEnumClassConst(entityName, EnumMapper.SEARCH_COND_TYPE_PATH);
+        EnumClassConst eSearchCondType = getEnumClassConst(entityName, EnumMapper.SEARCH_TYPE_PATH);
         return getCategories(eSearchCondType);
     }
 

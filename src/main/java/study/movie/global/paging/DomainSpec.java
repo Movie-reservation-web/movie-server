@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import study.movie.global.exception.CustomException;
+import study.movie.exception.CustomException;
 import study.movie.global.paging.sort.SortOption;
 import study.movie.global.paging.sort.SortPair;
 import study.movie.global.paging.sort.SortStrategy;
@@ -16,7 +16,7 @@ import study.movie.global.paging.sort.SortStrategyImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import static study.movie.global.exception.ErrorCode.INVALID_SORT_OPTION;
+import static study.movie.exception.ErrorCode.INVALID_SORT_OPTION;
 
 @AllArgsConstructor
 public class DomainSpec<T extends Enum<T>> {
@@ -60,11 +60,12 @@ public class DomainSpec<T extends Enum<T>> {
         for (var o : sorts) {
             T column;
             try {
+
                 column = Enum.valueOf(this.clazz, o.getColumn());
+
             } catch (IllegalArgumentException e) {
                 throw new CustomException(e, INVALID_SORT_OPTION);
             }
-
             final Sort.Order order = sortStrategy.getSortOrder(column, o.getSortOption());
             Assert.notNull(order, "sort option error");
 

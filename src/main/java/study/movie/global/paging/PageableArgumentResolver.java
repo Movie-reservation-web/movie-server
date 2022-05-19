@@ -14,7 +14,8 @@ import java.util.List;
 public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
     private final String PAGE = "page";
     private final String SIZE = "size";
-    private final String TOTAL_ELEMENTS = "total_elements";
+    private final String SORT = "sort";
+    private final String SEPARATE = ",";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -24,11 +25,13 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         List<SortPair<String, SortOption>> sorts = new ArrayList<>();
-        final var sortArr = webRequest.getParameterMap().get("sort");
+
+        final var sortArr = webRequest.getParameterMap().get(SORT);
         if (sortArr != null) {
             for (var v : sortArr) {
-                String[] keywords = v.split(",");
-                sorts.add(SortPair.of(
+                String[] keywords = v.split(SEPARATE);
+                sorts.add(
+                        SortPair.of(
                         (keywords[0] + "_" + keywords[1]).toUpperCase(),
                         SortOption.valueOf(keywords[1].toUpperCase())
                 ));

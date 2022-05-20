@@ -1,5 +1,6 @@
 package study.movie.theater.service;
 
+import study.movie.global.dto.PostIdResponse;
 import study.movie.theater.dto.request.CreateScreenRequest;
 import study.movie.theater.dto.request.UpdateScreenRequest;
 import study.movie.theater.dto.response.BasicScreenResponse;
@@ -7,7 +8,7 @@ import study.movie.theater.dto.response.BasicScreenResponse;
 public interface ScreenService {
 
     //save Screen
-    Long save(CreateScreenRequest request);
+    PostIdResponse save(CreateScreenRequest request);
 
     //delete Screen
     void delete(Long screenId);

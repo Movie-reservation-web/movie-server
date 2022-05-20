@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.global.utils.BasicServiceUtil;
 import study.movie.theater.dto.request.CreateTheaterRequest;
 import study.movie.theater.dto.request.UpdateTheaterRequest;
@@ -23,20 +24,20 @@ import static study.movie.exception.ErrorCode.THEATER_NOT_FOUND;
 @Transactional(readOnly = true)
 @Slf4j
 public class TheaterServiceImpl extends BasicServiceUtil implements TheaterService{
-
     private  final TheaterRepository theaterRepository;
 
     @Override
-    public Long save(CreateTheaterRequest request) {
-        Theater Createtheater = Theater.builder()
+    @Transactional
+    public PostIdResponse save(CreateTheaterRequest request) {
+        Theater createTheater = Theater.builder()
                                 .name(request.getName())
                                 .city(request.getCity())
                                 .phone(request.getPhone())
                                 .build();
 
-        Theater theater = theaterRepository.save(Createtheater);
+        Theater saveTheater = theaterRepository.save(createTheater);
 
-        return theater.getId();
+        return PostIdResponse.of(saveTheater.getId());
     }
 
     @Override

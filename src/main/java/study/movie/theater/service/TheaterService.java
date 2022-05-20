@@ -1,5 +1,6 @@
 package study.movie.theater.service;
 
+import study.movie.global.dto.PostIdResponse;
 import study.movie.theater.dto.request.CreateTheaterRequest;
 import study.movie.theater.dto.request.UpdateTheaterRequest;
 import study.movie.theater.dto.response.BasicTheaterResponse;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface TheaterService {
 
     //save Theater
-    Long save(CreateTheaterRequest request);
+    PostIdResponse save(CreateTheaterRequest request);
 
     //delete Theater
     void delete(Long theaterId);

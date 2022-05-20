@@ -28,7 +28,7 @@ public class TheaterController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid CreateTheaterRequest request) {
-        PostIdResponse result = PostIdResponse.of(theaterService.save(request));
+        PostIdResponse result = theaterService.save(request);
         return CustomResponse.success(CREATED, CREATE_THEATER, result);
     }
 

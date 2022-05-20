@@ -8,6 +8,7 @@ import study.movie.global.dto.PostIdResponse;
 import study.movie.theater.dto.request.CreateScreenRequest;
 import study.movie.theater.dto.request.UpdateScreenRequest;
 import study.movie.theater.dto.response.BasicScreenResponse;
+import study.movie.theater.entity.Screen;
 import study.movie.theater.service.ScreenService;
 import javax.validation.Valid;
 
@@ -24,7 +25,7 @@ public class ScreenController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid CreateScreenRequest request) {
-        PostIdResponse result = PostIdResponse.of(screenService.save(request));
+        PostIdResponse result = screenService.save(request);
         return CustomResponse.success(CREATED, CREATE_SCREEN, result);
     }
 

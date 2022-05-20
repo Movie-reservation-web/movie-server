@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.global.dto.PostIdResponse;
 import study.movie.global.utils.BasicServiceUtil;
 import study.movie.theater.dto.request.CreateScreenRequest;
 import study.movie.theater.dto.request.UpdateScreenRequest;
@@ -13,6 +14,8 @@ import study.movie.theater.entity.Theater;
 import study.movie.theater.repository.ScreenRepository;
 import study.movie.theater.repository.TheaterRepository;
 
+import javax.persistence.EntityManager;
+
 import static study.movie.exception.ErrorCode.SCREEN_NOT_FOUND;
 import static study.movie.exception.ErrorCode.THEATER_NOT_FOUND;
 
@@ -21,12 +24,13 @@ import static study.movie.exception.ErrorCode.THEATER_NOT_FOUND;
 @Transactional(readOnly = true)
 @Slf4j
 public class ScreenServiceImpl extends BasicServiceUtil implements ScreenService{
-
+    private final EntityManager em;
     private  final TheaterRepository theaterRepository;
     private  final ScreenRepository screenRepository;
 
     @Override
-    public Long save(CreateScreenRequest request) {
+    @Transactional
+    public PostIdResponse save(CreateScreenRequest request) {
         Theater findTheater = theaterRepository
                     .findById(request.getTheaterId())
                     .orElseThrow(getExceptionSupplier(THEATER_NOT_FOUND));
@@ -39,7 +43,9 @@ public class ScreenServiceImpl extends BasicServiceUtil implements ScreenService
                 .maxCols(request.getMaxCols())
                 .build();
 
-        return createScreen.getId();
+        em.flush();
+
+        return PostIdResponse.of(createScreen.getId());
     }
 
     @Override

@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 public class LoginRequest {
 
     @NotBlank
-    @Pattern(regexp = "[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}")
+    @Pattern(regexp = "[a-z0-9A-Z._-]*@[a-z0-9A-Z]*.[a-zA-Z.]*")
     private String email;
 
     @NotBlank

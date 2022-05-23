@@ -1,10 +1,9 @@
 package study.movie.domain.member.service;
 
-import study.movie.auth.dto.TokenRequest;
 import study.movie.auth.dto.TokenResponse;
 import study.movie.domain.member.dto.request.LoginRequest;
 
-public interface LoginService {
+public interface AuthService {
 
     /**
      * 1. authentication 생성
@@ -32,18 +31,18 @@ public interface LoginService {
      * @param request
      * @return
      */
-    TokenResponse reissue(TokenRequest request);
+    TokenResponse reissue(String refreshTokenRequest);
 
     /**
-     * 1. Access token 검증 <p>
-     * 2. token 에서 회원 정보 가져오기 <p>
-     * 3. Redis 에 email 을 키 값으로 가지고 있는 token 이 있으면
+     * JwtAuthenticationFilter 에서 doFilter 메서드를 통해 securityContext 에 Authentication 객체가 이미 들어있음<p>
+     * 1. SecurityContext 에서 Authentication 가져옴. (이미 검증은 되어있음)<p>
+     * 2. Redis 에 Authentication 정보를(RT : email 형태) 키 값으로 가지고 있는 token 이 있으면
      * 해당 키값 삭제 <p>
-     * 4. Access Token 의 만료시간을 가져옴
-     * 5. Redis 에 Acces Token을 키 값으로 가지는 블랙 리스트 추가
-     *
+     * 3. HttpServletRequest Header 에서 Access Token 의 만료시간을 가져옴
+     * 4. Redis 에 Acces Token을 키 값으로 가지는 블랙 리스트 추가
+     * 5. SecurityContext 에 있는 authentication 객체를 삭제.
      * @param request
      */
-    void logout(TokenRequest request);
+    void logout(String accessTokenRequest);
 
 }

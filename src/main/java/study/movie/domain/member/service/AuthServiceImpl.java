@@ -1,18 +1,19 @@
 package study.movie.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.auth.jwt.JwtTokenProvider;
-import study.movie.auth.dto.TokenRequest;
 import study.movie.auth.dto.TokenResponse;
-import study.movie.exception.CustomException;
-import study.movie.global.utils.BasicServiceUtil;
+import study.movie.auth.jwt.JwtTokenProvider;
 import study.movie.domain.member.dto.request.LoginRequest;
 import study.movie.domain.member.repository.MemberRepository;
+import study.movie.exception.CustomException;
+import study.movie.global.utils.BasicServiceUtil;
 import study.movie.redis.RedisRepository;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -21,7 +22,8 @@ import static study.movie.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LoginServiceImpl extends BasicServiceUtil implements LoginService {
+@Slf4j
+public class AuthServiceImpl extends BasicServiceUtil implements AuthService {
     private static final String BLACK_LIST_VALUE = "LOGOUT_TOKEN";
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -31,7 +33,7 @@ public class LoginServiceImpl extends BasicServiceUtil implements LoginService {
 
     public TokenResponse login(LoginRequest request) {
         // request로 온 email을 가지고 해당 회원이 있는지 확인
-        if (memberRepository.existsByEmail(request.getEmail()))
+        if (!memberRepository.existsByEmail(request.getEmail()))
             throw new CustomException(MEMBER_NOT_FOUND);
 
         // email, pw 로 Authentication 객체 생성
@@ -53,24 +55,24 @@ public class LoginServiceImpl extends BasicServiceUtil implements LoginService {
         return tokenResponse;
     }
 
-    public TokenResponse reissue(TokenRequest request) {
+    public TokenResponse reissue(String refreshTokenRequest) {
         // Refresh 토큰 검증
-        if (isInvalidationToken(request.getRefreshToken()))
+        if (isInvalidationToken(refreshTokenRequest))
             throw new CustomException(INVALID_REFRESH_TOKEN);
 
-        // 토큰에서 회원 정보 가져오기 :: email
-        Authentication authentication = getEmailByAuthentication(request.getAccessToken());
+        // Security Context 에서 Authentication 객체 가져오기 :: email
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Redis 에서 'RT:'+email 을 key 값으로 하는 value 를 가져옴
         String key = jwtTokenProvider.getRefreshTokenKey(authentication);
-        String refreshToken = redisRepository.getValue(key);
+        String savedRefreshToken = redisRepository.getValue(key);
 
         // logout 되어 Redis 에 refreshToken 이 없는 경우 체크
-        if (!hasText(refreshToken))
-            throw new CustomException(REFRESH_TOKEN_NOT_FOUND);
+        if (!hasText(savedRefreshToken))
+            throw new CustomException(ALREADY_USED_TOKEN);
 
         // Redis 에 저장되어 있는 RefreshToken 정보와 request 의 RefreshToken 정보 비교
-        if (!refreshToken.equals(request.getRefreshToken()))
+        if (!savedRefreshToken.equals(refreshTokenRequest))
             throw new CustomException(MISMATCH_REFRESH_TOKEN);
 
         // 새로운 토큰 생성
@@ -82,42 +84,27 @@ public class LoginServiceImpl extends BasicServiceUtil implements LoginService {
         return tokenResponse;
     }
 
-    public void logout(TokenRequest request) {
-        String accessToken = request.getAccessToken();
-
-        // Access 토큰 검증
-        if (isInvalidationToken(accessToken)) {
-            throw new CustomException(INVALID_ACCESS_TOKEN);
-        }
-
-        // 토큰에서 회원 정보 가져오기 :: email
-        Authentication authentication = getEmailByAuthentication(accessToken);
+    public void logout(String accessTokenRequest) {
+        // JwtAuthenticationFilter 에서 doFilter 메서드를 통해 securityContext 에 들어있는 Authentication 객체를 가져옴.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 위의 정보(email)로 저장된 refresh token 이 redis 에 있을 경우 삭제
         String key = jwtTokenProvider.getRefreshTokenKey(authentication);
         if (redisRepository.hasKey(key)) redisRepository.delete(key);
 
+        // HttpServletRequest Header 에서 accessToken을 가져옴
+        String accessToken = accessTokenRequest.substring(7);
+
         // Access 토큰의 유효시간을 가져옴
         Long expiration = jwtTokenProvider.getExpiration(accessToken);
 
-        /*
-            블랙리스트에 저장
-            Redis 에 저장되는 key 값: accessToken / value: LOGOUT_TOKEN / expire: accessToken 의 만료시간
-         */
+        // 블랙리스트에 저장
+        // Redis 에 저장되는 key 값: accessToken / value: LOGOUT_TOKEN / expire: accessToken 의 만료시간
         redisRepository.save(accessToken, BLACK_LIST_VALUE, expiration);
-    }
 
-    /**
-     * Access Token 을 복호화해서 email 정보 가져오기
-     * Authentication 객체에 담음
-     *
-     * @param accessToken
-     * @return
-     */
-    private Authentication getEmailByAuthentication(String accessToken) {
-        return jwtTokenProvider.getAuthentication(accessToken);
+        // SecurityContext 에 있는 authentication 객체를 삭제.
+        SecurityContextHolder.clearContext();
     }
-
 
     /**
      * 유효하지 않은 토큰인지 확인

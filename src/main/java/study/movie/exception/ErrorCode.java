@@ -41,6 +41,7 @@ public enum ErrorCode {
     INVALID_SOCIAL_URL(BAD_REQUEST, "잘못된 소셜 URL 주소입니다."),
     INVALID_SOCIAL_LOGIN_TYPE(BAD_REQUEST, "지원하지 않는 소셜 로그인 형식입니다."),
     INVALID_ACCESS_TOKEN(BAD_REQUEST, "엑세스 토큰이 유효하지 않습니다."),
+    ALREADY_USED_TOKEN(BAD_REQUEST, "이미 사용 후 반납된 토큰입니다."),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     ALREADY_CANCELLED_TICKET(BAD_REQUEST, "이미 취소된 티켓입니다."),
     NOT_ALLOW_RESERVED_STATUS(BAD_REQUEST, "예약 상태로 변경할 수 없습니다."),

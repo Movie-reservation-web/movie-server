@@ -28,12 +28,10 @@ public class JwtTokenProvider {
 
     private final Key key;
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String BEARER_TYPE = "Bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 1000L; // 1시간              // 30분
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 14 * 24 * 60 * 60 * 1000L; // 14일
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 1000L; // 1시간
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 14 * 24 * 60 * 60 * 1000L; // 14일
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
-        log.info("secretKey={}", secretKey);
         byte[] keyBites = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBites);
     }
@@ -59,10 +57,8 @@ public class JwtTokenProvider {
 
         // 생성한 Token 정보를 Response 에 담아 리턴
         return TokenResponse.builder()
-                .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .refreshTokenExpirationTime(refreshTokenExpiration.getTime())
                 .build();
     }
 

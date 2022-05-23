@@ -21,8 +21,6 @@ import study.movie.auth.jwt.JwtAuthenticationFilter;
 import study.movie.auth.jwt.JwtTokenProvider;
 import study.movie.redis.RedisRepository;
 
-import static org.springframework.http.HttpMethod.*;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -38,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomOauth2UserService customOauth2UserService;
     private final CustomUserDetailsService customUserDetailsService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -46,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * authenticate 메소드로 인증 처리시 customUserDetailsServeice를 사용
      * passwordEncoder와 같이
+     *
      * @param auth
      * @throws Exception
      */
@@ -65,13 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 토큰을 활욜하면 세션이 필요 없어지므로 STATELESS 로 설정.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .authorizeRequests()
-                        .antMatchers(OPTIONS, "/**").permitAll()
-                        .antMatchers(POST,"/authorize","/authorize/reissue","/members/**").permitAll()
-                        .antMatchers(POST, "/oauth/unlink").authenticated()
-                        .antMatchers("/oauth2/**").permitAll()
-                        .antMatchers(GET, "/exception/**").permitAll()
-                        .anyRequest().authenticated()
+                .authorizeRequests()
+                .antMatchers("/**").permitAll()
 //                        .antMatchers("/admin/**/create").hasRole("MASTER")
 //                        .antMatchers("/admin/**").hasAnyRole("MASTER","ADMIN")
 //                        .antMatchers("/api/*/schedules/selected").hasRole("USER")
@@ -84,16 +79,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                        ).permitAll()
 //                        .anyRequest().hasRole("USER")
                 .and()
-                    .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
-                    .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
-                    .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, redisRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, redisRepository), UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login()
-                    .successHandler(oAuth2SuccessHandler)
-                    .userInfoEndpoint()
-                    .userService(customOauth2UserService);
-
+                .successHandler(oAuth2SuccessHandler)
+                .userInfoEndpoint()
+                .userService(customOauth2UserService);
 
 
     }

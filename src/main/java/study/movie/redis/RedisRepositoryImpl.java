@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import study.movie.auth.dto.TokenResponse;
+import study.movie.auth.jwt.JwtTokenProvider;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +20,7 @@ public class RedisRepositoryImpl implements RedisRepository {
                 .set(
                         key,
                         response.getRefreshToken(),
-                        response.getRefreshTokenExpirationTime(),
+                        JwtTokenProvider.REFRESH_TOKEN_EXPIRE_TIME,
                         TimeUnit.MILLISECONDS);
     }
 

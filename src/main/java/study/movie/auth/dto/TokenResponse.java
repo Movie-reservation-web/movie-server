@@ -1,23 +1,26 @@
 package study.movie.auth.dto;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpHeaders;
+
+import static study.movie.global.utils.JwtUtil.REFRESH_TOKEN_HEADER;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TokenResponse {
-    private String grantType;
     private String accessToken;
     private String refreshToken;
-    private Long refreshTokenExpirationTime;
 
     @Builder
-    public TokenResponse(String grantType, String accessToken, String refreshToken, long refreshTokenExpirationTime) {
-        this.grantType = grantType;
+    public TokenResponse(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.refreshTokenExpirationTime = refreshTokenExpirationTime;
+    }
+
+    public HttpHeaders getHeaders(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(REFRESH_TOKEN_HEADER, refreshToken);
+        headers.setBearerAuth(accessToken);
+        return headers;
     }
 }

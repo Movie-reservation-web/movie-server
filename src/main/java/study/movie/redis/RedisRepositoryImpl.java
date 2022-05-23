@@ -3,7 +3,7 @@ package study.movie.redis;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import study.movie.auth.TokenResponse;
+import study.movie.auth.dto.TokenResponse;
 
 import java.util.concurrent.TimeUnit;
 

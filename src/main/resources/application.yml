@@ -1,6 +1,10 @@
 spring:
+  config:
+    import: classpath:jwt.yml, classpath:oauth2.yml
   profiles:
-    include: jwt
+    include:
+      - jwt
+      - ouath2
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,13 +23,11 @@ spring:
         default_batch_fetch_size: 100
     open-in-view: true # db 커넥션을 트랜잭션에서만 하고 끝냄..
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 logging:
   level:
     org.hibernate.SQL: debug # 하이버네이트가 생성하는 SQL 이 다보인다.
 #    org.hibernate.type: trace
-
-
-iamport:
-  restkey: 0349213312895772
-  secret: 33cc95c0a912987164e4c8dbef320288f8da0843b93daf2cede64b6d237b9b28d0360c8b3d60108c

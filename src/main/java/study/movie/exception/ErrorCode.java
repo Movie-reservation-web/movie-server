@@ -34,8 +34,12 @@ public enum ErrorCode {
      * Detail: 잘못된 요청
      */
     INVALID_JSON_WEB_TOKEN(BAD_REQUEST, "Json Web Token 정보가 올바르지 않습니다"),
+    NO_JSON_WEB_TOKEN(BAD_REQUEST, "Json Web Token 정보가 없습니다."),
+    EXPIRED_TOKEN(BAD_REQUEST, "Json Web Token 정보가 없습니다."),
     PERMISSION_NOT_ACCESSIBLE(BAD_REQUEST, "해당 리소스에 대한 권한이 없습니다."),
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다."),
+    INVALID_SOCIAL_URL(BAD_REQUEST, "잘못된 소셜 URL 주소입니다."),
+    INVALID_SOCIAL_LOGIN_TYPE(BAD_REQUEST, "지원하지 않는 소셜 로그인 형식입니다."),
     INVALID_ACCESS_TOKEN(BAD_REQUEST, "엑세스 토큰이 유효하지 않습니다."),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     ALREADY_CANCELLED_TICKET(BAD_REQUEST, "이미 취소된 티켓입니다."),
@@ -49,6 +53,7 @@ public enum ErrorCode {
     NEGATIVE_AUDIENCE_COUNT(BAD_REQUEST, "관객 수는 음수가 될 수 없습니다."),
     INVALID_PASSWORD(BAD_REQUEST, "비밀번호가 올바르지 않습니다."),
 
+    INVALID_OAUTH2_PROVIDER(BAD_REQUEST, "제공자(소셜)가 올바르지 않습니다."),
     /**
      * <p>
      * Status: 404 NOT_FOUND

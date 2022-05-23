@@ -2,19 +2,19 @@ package study.movie.global.enumMapper;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import study.movie.member.entity.GenderType;
-import study.movie.movie.dto.condition.*;
-import study.movie.movie.entity.FilmFormat;
-import study.movie.movie.entity.FilmRating;
-import study.movie.movie.entity.MovieGenre;
-import study.movie.schedule.dto.condition.ScheduleSearchType;
-import study.movie.schedule.dto.condition.ScheduleSortType;
-import study.movie.schedule.entity.ScheduleStatus;
-import study.movie.theater.entity.CityCode;
-import study.movie.theater.entity.ScreenFormat;
-import study.movie.ticket.dto.condition.TicketSearchType;
-import study.movie.ticket.dto.condition.TicketSortType;
-import study.movie.ticket.entity.TicketStatus;
+import study.movie.domain.member.entity.GenderType;
+import study.movie.domain.movie.dto.condition.*;
+import study.movie.domain.movie.entity.FilmFormat;
+import study.movie.domain.movie.entity.FilmRating;
+import study.movie.domain.movie.entity.MovieGenre;
+import study.movie.domain.schedule.dto.condition.ScheduleSearchType;
+import study.movie.domain.schedule.dto.condition.ScheduleSortType;
+import study.movie.domain.schedule.entity.ScheduleStatus;
+import study.movie.domain.theater.entity.CityCode;
+import study.movie.domain.theater.entity.ScreenFormat;
+import study.movie.domain.ticket.dto.condition.TicketSearchType;
+import study.movie.domain.ticket.dto.condition.TicketSortType;
+import study.movie.domain.ticket.entity.TicketStatus;
 
 import static study.movie.global.enumMapper.EnumClassConst.*;
 

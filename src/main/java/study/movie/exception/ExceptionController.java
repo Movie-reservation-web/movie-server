@@ -1,6 +1,7 @@
 package study.movie.exception;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import static study.movie.exception.ErrorCode.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/exception")
+@Slf4j
 public class ExceptionController {
     @GetMapping("/entry-point")
     public ResponseEntity<?> entryPointException() {

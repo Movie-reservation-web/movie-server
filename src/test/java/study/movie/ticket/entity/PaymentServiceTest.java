@@ -4,11 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import study.movie.ticket.entity.payment.AgeType;
-import study.movie.ticket.entity.payment.DateTimeType;
-import study.movie.ticket.entity.payment.DayWeekType;
-import study.movie.theater.entity.ScreenFormat;
-import study.movie.ticket.service.PaymentService;
+import study.movie.domain.ticket.entity.payment.AgeType;
+import study.movie.domain.ticket.entity.payment.DateTimeType;
+import study.movie.domain.ticket.entity.payment.DayWeekType;
+import study.movie.domain.theater.entity.ScreenFormat;
+import study.movie.domain.ticket.service.PaymentService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

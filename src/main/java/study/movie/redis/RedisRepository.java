@@ -1,6 +1,6 @@
 package study.movie.redis;
 
-import study.movie.auth.TokenResponse;
+import study.movie.auth.dto.TokenResponse;
 
 public interface RedisRepository {
     void save(String key, TokenResponse response);

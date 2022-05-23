@@ -7,12 +7,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
-import study.movie.movie.entity.Movie;
-import study.movie.schedule.repository.ScheduleRepository;
-import study.movie.theater.entity.CityCode;
-import study.movie.theater.entity.Screen;
-import study.movie.theater.entity.ScreenFormat;
-import study.movie.theater.entity.Theater;
+import study.movie.domain.movie.entity.Movie;
+import study.movie.domain.schedule.entity.Schedule;
+import study.movie.domain.schedule.entity.ScheduleStatus;
+import study.movie.domain.schedule.entity.ScreenTime;
+import study.movie.domain.schedule.entity.SeatStatus;
+import study.movie.domain.schedule.repository.ScheduleRepository;
+import study.movie.domain.theater.entity.CityCode;
+import study.movie.domain.theater.entity.Screen;
+import study.movie.domain.theater.entity.ScreenFormat;
+import study.movie.domain.theater.entity.Theater;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -20,7 +24,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.movie.global.constants.StringAttrConst.SEAT;
 import static study.movie.global.constants.StringAttrConst.TOTAL;
-import static study.movie.schedule.entity.SeatStatus.RESERVED;
+import static study.movie.domain.schedule.entity.SeatStatus.RESERVED;
 
 @SpringBootTest
 @Transactional

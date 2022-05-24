@@ -24,7 +24,7 @@ import java.util.List;
 import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.movie.entity.QMovie.movie;
 import static study.movie.domain.movie.entity.QReview.review;
-import static study.movie.schedule.entity.QSchedule.schedule;
+import static study.movie.domain.schedule.entity.QSchedule.schedule;
 import static study.movie.domain.schedule.entity.ScheduleStatus.OPEN;
 
 @Repository

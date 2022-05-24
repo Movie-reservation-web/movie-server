@@ -5,19 +5,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.movie.dto.request.CreateReviewRequest;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.movie.entity.Review;
+import study.movie.domain.movie.repository.MovieRepository;
+import study.movie.domain.movie.repository.ReviewRepository;
 import study.movie.domain.movie.dto.condition.ReviewSearchCond;
 import study.movie.domain.movie.dto.condition.ReviewSortType;
-import study.movie.domain.movie.dto.request.CreateReviewRequest;
 import study.movie.domain.movie.dto.request.UpdateReviewRequest;
 import study.movie.domain.movie.dto.response.ReviewResponse;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.DomainSpec;
 import study.movie.global.paging.PageableDTO;
 import study.movie.global.utils.BasicServiceUtil;
-import study.movie.domain.movie.repository.MovieRepository;
-import study.movie.domain.movie.repository.ReviewRepository;
 
 import javax.persistence.EntityManager;
 

@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import study.movie.domain.movie.dto.condition.MovieChartSortType;
 import study.movie.domain.movie.dto.response.BasicMovieResponse;
 import study.movie.domain.movie.dto.response.FindMovieResponse;
+import study.movie.domain.movie.service.MovieService;
 import study.movie.domain.schedule.dto.response.MovieChartResponse;
 import study.movie.global.dto.CustomResponse;
 import study.movie.exception.CustomException;
-import study.movie.domain.movie.service.MovieService;
 
 import java.util.List;
 

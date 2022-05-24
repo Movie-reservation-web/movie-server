@@ -23,11 +23,11 @@ import java.util.Optional;
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
 import static org.springframework.util.StringUtils.hasText;
+import static study.movie.domain.theater.entity.QTheater.theater;
+import static study.movie.domain.ticket.entity.QTicket.ticket;
 import static study.movie.global.utils.DateTimeUtil.*;
 import static study.movie.domain.member.entity.QMember.member;
 import static study.movie.domain.movie.entity.QMovie.movie;
-import static study.movie.theater.entity.QTheater.theater;
-import static study.movie.ticket.entity.QTicket.ticket;
 import static study.movie.domain.ticket.entity.TicketStatus.RESERVED;
 
 @Repository

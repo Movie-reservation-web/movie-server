@@ -8,9 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import study.movie.domain.movie.entity.Review;
 import study.movie.global.utils.BasicRepositoryUtil;
 import study.movie.domain.movie.dto.condition.ReviewSearchCond;
-import study.movie.domain.movie.entity.Review;
 
 import java.util.List;
 

@@ -48,6 +48,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             if (this.isInBlackList(accessToken)) throw new CustomException(ALREADY_USED_TOKEN);
             // Authentication 객체를 꺼냄
             Authentication authentication = jwtProvider.getAuthentication(accessToken);
+            // email, role
             // Security Context 에 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

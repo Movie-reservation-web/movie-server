@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import study.movie.exception.ErrorCode;
@@ -13,8 +12,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static study.movie.global.constants.ResponseMessage.SUCCESS;
 import static study.movie.exception.ErrorCode.ARGUMENTS_NOT_VALID;
+import static study.movie.global.constants.ResponseMessage.SUCCESS;
 
 public class CustomResponse {
     @Data
@@ -68,18 +67,6 @@ public class CustomResponse {
                         .build());
     }
 
-    public static <T> ResponseEntity<?> success(HttpHeaders headers, HttpStatus status, String message, T data) {
-        return ResponseEntity
-                .status(status.value())
-                .headers(headers)
-                .body(Result.<T>ResponseBuilder()
-                        .timeStamp(LocalDateTime.now())
-                        .status(status.value())
-                        .message(message)
-                        .data(data)
-                        .build());
-    }
-
     /**
      * 상태 리턴
      *
@@ -115,16 +102,6 @@ public class CustomResponse {
     public static <T> ResponseEntity<?> success(String message, T data) {
         return success(HttpStatus.OK, message, data);
     }
-
-    /**
-     * 데이터, 메시지 리턴
-     *
-     * @return data, message
-     */
-    public static ResponseEntity<?> success(HttpHeaders headers, String message) {
-        return success(headers, HttpStatus.OK, message, Collections.emptyList());
-    }
-
 
     public static ResponseEntity<Object> fail(ErrorCode errorCode) {
         return ResponseEntity

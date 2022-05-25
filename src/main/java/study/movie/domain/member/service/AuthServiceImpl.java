@@ -36,17 +36,18 @@ public class AuthServiceImpl extends BasicServiceUtil implements AuthService {
         if (!memberRepository.existsByEmail(request.getEmail()))
             throw new CustomException(MEMBER_NOT_FOUND);
 
-        // email, pw 로 Authentication 객체 생성
+        // email, pw 로 Authentication 객체 생성 -> email password // request
         UsernamePasswordAuthenticationToken authenticationToken = request.toAuthentication();
 
         /*
           AuthenticationManagerBuilder 의 authenticate 메서드가 호출되면
           CustomUserDetailService 에서 override 한 loadUserByUsername 이 호출됨.
           loadUserByUsername 으로 가져온 UserDetails 객체를 가지고 password check 를 한다.
+          response -> Member(role...)
          */
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
-
+//===================================================== Filter
         // 인증 정보를 기반으로 토큰(access, refresh, expiration) 생성
         TokenResponse tokenResponse = jwtTokenProvider.generateToken(authentication);
 
@@ -75,7 +76,7 @@ public class AuthServiceImpl extends BasicServiceUtil implements AuthService {
         if (!savedRefreshToken.equals(refreshTokenRequest))
             throw new CustomException(MISMATCH_REFRESH_TOKEN);
 
-        // 새로운 토큰 생성
+        // 새로운 토큰 생성 -> access만 재발급 하는걸로
         TokenResponse tokenResponse = jwtTokenProvider.generateToken(authentication);
 
         // Refresh 토큰 업데이트

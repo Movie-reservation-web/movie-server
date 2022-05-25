@@ -4,7 +4,6 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +12,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import study.movie.auth.dto.TokenResponse;
 import study.movie.exception.CustomException;
+import study.movie.global.config.AppProperties;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -25,14 +25,13 @@ import static study.movie.exception.ErrorCode.PERMISSION_NOT_ACCESSIBLE;
 @Slf4j
 @Component
 public class JwtTokenProvider {
-
-    private final Key key;
+    private Key key;
+    private final AppProperties appProperties;
     private static final String AUTHORITIES_KEY = "auth";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 1000L; // 1시간
-    public static final long REFRESH_TOKEN_EXPIRE_TIME = 14 * 24 * 60 * 60 * 1000L; // 14일
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
-        byte[] keyBites = Decoders.BASE64.decode(secretKey);
+    public JwtTokenProvider(AppProperties appProperties) {
+        this.appProperties = appProperties;
+        byte[] keyBites = Decoders.BASE64.decode(appProperties.getAuth().getTokenSecret());
         this.key = Keys.hmacShaKeyFor(keyBites);
     }
 
@@ -48,11 +47,11 @@ public class JwtTokenProvider {
         Date now = new Date();
 
         // access token 생성
-        Date accessTokenExpiration = this.getExpireTime(now, ACCESS_TOKEN_EXPIRE_TIME);
+        Date accessTokenExpiration = this.getExpireTime(now, appProperties.getAuth().getAccessTokenExpireTime());
         String accessToken = this.createAccessToken(authentication, accessTokenExpiration);
 
         // refresh token 생성
-        Date refreshTokenExpiration = this.getExpireTime(now, REFRESH_TOKEN_EXPIRE_TIME);
+        Date refreshTokenExpiration = this.getExpireTime(now, appProperties.getAuth().getRefreshTokenExpireTime());
         String refreshToken = this.createRefreshToken(refreshTokenExpiration);
 
         // 생성한 Token 정보를 Response 에 담아 리턴

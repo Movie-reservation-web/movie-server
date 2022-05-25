@@ -1,4 +1,4 @@
-package study.movie.auth;
+package study.movie.auth.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
-import study.movie.auth.oauth2.PrincipalDetails;
 import study.movie.auth.oauth2.userInfo.OAuth2UserInfo;
 import study.movie.auth.oauth2.userInfo.OAuth2UserInfoFactory;
 import study.movie.domain.member.entity.Member;
@@ -42,7 +41,11 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         Member member = memberRepository
                 .findByEmail(userInfo.getId())
                 .orElse(saveSocialMember(socialType, userInfo));
+
         if (member.getSocialType() == null) member.connectSocial(socialType);
+        // 회원가입도 되어있고 연동도 한 상태 -> 바뀌는거 아무것도 없음
+        // 회원가입은 했지만 연동은 안한 상태 -> socialType을 set 해줌
+        // 회원가입도 안하고 연동도 X -> 소셜정보만으로 일단 저장을 함(소셜 타입, 이메일, 이름, 역할(GUEST)) -> 추가 회원가입 필요
         return memberRepository.save(member);
     }
 

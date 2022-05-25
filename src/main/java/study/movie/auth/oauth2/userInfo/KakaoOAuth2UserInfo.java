@@ -2,14 +2,14 @@ package study.movie.auth.oauth2.userInfo;
 
 import java.util.Map;
 
-public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
+public class KakaoOAuth2UserInfo extends OAuth2UserInfo{
 
     public KakaoOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);
     }
 
     private Map<String, Object> getProperties() {
-        return (Map<String, Object>) attributes.get("properties");
+        return (Map<String, Object>) super.attributes.get("properties");
     }
 
     @Override

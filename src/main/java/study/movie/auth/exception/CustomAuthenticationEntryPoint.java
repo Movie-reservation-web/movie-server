@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import study.movie.exception.ErrorCode;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +16,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String exception = (String) request.getAttribute("exception");
-        log.info("request={}", request);
-        ErrorCode errorCode;
-        log.debug("log: exception: {} ", exception);
-
+        log.info("authException.getMessage()={}", authException.getMessage());
+        log.info("authException={}", authException.getClass());
+        log.info("request={}", request.getRequestURI());
+        log.info("request={}", request.getHeaderNames());
         /**
          * 토큰 없는 경우
          */

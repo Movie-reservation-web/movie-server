@@ -29,7 +29,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Set.of(
-                new SimpleGrantedAuthority(member.getRole().getGrantedAuthority()));
+                new SimpleGrantedAuthority(member.getRole().getValue()));
     }
 
     // 사용자의 id를 반환

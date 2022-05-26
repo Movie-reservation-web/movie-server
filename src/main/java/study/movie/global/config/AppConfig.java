@@ -10,11 +10,16 @@ import java.util.List;
 
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
+    private final long MAX_AGE_SECS = 3600;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("http//localhost:3000")
-                .allowCredentials(true);
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") //요청 허용 메서드
+                .allowedHeaders("*") //요청 허용 헤더
+                .allowCredentials(true)
+                .maxAge(MAX_AGE_SECS);
     }
 
     @Override

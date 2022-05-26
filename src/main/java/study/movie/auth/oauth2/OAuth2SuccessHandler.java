@@ -30,7 +30,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         TokenResponse tokenResponse = tokenProvider.generateToken(authentication);
         redisRepository.save(tokenProvider.getRefreshTokenKey(authentication), tokenResponse);
 
-
         if (checkGuest(authentication)) {
             System.out.println("===========회원가입을 진행해주세요============");
             // 프론트에 회원가입을 해야된다고 알려줘야함

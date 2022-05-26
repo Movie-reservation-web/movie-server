@@ -47,12 +47,10 @@ public class JwtTokenProvider {
         Date now = new Date();
 
         // access token 생성
-        Date accessTokenExpiration = this.getExpireTime(now, appProperties.getAuth().getAccessTokenExpireTime());
-        String accessToken = this.createAccessToken(authentication, accessTokenExpiration);
+        String accessToken = this.createAccessToken(authentication, now);
 
         // refresh token 생성
-        Date refreshTokenExpiration = this.getExpireTime(now, appProperties.getAuth().getRefreshTokenExpireTime());
-        String refreshToken = this.createRefreshToken(refreshTokenExpiration);
+        String refreshToken = this.createRefreshToken(now);
 
         // 생성한 Token 정보를 Response 에 담아 리턴
         return TokenResponse.builder()
@@ -181,14 +179,17 @@ public class JwtTokenProvider {
      * @param expiration
      * @return
      */
-    private String createAccessToken(Authentication authentication, Date expiration) {
+    public String createAccessToken(Authentication authentication, Date date) {
+        // 만료 시간 설정
+        Date accessTokenExpiration = this.getExpireTime(date, appProperties.getAuth().getAccessTokenExpireTime());
+
         // 권한 가져오기
         String authorities = this.convertToString(authentication);
 
         return Jwts.builder()
                 .setSubject(authentication.getName()) // email
                 .claim(AUTHORITIES_KEY, authorities) // 권한 정보
-                .setExpiration(expiration) // 만료 시간
+                .setExpiration(accessTokenExpiration) // 만료 시간
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -199,9 +200,10 @@ public class JwtTokenProvider {
      * @param expiration
      * @return
      */
-    private String createRefreshToken(Date expiration) {
+    private String createRefreshToken(Date date) {
+        Date refreshTokenExpiration = this.getExpireTime(date, appProperties.getAuth().getRefreshTokenExpireTime());
         return Jwts.builder()
-                .setExpiration(expiration) // 만료시간
+                .setExpiration(refreshTokenExpiration) // 만료시간
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -18,4 +18,5 @@ public enum SocialType implements EnumMapperType {
     public String getCode() {
         return name();
     }
+
 }

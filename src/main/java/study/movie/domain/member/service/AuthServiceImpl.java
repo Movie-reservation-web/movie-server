@@ -16,6 +16,8 @@ import study.movie.exception.CustomException;
 import study.movie.global.utils.BasicServiceUtil;
 import study.movie.redis.RedisRepository;
 
+import java.util.Date;
+
 import static org.springframework.util.StringUtils.hasText;
 import static study.movie.exception.ErrorCode.*;
 
@@ -47,7 +49,6 @@ public class AuthServiceImpl extends BasicServiceUtil implements AuthService {
          */
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
-//===================================================== Filter
         // 인증 정보를 기반으로 토큰(access, refresh, expiration) 생성
         TokenResponse tokenResponse = jwtTokenProvider.generateToken(authentication);
 
@@ -77,12 +78,12 @@ public class AuthServiceImpl extends BasicServiceUtil implements AuthService {
             throw new CustomException(MISMATCH_REFRESH_TOKEN);
 
         // 새로운 토큰 생성 -> access만 재발급 하는걸로
-        TokenResponse tokenResponse = jwtTokenProvider.generateToken(authentication);
+        String accessToken = jwtTokenProvider.createAccessToken(authentication, new Date());
 
-        // Refresh 토큰 업데이트
-        redisRepository.save(key, tokenResponse);
-
-        return tokenResponse;
+        return TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshTokenRequest)
+                .build();
     }
 
     public void logout(String accessTokenRequest) {

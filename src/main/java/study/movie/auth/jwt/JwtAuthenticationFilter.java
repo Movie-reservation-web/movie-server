@@ -42,6 +42,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                          FilterChain chain) throws IOException, ServletException {
         // Request Header 에서 토큰 추출
         String accessToken = JwtUtil.extractAccessToken((HttpServletRequest) request);
+
         // 토큰 정보가 있으면 유효성 검사
         if (accessToken != null && jwtProvider.validateToken(accessToken)) {
             // 블랙리스트에 있는 토큰인지 확인

@@ -1,12 +1,17 @@
 package study.movie.auth.oauth2.userInfo;
 
+import study.movie.domain.member.entity.SocialType;
+
 import java.util.Map;
 
-public class NaverOAuth2UserInfo extends OAuth2UserInfo{
+public class NaverOAuth2UserInfo extends OAuth2UserInfo {
     private static String NAVER_DOMAIN = "naver.com";
+
     public NaverOAuth2UserInfo(Map<String, Object> attributes) {
         super((Map<String, Object>) attributes.get("response"));
+        super.socialType = SocialType.NAVER;
     }
+
     @Override
     public String getId() {
         return (String) attributes.get("id");
@@ -27,5 +32,10 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
     @Override
     public String getImage() {
         return (String) attributes.get("profile_image");
+    }
+
+    @Override
+    public String getMobile() {
+        return (String) attributes.get("mobile");
     }
 }

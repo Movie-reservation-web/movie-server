@@ -1,11 +1,11 @@
-package study.movie.auth;
+package study.movie.auth.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import study.movie.auth.oauth2.PrincipalDetails;
+import study.movie.auth.dto.PrincipalDetails;
 import study.movie.global.utils.BasicServiceUtil;
 import study.movie.domain.member.repository.MemberRepository;
 

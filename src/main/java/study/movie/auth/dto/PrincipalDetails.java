@@ -1,4 +1,4 @@
-package study.movie.auth.oauth2;
+package study.movie.auth.dto;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -80,6 +80,6 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        return member.getName();
+        return member.getEmail();
     }
 }

@@ -37,7 +37,7 @@ public class Member extends BaseTimeEntity {
     private LocalDate birth;
 
     private String nickname;
-
+    @Enumerated(EnumType.STRING)
     private GenderType gender;
 
     @Column(unique = true)
@@ -47,7 +47,6 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -87,5 +86,34 @@ public class Member extends BaseTimeEntity {
 
     public void conferRole(Role role) {
         this.role = role;
+    }
+
+    public void registerBasicInfo(String password, String nickname, String mobile, LocalDate birth, GenderType gender) {
+        updatePassword(password);
+        updateNickname(password);
+        updateBirth(birth);
+        updateGender(gender);
+        updateMobile(mobile);
+        conferRole(Role.USER);
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    private void updateBirth(LocalDate birth) {
+        this.birth = birth;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateGender(GenderType gender) {
+        this.gender = gender;
+    }
+
+    public void updateMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

@@ -1,97 +1,98 @@
 package study.movie.auth.oauth2;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.client.RestTemplate;
-import study.movie.domain.member.entity.SocialType;
-import study.movie.exception.CustomException;
-import study.movie.exception.ErrorCode;
+import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.WebClient;
+import study.movie.auth.dto.CustomOAuth2AuthenticationToken;
+import study.movie.auth.dto.OAuth2TokenRequest;
+import study.movie.auth.dto.OAuth2TokenResponse;
+import study.movie.global.utils.OAuth2Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
+
+@Component
 @Slf4j
 public class OAuth2AuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     public static final String DEFAULT_OAUTH2_LOGIN_PATH_PREFIX = "/oauth2/login/*";
     private static final String HTTP_METHOD = "GET";
-    private static final String CODE_KEY = "code";
-    private static final String STATE_KEY = "state";
-
     private static final AntPathRequestMatcher DEFAULT_OAUTH2_LOGIN_PATH_REQUEST_MATCHER =
             new AntPathRequestMatcher(DEFAULT_OAUTH2_LOGIN_PATH_PREFIX + "*", HTTP_METHOD);
 
+    private final ClientRegistrationRepository clientRegistrationRepository;
+
     public OAuth2AuthenticationFilter(OAuth2AuthenticationProvider oAuth2AuthenticationProvider,   //Provider를 등록해주었다. 이는 조금 이따 설명하겠다.
-                                      AuthenticationSuccessHandler authenticationSuccessHandler,  //로그인 성공 시 처리할  handler이다
-                                      AuthenticationFailureHandler authenticationFailureHandler) { //로그인 실패 시 처리할 handler이다.
+                                      OAuth2SuccessHandler successHandler,  //로그인 성공 시 처리할  handler이다
+                                      OAuth2FailureHandler failureHandler,
+                                      ClientRegistrationRepository clientRegistrationRepository) { //로그인 실패 시 처리할 handler이다.
 
         super(DEFAULT_OAUTH2_LOGIN_PATH_REQUEST_MATCHER);   // 위에서 설정한  /oauth2/login/* 의 요청에, GET으로 온 요청을 처리하기 위해 설정한다.
 
         this.setAuthenticationManager(new ProviderManager(oAuth2AuthenticationProvider));
         //AbstractAuthenticationProcessingFilter를 커스터마이징 하려면  ProviderManager를 꼭 지정해 주어야 한다(안그러면 예외남!!!)
 
-        this.setAuthenticationSuccessHandler(authenticationSuccessHandler);
-        this.setAuthenticationFailureHandler(authenticationFailureHandler);
-
+        this.setAuthenticationSuccessHandler(successHandler);
+        this.setAuthenticationFailureHandler(failureHandler);
+        this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        // social type을 뽑는다.
-        SocialType socialType = extractSocialType(request);
+        // request에서 파라미터 정보(code, state, error)를 뽑는다.
+        MultiValueMap<String, String> params = OAuth2Util.toMultiMap(request.getParameterMap());
+        // 파라미터 인증.
+        if (!OAuth2Util.isAuthorizationResponse(params)) {
+            OAuth2Error oauth2Error = new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST);
+            throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
+        }
+        // registration 정보 가져오기
+        String registrationId = this.extractRegistrationId(request);
+        ClientRegistration clientRegistration = this.clientRegistrationRepository.findByRegistrationId(registrationId);
 
-        // request에서 파라미터 정보(인가 코드, state)를 뽑는다.
-        Map<String, String> paramMap = new HashMap<>();
-        request.getParameterMap().forEach((key, values) -> {
-            if (values.length > 0) {
-                Arrays.stream(values).forEach(value -> paramMap.put(key, value));
-            }
-        });
-        ClientRegistration clientRegistration = ClientRegistration.withRegistrationId(request.getRequestURI()
-                .substring(DEFAULT_OAUTH2_LOGIN_PATH_PREFIX.length()-1)).build();
-        log.info("clientRegistration={}", clientRegistration);
-        log.info("clientRegistration={}", clientRegistration.getClientId());
-        log.info("clientRegistration={}", clientRegistration.getClientSecret());
-        log.info("clientRegistration={}", clientRegistration.getRegistrationId());
-        log.info("clientRegistration={}", clientRegistration.getClientName());
-        log.info("clientRegistration={}", clientRegistration.getClientAuthenticationMethod());
-        log.info("clientRegistration={}", clientRegistration.getRedirectUri());
-        log.info("clientRegistration={}", clientRegistration.getProviderDetails());
-//        OAuth2LoginAuthenticationToken authenticationRequest = new OAuth2LoginAuthenticationToken(clientRegistration,
-//                new OAuth2AuthorizationExchange(authorizationRequest, authorizationResponse));
-//        authenticationRequest.setDetails(authenticationDetails);
-//        OAuth2LoginAuthenticationToken authenticationResult = (OAuth2LoginAuthenticationToken) this
-//                .getAuthenticationManager().authenticate(authenticationRequest);
-//        OAuth2AuthenticationToken oauth2Authentication = this.authenticationResultConverter
-//                .convert(authenticationResult);
+        // 토큰을 받기 위한 정보를 담은 request 객체 생성
+        OAuth2TokenRequest tokenRequest = OAuth2TokenRequest.of(clientRegistration, params);
 
+        // 토큰을 요청할 uri과 request를 가지고 토큰정보(reponse)를 받음
+        String tokenUri = clientRegistration.getProviderDetails().getTokenUri();
+        OAuth2TokenResponse tokenResponse = getOAuth2AccessToken(tokenUri, tokenRequest);
 
-        return null;
+        Authentication authenticate = this.getAuthenticationManager().authenticate(new CustomOAuth2AuthenticationToken(clientRegistration, tokenResponse.getAccessToken()));
+        return authenticate;
     }
 
-    private SocialType extractSocialType(HttpServletRequest request) {
-        log.info("name={}",request.getRequestURI()
-                .substring(DEFAULT_OAUTH2_LOGIN_PATH_PREFIX.length()-1)
-                .toUpperCase());
-        return Optional.of(
-                SocialType.valueOf(
-                        request.getRequestURI()
-                                .substring(DEFAULT_OAUTH2_LOGIN_PATH_PREFIX.length()-1)
-                                .toUpperCase()))
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_REFRESH_TOKEN));
+    private String extractRegistrationId(HttpServletRequest request) {
+        return request.getRequestURI().substring(DEFAULT_OAUTH2_LOGIN_PATH_PREFIX.length() - 1);
     }
 
+    private OAuth2TokenResponse getOAuth2AccessToken(String userInfoUri, OAuth2TokenRequest tokenRequest) {
+        return WebClient.create()
+                .post()
+                .uri(userInfoUri)
+                .headers(header -> {
+                    header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                    header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
+                })
+                .bodyValue(tokenRequest.toMultiMap())
+                .retrieve()
+                .bodyToMono(OAuth2TokenResponse.class)
+                .block();
+    }
 }

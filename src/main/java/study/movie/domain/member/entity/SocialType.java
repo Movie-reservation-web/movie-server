@@ -1,11 +1,13 @@
 package study.movie.domain.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import study.movie.global.enumMapper.EnumMapperType;
 
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum SocialType implements EnumMapperType {
     KAKAO("kakao", "https://kapi.kakao.com/v2/user/me"),
     NAVER("naver", "https://openapi.naver.com/v1/nid/me"),

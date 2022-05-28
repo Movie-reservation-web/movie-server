@@ -1,11 +1,14 @@
 package study.movie.auth.oauth2.userInfo;
 
+import study.movie.domain.member.entity.SocialType;
+
 import java.util.Map;
 
-public class GoogleOAuth2UserInfo extends OAuth2UserInfo{
+public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 
     public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);
+        super.socialType = SocialType.GOOGLE;
     }
 
     @Override
@@ -26,5 +29,10 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo{
     @Override
     public String getImage() {
         return (String) attributes.get("picture");
+    }
+
+    @Override
+    public String getMobile() {
+        return null;
     }
 }

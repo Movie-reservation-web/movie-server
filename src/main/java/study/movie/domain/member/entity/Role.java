@@ -1,5 +1,6 @@
 package study.movie.domain.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import study.movie.global.enumMapper.EnumMapperType;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Role implements EnumMapperType {
 
     ADMIN("ROLE_ADMIN"),

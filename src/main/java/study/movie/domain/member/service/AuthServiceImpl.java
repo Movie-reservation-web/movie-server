@@ -6,11 +6,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.auth.dto.PrincipalDetails;
 import study.movie.auth.dto.TokenResponse;
 import study.movie.auth.jwt.JwtTokenProvider;
 import study.movie.domain.member.dto.request.LoginRequest;
+import study.movie.domain.member.dto.request.OAuth2RegisterRequest;
+import study.movie.domain.member.entity.Member;
 import study.movie.domain.member.repository.MemberRepository;
 import study.movie.exception.CustomException;
 import study.movie.global.utils.BasicServiceUtil;
@@ -32,6 +36,7 @@ public class AuthServiceImpl extends BasicServiceUtil implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
     private final RedisRepository redisRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public TokenResponse login(LoginRequest request) {
         // request로 온 email을 가지고 해당 회원이 있는지 확인
@@ -106,6 +111,23 @@ public class AuthServiceImpl extends BasicServiceUtil implements AuthService {
 
         // SecurityContext 에 있는 authentication 객체를 삭제.
         SecurityContextHolder.clearContext();
+    }
+
+    @Override
+    public TokenResponse socialRegister(OAuth2RegisterRequest request) {
+        PrincipalDetails oAuth2User = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication();
+
+        Member member = request.toEntity(oAuth2User.getMember(), passwordEncoder);
+
+        memberRepository.save(member);
+
+        // 인증 정보를 기반으로 토큰(access, refresh, expiration) 생성
+        TokenResponse tokenResponse = jwtTokenProvider.generateToken((Authentication) oAuth2User);
+
+        // RefreshToken Redis 저장, expirationTime 이 지나면 자동 삭제
+        redisRepository.save(jwtTokenProvider.getRefreshTokenKey((Authentication) oAuth2User), tokenResponse);
+
+        return tokenResponse;
     }
 
     /**

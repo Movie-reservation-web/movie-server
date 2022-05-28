@@ -2,6 +2,7 @@ package study.movie.domain.member.service;
 
 import study.movie.auth.dto.TokenResponse;
 import study.movie.domain.member.dto.request.LoginRequest;
+import study.movie.domain.member.dto.request.OAuth2RegisterRequest;
 
 public interface AuthService {
 
@@ -45,4 +46,5 @@ public interface AuthService {
      */
     void logout(String accessTokenRequest);
 
+    TokenResponse socialRegister(OAuth2RegisterRequest request);
 }

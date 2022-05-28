@@ -13,22 +13,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import study.movie.auth.CustomUserDetailsService;
+import study.movie.auth.jwt.CustomUserDetailsService;
 import study.movie.auth.exception.CustomAccessDeniedHandler;
 import study.movie.auth.exception.CustomAuthenticationEntryPoint;
 import study.movie.auth.jwt.JwtAuthenticationFilter;
 import study.movie.auth.jwt.JwtTokenProvider;
-import study.movie.auth.oauth2.*;
-import study.movie.auth.oauth2.CustomOAuth2Provider;
+import study.movie.auth.oauth2.OAuth2AuthenticationFilter;
 import study.movie.redis.RedisRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static study.movie.domain.member.entity.Role.*;
 
@@ -44,11 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtProvider;
     private final RedisRepository redisRepository;
-    private final CustomOauth2UserService customOauth2UserService;
     private final CustomUserDetailsService customUserDetailsService;
-    private final OAuth2AuthenticationProvider oAuth2AuthenticationProvider;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final OAuth2FailureHandler oAuth2FailureHandler;
+    private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -72,20 +63,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter(jwtProvider, redisRepository);
     }
 
-    @Bean
-    public OAuth2AuthenticationFilter oAuth2AuthenticationFilter() {
-        return new OAuth2AuthenticationFilter(oAuth2AuthenticationProvider, oAuth2SuccessHandler, oAuth2FailureHandler);
-    }
-
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        List<ClientRegistration> registrations = new ArrayList<>();
-        registrations.add(CustomOAuth2Provider.KAKAO.getBuilder("kakao")
-                .jwkSetUri("temp")
-                .build()
-        );
-        return registrations;
-    }
+//    @Bean
+//    public ClientRegistrationRepository clientRegistrationRepository() {
+//        List<ClientRegistration> registrations = new ArrayList<>();
+//        registrations.add(CustomOAuth2Provider.KAKAO.getBuilder("kakao")
+//                .clientId())
+//    }
 
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
@@ -111,33 +94,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 토큰을 활욜하면 세션이 필요 없어지므로 STATELESS 로 설정.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .authorizeRequests()
-                        .expressionHandler(webExpressionHandler())
-                        .antMatchers("/admin/**/create").hasRole(ADMIN.getCode())
-                        .antMatchers("/admin/**").hasRole(MANAGER.getCode())
-                        .antMatchers("/api/*/schedules/selected").hasRole(USER.getCode())
-                        .antMatchers(
-        //                        "/login/**",
-                                "/api/*/auth/login",
-                                "/api/*/members/sign-up",
-                                "/api/*/movies/**",
-                                "/api/*/schedules/**",
-                                "/api/*/theater/**",
-                                "/api/*/categories/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                .authorizeRequests()
+                .expressionHandler(webExpressionHandler())
+                .antMatchers("/admin/**/create").hasRole(ADMIN.getCode())
+                .antMatchers("/admin/**").hasRole(MANAGER.getCode())
+                .antMatchers("/api/*/schedules/selected").hasRole(USER.getCode())
+                .antMatchers(
+//                        "/login/**",
+                        "/api/*/auth/login",
+                        "/api/*/members/sign-up",
+                        "/api/*/movies/**",
+                        "/api/*/schedules/**",
+                        "/api/*/theater/**",
+                        "/api/*/categories/**"
+                ).permitAll()
+                .anyRequest().authenticated()
                 .and()
-                    .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
-                    .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
-                    .addFilterBefore(oAuth2AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login()
-                    .userInfoEndpoint()
-                    .userService(customOauth2UserService)
-                .and()
-                    .successHandler(oAuth2SuccessHandler)
-                    .failureHandler(oAuth2FailureHandler);
+                .addFilterBefore(oAuth2AuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

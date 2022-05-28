@@ -1,11 +1,13 @@
 package study.movie.auth.exception;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -13,39 +15,21 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    @SneakyThrows
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        String exception = (String) request.getAttribute("exception");
-        log.info("authException.getMessage()={}", authException.getMessage());
-        log.info("authException={}", authException.getClass());
-        log.info("request={}", request.getRequestURI());
-        log.info("request={}", request.getHeaderNames());
-        /**
-         * 토큰 없는 경우
-         */
-//        if (exception == null) {
-//            errorCode = ErrorCode.NO_JSON_WEB_TOKEN;
-//            setResponse(response, errorCode);
-//            return;
-//        }
-//
-//        /**
-//         * 토큰 만료된 경우
-//         */
-//        if (exception.equals("ExpiredJwtException")) {
-//            errorCode = ErrorCode.EXPIRED_JSON_WEB_TOKEN;
-//            setResponse(response, errorCode);
-//            return;
-//        }
-//
-//        /**
-//         * 토큰 시그니처가 다른 경우
-//         */
-//        if (exception.equals(ErrorCode.INVALID_TOKEN.getCode())) {
-//            errorCode = ErrorCode.INVALID_TOKEN;
-//            setResponse(response, errorCode);
-//        }
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        response.sendRedirect("/exception/entry-point");
+        JSONObject responseJson = new JSONObject();
+        if (authException instanceof OAuth2AuthenticationException) {
+            responseJson.put("errorCode", ((OAuth2AuthenticationException) authException).getError().getErrorCode());
+            responseJson.put("description", ((OAuth2AuthenticationException) authException).getError().getDescription());
+            responseJson.put("uri", ((OAuth2AuthenticationException) authException).getError().getUri());
+        } else {
+            responseJson.put("message", authException.getMessage());
+        }
+        response.getWriter().print(responseJson);
     }
+
 }

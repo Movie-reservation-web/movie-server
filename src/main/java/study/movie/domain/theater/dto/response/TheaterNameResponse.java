@@ -1,15 +1,20 @@
 package study.movie.domain.theater.dto.response;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import study.movie.domain.theater.entity.Theater;
-@Data
+
+@Getter
+@Builder
 public class TheaterNameResponse {
 
-    private Long theaterId;
-    private String theaterName;
+    private Long id;
+    private String name;
 
-    public TheaterNameResponse(Theater theater){
-        this.theaterId = theater.getId();
-        this.theaterName = theater.getName();
+    public static TheaterNameResponse of(Theater theater) {
+        return TheaterNameResponse.builder()
+                .id(theater.getId())
+                .name(theater.getName())
+                .build();
     }
 }

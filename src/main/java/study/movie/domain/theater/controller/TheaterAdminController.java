@@ -1,28 +1,27 @@
 package study.movie.domain.theater.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import study.movie.domain.theater.dto.condition.TheaterSearchCond;
 import study.movie.domain.theater.dto.request.CreateTheaterRequest;
 import study.movie.domain.theater.dto.request.UpdateTheaterRequest;
-import study.movie.domain.theater.dto.response.BasicTheaterResponse;
-import study.movie.domain.theater.dto.response.TheaterNameResponse;
-import study.movie.domain.theater.entity.CityCode;
+import study.movie.domain.theater.dto.response.TheaterResponse;
+import study.movie.domain.theater.service.TheaterService;
 import study.movie.global.dto.CustomResponse;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.domain.theater.service.TheaterService;
+import study.movie.global.paging.PageableDTO;
 
 import javax.validation.Valid;
-
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static study.movie.global.constants.ResponseMessage.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/theater")
-public class TheaterController {
+@RequestMapping("/admin/v1/theater")
+public class TheaterAdminController {
 
     private final TheaterService theaterService;
 
@@ -44,15 +43,15 @@ public class TheaterController {
         return CustomResponse.success(DELETE_THEATER);
     }
 
-    @GetMapping("/find")
-    public ResponseEntity<?> search(@RequestParam @Valid Long theaterId) {
-        BasicTheaterResponse result = theaterService.findById(theaterId);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findOne(@PathVariable Long id) {
+        TheaterResponse result = theaterService.findById(id);
         return CustomResponse.success(READ_THEATER, result);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam @Valid CityCode cityCode) {
-        List<TheaterNameResponse> result = theaterService.searchByCity(cityCode);
+    public ResponseEntity<?> search(@RequestBody TheaterSearchCond cond, PageableDTO pageableDTO) {
+        Page<TheaterResponse> result = theaterService.search(cond, pageableDTO);
         return CustomResponse.success(READ_THEATER, result);
     }
 }

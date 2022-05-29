@@ -1,9 +1,17 @@
 package study.movie.domain.theater.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import study.movie.domain.theater.dto.condition.ScreenSearchCond;
 import study.movie.domain.theater.entity.Screen;
 
 public interface ScreenRepositoryCustom {
 
-    JPAQuery<Screen> findByScreenId(Long screenId);
+    /**
+     * 상영관 검색
+     * @param cond screenFormat, theaterName
+     * @param pageable
+     * @return Page
+     */
+    Page<Screen> search(ScreenSearchCond cond, Pageable pageable);
 }

@@ -33,6 +33,7 @@ public class Screen extends BaseTimeEntity {
 
     private Integer maxRows;
     private Integer maxCols;
+    private Integer totalSeatCount;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "theater_id")
@@ -49,6 +50,7 @@ public class Screen extends BaseTimeEntity {
         this.name = name;
         this.maxRows = maxRows;
         this.maxCols = maxCols;
+        this.totalSeatCount = maxRows * maxCols;
         registerTheater(theater);
     }
 
@@ -59,7 +61,7 @@ public class Screen extends BaseTimeEntity {
     }
 
     //==비즈니스 로직==//
-    public void checkAllowedMovieFormat(List<FilmFormat> filmFormats){
+    public void checkAllowedMovieFormat(List<FilmFormat> filmFormats) {
         if (!filmFormats.stream().allMatch(value -> format.isAllowedFilmFormat(value)))
             throw new CustomException(NOT_ALLOW_SCREEN_FORMAT);
     }
@@ -73,10 +75,12 @@ public class Screen extends BaseTimeEntity {
     private void updateFormat(ScreenFormat format) {
         this.format = format;
     }
+
     private void updateMaxRows(Integer maxRows) {
         this.maxRows = maxRows;
     }
-    private void updateMaxCols( Integer maxCols) {
+
+    private void updateMaxCols(Integer maxCols) {
         this.maxCols = maxCols;
     }
 }

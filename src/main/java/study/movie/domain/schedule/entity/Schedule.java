@@ -126,7 +126,7 @@ public class Schedule extends BaseTimeEntity {
      * @return String
      */
     public String getTotalSeatCountToString() {
-        return TOTAL + seats.size() + SEAT;
+        return TOTAL + screen.getTotalSeatCount() + SEAT;
     }
 
     /**

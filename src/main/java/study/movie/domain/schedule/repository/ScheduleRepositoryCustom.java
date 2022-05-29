@@ -79,7 +79,7 @@ public interface ScheduleRepositoryCustom {
      *
      * @param cond          movieTitle, movieNation, theaterName, screenDate, screenFormat, scheduleStatus, scheduleNumber, orderBy
      * @param pageable
-     * @return List
+     * @return Page
      */
     Page<Schedule> search(ScheduleSearchCond cond, Pageable pageable);
 

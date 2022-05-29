@@ -2,16 +2,22 @@ package study.movie.domain.theater.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.movie.domain.theater.dto.condition.TheaterSearchCond;
+import study.movie.domain.theater.dto.condition.TheaterSortType;
 import study.movie.domain.theater.dto.request.CreateTheaterRequest;
 import study.movie.domain.theater.dto.request.UpdateTheaterRequest;
-import study.movie.domain.theater.dto.response.BasicTheaterResponse;
 import study.movie.domain.theater.dto.response.TheaterNameResponse;
+import study.movie.domain.theater.dto.response.TheaterResponse;
 import study.movie.domain.theater.entity.CityCode;
 import study.movie.domain.theater.entity.Theater;
 import study.movie.domain.theater.repository.TheaterRepository;
 import study.movie.global.dto.PostIdResponse;
+import study.movie.global.paging.DomainSpec;
+import study.movie.global.paging.PageableDTO;
 import study.movie.global.utils.BasicServiceUtil;
 
 import java.util.List;
@@ -23,20 +29,16 @@ import static study.movie.exception.ErrorCode.THEATER_NOT_FOUND;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-public class TheaterServiceImpl extends BasicServiceUtil implements TheaterService{
-    private  final TheaterRepository theaterRepository;
+public class TheaterServiceImpl extends BasicServiceUtil implements TheaterService {
+    private final TheaterRepository theaterRepository;
+    private final DomainSpec<TheaterSortType> spec = new DomainSpec<>(TheaterSortType.class);
+
 
     @Override
     @Transactional
     public PostIdResponse save(CreateTheaterRequest request) {
-        Theater createTheater = Theater.builder()
-                                .name(request.getName())
-                                .city(request.getCity())
-                                .phone(request.getPhone())
-                                .build();
-
-        Theater saveTheater = theaterRepository.save(createTheater);
-
+        Theater theater = request.toEntity();
+        Theater saveTheater = theaterRepository.save(theater);
         return PostIdResponse.of(saveTheater.getId());
     }
 
@@ -46,6 +48,7 @@ public class TheaterServiceImpl extends BasicServiceUtil implements TheaterServi
     }
 
     @Override
+    @Transactional
     public void update(Long id, UpdateTheaterRequest request) {
         Theater findTheater = theaterRepository.findById(id)
                 .orElseThrow(getExceptionSupplier(THEATER_NOT_FOUND));
@@ -57,14 +60,22 @@ public class TheaterServiceImpl extends BasicServiceUtil implements TheaterServi
     public List<TheaterNameResponse> searchByCity(CityCode cityCode) {
         return theaterRepository.findByCity(cityCode)
                 .stream()
-                .map(TheaterNameResponse::new)
+                .map(TheaterNameResponse::of)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public BasicTheaterResponse findById(Long theaterId) {
-        return new BasicTheaterResponse(theaterRepository
-                .findById(theaterId)
-                .orElseThrow(getExceptionSupplier(THEATER_NOT_FOUND)));
+    public TheaterResponse findById(Long theaterId) {
+        return TheaterResponse.of(
+                theaterRepository.findById(theaterId)
+                        .orElseThrow(getExceptionSupplier(THEATER_NOT_FOUND)));
     }
+
+    @Override
+    public Page<TheaterResponse> search(TheaterSearchCond cond, PageableDTO pageableDTO) {
+        Pageable pageable = spec.getPageable(pageableDTO);
+        return theaterRepository.search(cond, pageable)
+                .map(TheaterResponse::of);
+    }
+
 }

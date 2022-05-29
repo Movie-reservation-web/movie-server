@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import study.movie.domain.movie.dto.condition.MovieSearchCond;
 import study.movie.domain.movie.dto.condition.MovieSearchType;
 import study.movie.domain.movie.dto.request.CreateMovieRequest;
+import study.movie.domain.movie.service.MovieService;
 import study.movie.domain.movie.dto.request.UpdateMovieRequest;
 import study.movie.domain.movie.dto.response.MovieSearchResponse;
 import study.movie.global.dto.CustomResponse;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.PageableDTO;
-import study.movie.domain.movie.service.MovieService;
 
 import javax.validation.Valid;
 

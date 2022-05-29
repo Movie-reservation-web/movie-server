@@ -63,4 +63,20 @@ public class Screen extends BaseTimeEntity {
         if (!filmFormats.stream().allMatch(value -> format.isAllowedFilmFormat(value)))
             throw new CustomException(NOT_ALLOW_SCREEN_FORMAT);
     }
+
+    public void update(ScreenFormat format, Integer maxRows, Integer maxCols) {
+        this.updateFormat(format);
+        this.updateMaxRows(maxRows);
+        this.updateMaxCols(maxCols);
+    }
+
+    private void updateFormat(ScreenFormat format) {
+        this.format = format;
+    }
+    private void updateMaxRows(Integer maxRows) {
+        this.maxRows = maxRows;
+    }
+    private void updateMaxCols( Integer maxCols) {
+        this.maxCols = maxCols;
+    }
 }

@@ -40,6 +40,10 @@ public abstract class ResponseMessage {
      * Domain: Screen
      */
     public static final String READ_SCREEN = "상영관 조회 성공";
+    public static final String CREATE_SCREEN = "상영관 저장 성공";
+    public static final String UPDATE_SCREEN = "상영관 업데이트 성공";
+    public static final String DELETE_SCREEN = "상영관 삭제 성공";
+
 
     public static final String CREATE_MOVIE = "영화 저장 성공";
     public static final String UPDATE_MOVIE = "영화 업데이트 성공";
@@ -57,8 +61,10 @@ public abstract class ResponseMessage {
     /**
      * Domain: Theater
      */
+    public static final String CREATE_THEATER = "극장 저장 성공";
+    public static final String UPDATE_THEATER = "극장 업데이트 성공";
     public static final String READ_THEATER = "극장 조회 성공";
-
+    public static final String DELETE_THEATER = "극장 삭제 성공";
     /**
      * Domain: Movie
      */

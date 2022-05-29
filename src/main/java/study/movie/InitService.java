@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.member.entity.GenderType;
 import study.movie.domain.member.entity.Member;
+import study.movie.domain.movie.entity.*;
 import study.movie.domain.schedule.entity.Schedule;
 import study.movie.domain.schedule.entity.ScreenTime;
 import study.movie.domain.theater.entity.CityCode;
 import study.movie.domain.theater.entity.Screen;
 import study.movie.domain.theater.entity.ScreenFormat;
 import study.movie.domain.theater.entity.Theater;
-import study.movie.domain.movie.entity.*;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;

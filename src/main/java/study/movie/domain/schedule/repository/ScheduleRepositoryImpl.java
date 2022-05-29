@@ -26,14 +26,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.util.StringUtils.hasText;
+import static study.movie.domain.schedule.entity.QSchedule.schedule;
+import static study.movie.domain.schedule.entity.QSeatEntity.seatEntity;
+import static study.movie.domain.theater.entity.QScreen.screen;
+import static study.movie.domain.theater.entity.QTheater.theater;
 import static study.movie.global.utils.DateTimeUtil.dailyEndDateTime;
 import static study.movie.global.utils.DateTimeUtil.dailyStartDateTime;
 import static study.movie.domain.movie.entity.QMovie.movie;
-import static study.movie.schedule.entity.QSchedule.schedule;
-import static study.movie.schedule.entity.QSeatEntity.seatEntity;
-import static study.movie.theater.entity.QScreen.screen;
-import static study.movie.theater.entity.QTheater.theater;
-
 
 @Repository
 @RequiredArgsConstructor

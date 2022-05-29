@@ -114,6 +114,14 @@ public class ScheduleServiceImpl extends BasicServiceUtil implements ScheduleSer
     }
 
     @Override
+    public ScheduleResponse findById(Long id) {
+        return ScheduleResponse.of(
+                scheduleRepository.findById(id)
+                        .orElseThrow(getExceptionSupplier(SCHEDULE_NOT_FOUND))
+        );
+    }
+
+    @Override
     public Page<ScheduleResponse> search(ScheduleSearchCond cond, PageableDTO pageableDTO) {
         Pageable pageable = spec.getPageable(pageableDTO);
         return scheduleRepository.search(cond, pageable)

@@ -11,11 +11,11 @@ public abstract class ResponseMessage {
     public static final String LOGOUT_SUCCESS = "로그아웃 성공";
     public static final String REISSUE_TOKEN_SUCCESS = "토큰 재발급 성공";
     public static final String LOGIN_FAIL = "로그인 실패";
-    public static final String READ_USER = "회원 정보 조회 성공";
-    public static final String CREATED_USER = "회원 가입 성공";
+    public static final String READ_MEMBER = "회원 정보 조회 성공";
+    public static final String CREATED_MEMBER = "회원 가입 성공";
     public static final String CREATED_ADMIN = "관리자 계정 생성 성송";
-    public static final String UPDATE_USER = "회원 정보 수정 성공";
-    public static final String DELETE_USER = "회원 탈퇴 성공";
+    public static final String UPDATE_MEMBER = "회원 정보 수정 성공";
+    public static final String DELETE_MEMBER = "회원 탈퇴 성공";
 
     /**
      * Domain: Schedule

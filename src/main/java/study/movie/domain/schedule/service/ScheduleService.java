@@ -65,6 +65,12 @@ public interface ScheduleService {
     Page<ScheduleResponse> search(ScheduleSearchCond cond, PageableDTO pageableDTO);
 
     /**
+     * Admin Server <p>
+     * 스케줄 단건 조회
+     */
+    ScheduleResponse findById(Long id);
+
+    /**
      * Batch Server
      * <p>
      * 상영 일정 상태 변경

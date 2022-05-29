@@ -13,7 +13,7 @@ import study.movie.domain.member.service.MemberService;
 
 import javax.validation.Valid;
 
-import static study.movie.global.constants.ResponseMessage.CREATED_USER;
+import static study.movie.global.constants.ResponseMessage.CREATED_MEMBER;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +25,6 @@ public class MemberApiController {
     @PostMapping("/sign-up")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest request) {
         PostIdResponse result = memberService.signup(request);
-        return CustomResponse.success(CREATED_USER, result);
+        return CustomResponse.success(CREATED_MEMBER, result);
     }
 }

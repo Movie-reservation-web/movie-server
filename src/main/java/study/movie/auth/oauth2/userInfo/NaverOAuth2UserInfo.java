@@ -26,7 +26,7 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo {
     public String getEmail() {
         String email = (String) attributes.get("email");
         String[] split = email.split("@");
-        return split[1].equals(NAVER_DOMAIN) ? email : split[0] + NAVER_DOMAIN;
+        return split[1].equals(NAVER_DOMAIN) ? email : split[0] + "@" + NAVER_DOMAIN;
     }
 
     @Override

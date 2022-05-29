@@ -34,17 +34,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         if (isGuest(authentication)) {
-            // 프론트에 회원가입을 해야된다고 알려줘야함
-            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080")
-                    .path("/api/v1/categories/film-rating")
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8081")
+                    .path("/register-user-info")
                     .encode()
                     .build().toUriString();
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
         } else {
-            // 메인 화면으로 가면됨
             TokenResponse tokenResponse = tokenProvider.generateToken(authentication);
             redisRepository.save(tokenProvider.getRefreshTokenKey(authentication), tokenResponse);
-            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080")
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8081")
                     .path("/")
                     .queryParam("access-token", tokenResponse.getAccessToken())
                     .queryParam("token-type", JwtUtil.BEARER_TYPE)

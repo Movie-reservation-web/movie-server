@@ -1,7 +1,6 @@
 package study.movie.domain.theater.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ import static study.movie.exception.ErrorCode.THEATER_NOT_FOUND;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Slf4j
 public class ScreenServiceImpl extends BasicServiceUtil implements ScreenService {
     private final TheaterRepository theaterRepository;
     private final ScreenRepository screenRepository;
@@ -67,7 +65,7 @@ public class ScreenServiceImpl extends BasicServiceUtil implements ScreenService
     @Override
     public ScreenResponse findById(Long id) {
         return ScreenResponse.of(
-                screenRepository.findById(id)
+                screenRepository.findScreenById(id)
                         .orElseThrow(getExceptionSupplier(SCREEN_NOT_FOUND))
         );
     }

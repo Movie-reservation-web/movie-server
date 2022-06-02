@@ -46,7 +46,6 @@ public class OAuth2AuthenticationFilter extends AbstractAuthenticationProcessing
         super(DEFAULT_OAUTH2_LOGIN_PATH_REQUEST_MATCHER);   // 위에서 설정한  /oauth2/login/* 의 요청에, GET으로 온 요청을 처리하기 위해 설정한다.
 
         this.setAuthenticationManager(new ProviderManager(oAuth2AuthenticationProvider));
-        //AbstractAuthenticationProcessingFilter를 커스터마이징 하려면  ProviderManager를 꼭 지정해 주어야 한다(안그러면 예외남!!!)
 
         this.setAuthenticationSuccessHandler(successHandler);
         this.setAuthenticationFailureHandler(failureHandler);
@@ -74,7 +73,9 @@ public class OAuth2AuthenticationFilter extends AbstractAuthenticationProcessing
         String tokenUri = clientRegistration.getProviderDetails().getTokenUri();
         OAuth2TokenResponse tokenResponse = getOAuth2AccessToken(tokenUri, tokenRequest);
 
-        Authentication authenticate = this.getAuthenticationManager().authenticate(new CustomOAuth2AuthenticationToken(clientRegistration, tokenResponse.getAccessToken()));
+        Authentication authenticate = this.getAuthenticationManager().authenticate(
+                new CustomOAuth2AuthenticationToken(clientRegistration, tokenResponse.getAccessToken()));
+
         return authenticate;
     }
 
@@ -82,10 +83,10 @@ public class OAuth2AuthenticationFilter extends AbstractAuthenticationProcessing
         return request.getRequestURI().substring(DEFAULT_OAUTH2_LOGIN_PATH_PREFIX.length() - 1);
     }
 
-    private OAuth2TokenResponse getOAuth2AccessToken(String userInfoUri, OAuth2TokenRequest tokenRequest) {
+    private OAuth2TokenResponse getOAuth2AccessToken(String tokenUri, OAuth2TokenRequest tokenRequest) {
         return WebClient.create()
                 .post()
-                .uri(userInfoUri)
+                .uri(tokenUri)
                 .headers(header -> {
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));

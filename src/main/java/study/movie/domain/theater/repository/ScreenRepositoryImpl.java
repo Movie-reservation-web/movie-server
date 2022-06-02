@@ -15,6 +15,7 @@ import study.movie.domain.theater.entity.ScreenFormat;
 import study.movie.global.utils.BasicRepositoryUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.theater.entity.QScreen.screen;
@@ -26,6 +27,16 @@ import static study.movie.domain.theater.entity.QTheater.theater;
 public class ScreenRepositoryImpl extends BasicRepositoryUtil implements ScreenRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Optional<Screen> findById(Long id) {
+        return Optional.ofNullable(
+                queryFactory.selectFrom(screen)
+                        .leftJoin(screen.theater, theater)
+                        .where(idEq(id))
+                        .fetchFirst()
+        );
+    }
 
     @Override
     public Page<Screen> search(ScreenSearchCond cond, Pageable pageable) {
@@ -61,6 +72,10 @@ public class ScreenRepositoryImpl extends BasicRepositoryUtil implements ScreenR
                         screenFormatEq(cond.getFormat()),
                         theaterNameEq(cond.getTheaterName())
                 );
+    }
+
+    private BooleanExpression idEq(Long id) {
+        return id != null ? screen.id.eq(id) : null;
     }
 
     private BooleanExpression screenFormatEq(ScreenFormat screenFormat) {

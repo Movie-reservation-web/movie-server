@@ -70,7 +70,7 @@ public enum ErrorCode {
     THEATER_NOT_FOUND(NOT_FOUND, "해당 극장을 찾을 수 없습니다."),
     EMAIL_MEMBER_NOT_FOUND(NOT_FOUND, "해당 이메일에 맞는 회원을 찾을 수 없습니다"),
     REFRESH_TOKEN_NOT_FOUND(BAD_REQUEST, "리프레시 토큰을 찾을 수 없습니다."),
-
+    ENTITY_NOT_FOUND(BAD_REQUEST, "ID에 해당하는 테이블을 찾을 수 없습니다."),
     /**
      * <p>
      * Status: 409 CONFLICT

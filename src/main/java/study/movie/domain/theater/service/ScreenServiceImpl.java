@@ -56,9 +56,7 @@ public class ScreenServiceImpl extends BasicServiceUtil implements ScreenService
 
     @Override
     public void update(Long id, UpdateScreenRequest request) {
-        Screen findScreen = screenRepository.findById(id)
-                .orElseThrow(getExceptionSupplier(SCREEN_NOT_FOUND));
-
+        Screen findScreen = screenRepository.getById(id);
         findScreen.update(request.getFormat(), request.getMaxRows(), request.getMaxCols());
     }
 

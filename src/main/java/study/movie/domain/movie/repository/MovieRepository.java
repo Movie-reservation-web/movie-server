@@ -3,8 +3,10 @@ package study.movie.domain.movie.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import study.movie.domain.movie.entity.FilmFormat;
 import study.movie.domain.movie.entity.Movie;
 
@@ -50,4 +52,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long>, MovieReposi
             countQuery = "select count(movie.movie_id) from movie where movie.formats like %:format%",
             nativeQuery = true)
     Page<Movie> findByFormatPaging(@Param("format") FilmFormat format, Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query("delete from Movie m where m.id in :ids")
+    void deleteAllByIdInQuery(@Param("ids") List<Long> ids);
 }

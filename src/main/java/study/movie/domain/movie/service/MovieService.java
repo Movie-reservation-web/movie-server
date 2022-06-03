@@ -1,15 +1,16 @@
 package study.movie.domain.movie.service;
 
 import org.springframework.data.domain.Page;
+import study.movie.domain.movie.dto.condition.MovieChartSortType;
 import study.movie.domain.movie.dto.condition.MovieSearchCond;
 import study.movie.domain.movie.dto.condition.MovieSearchType;
-import study.movie.domain.movie.dto.condition.MovieChartSortType;
 import study.movie.domain.movie.dto.request.CreateMovieRequest;
 import study.movie.domain.movie.dto.request.UpdateMovieRequest;
 import study.movie.domain.movie.dto.response.BasicMovieResponse;
 import study.movie.domain.movie.dto.response.FindMovieResponse;
 import study.movie.domain.movie.dto.response.MovieSearchResponse;
 import study.movie.domain.schedule.dto.response.MovieChartResponse;
+import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.PageableDTO;
 
@@ -73,7 +74,7 @@ public interface MovieService {
      * <p>
      * 영화 삭제
      */
-    void delete(Long movieId);
+    void delete(IdListRequest request);
 
     /**
      * Admin Server

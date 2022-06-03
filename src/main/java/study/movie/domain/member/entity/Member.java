@@ -30,13 +30,12 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true, updatable = false)
     private String email;
 
-    @Column(updatable = false)
     private String name;
 
-    @Column(updatable = false)
     private LocalDate birth;
 
     private String nickname;
+
     @Enumerated(EnumType.STRING)
     private GenderType gender;
 
@@ -47,6 +46,7 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -90,7 +90,7 @@ public class Member extends BaseTimeEntity {
 
     public void registerBasicInfo(String password, String nickname, String mobile, LocalDate birth, GenderType gender) {
         updatePassword(password);
-        updateNickname(password);
+        updateNickname(nickname);
         updateBirth(birth);
         updateGender(gender);
         updateMobile(mobile);

@@ -1,27 +1,10 @@
 spring:
   config:
-    import: classpath:jwt.yml, classpath:oauth2.yml
+    import: classpath:database.yml, classpath:oauth2.yml
   profiles:
     include:
-      - jwt
+      - database
       - ouath2
-
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/moviedb?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-    password: 1234
-
-  jpa:
-    hibernate:
-      ddl-auto: create # 자동으로 테이블 생성
-
-    properties:
-      hibernate:
-        #        show_sql: true
-        format_sql: true
-        default_batch_fetch_size: 100
-    open-in-view: true # db 커넥션을 트랜잭션에서만 하고 끝냄..
 
   mvc:
     pathmatch:

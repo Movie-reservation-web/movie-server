@@ -63,12 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter(jwtProvider, redisRepository);
     }
 
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository() {
-//        List<ClientRegistration> registrations = new ArrayList<>();
-//        registrations.add(CustomOAuth2Provider.KAKAO.getBuilder("kakao")
-//                .clientId())
-//    }
 
     @Bean
     public RoleHierarchyImpl roleHierarchy() {

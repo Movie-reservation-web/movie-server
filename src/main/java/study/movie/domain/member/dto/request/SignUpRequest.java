@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import study.movie.domain.member.entity.GenderType;
 import study.movie.domain.member.entity.Member;
+import study.movie.domain.member.entity.Role;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -50,6 +51,7 @@ public class SignUpRequest {
                 .birth(this.birth)
                 .gender(this.gender)
                 .mobile(this.mobile)
+                .role(Role.USER)
                 .build();
     }
 }

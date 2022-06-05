@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
-import study.movie.movie.entity.Movie;
+import study.movie.domain.theater.entity.CityCode;
+import study.movie.domain.theater.entity.Theater;
 
 import javax.persistence.EntityManager;
 

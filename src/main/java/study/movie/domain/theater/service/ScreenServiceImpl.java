@@ -21,6 +21,7 @@ import study.movie.global.paging.PageableDTO;
 import study.movie.global.utils.BasicServiceUtil;
 
 import static study.movie.exception.ErrorCode.SCREEN_NOT_FOUND;
+import static study.movie.exception.ErrorCode.THEATER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,9 @@ public class ScreenServiceImpl extends BasicServiceUtil implements ScreenService
     @Override
     @Transactional
     public PostIdResponse save(CreateScreenRequest request) {
-        Theater findTheater = theaterRepository.getById(request.getTheaterId());
+        Theater findTheater = theaterRepository
+                .findById(request.getTheaterId())
+                .orElseThrow(getExceptionSupplier(THEATER_NOT_FOUND));
 
         Screen screen = Screen.builder()
                 .theater(findTheater)

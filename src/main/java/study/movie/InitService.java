@@ -28,45 +28,6 @@ import static study.movie.domain.theater.entity.ScreenFormat.*;
 public class InitService {
     private final EntityManager em;
 
-    public void initDB() {
-        addTheaterScreen(
-                "CGV 용산",
-                CityCode.SEL,
-                Arrays.asList("1관", "2관", "3관", "4관", "5관"),
-                Arrays.asList(TWO_D, IMAX, FOUR_D_FLEX, SCREEN_X, PREMIUM));
-        addTheaterScreen(
-                "CGV 강남",
-                CityCode.SEL,
-                Arrays.asList("1관", "2관", "3관", "4관"),
-                Arrays.asList(TWO_D, TWO_D, FOUR_D_FLEX, PREMIUM));
-        addTheaterScreen(
-                "CGV 수원",
-                CityCode.KYG,
-                Arrays.asList("1관", "2관", "3관", "4관", "5관"),
-                Arrays.asList(TWO_D, TWO_D, TWO_D, SCREEN_X, PREMIUM));
-
-        addMovies(
-                Arrays.asList("영화1", "영화2", "영화3", "영화4", "영화5", "영화6"),
-                Arrays.asList("감독1", "감독2", "감독3", "감독4", "감독5", "감독6"),
-                Arrays.asList(
-                        Arrays.asList("로버트 패틴슨", "폴 다노"),
-                        Arrays.asList("찰스 자비에", "울버린"),
-                        Arrays.asList("로버트 패틴슨", "레이첼"),
-                        Arrays.asList("배우1", "배우2", "배우3"),
-                        Arrays.asList("배우1", "배우2", "배우3"),
-                        Arrays.asList("배우1", "배우2", "배우3")
-                ),
-                Arrays.asList(
-                        Arrays.asList(FilmFormat.TWO_D, FilmFormat.FOUR_D_FLEX, FilmFormat.IMAX),
-                        Arrays.asList(FilmFormat.TWO_D, FilmFormat.SCREEN_X),
-                        Arrays.asList(FilmFormat.TWO_D, FilmFormat.FOUR_D_FLEX, FilmFormat.IMAX, FilmFormat.SCREEN_X),
-                        Arrays.asList(FilmFormat.TWO_D),
-                        Arrays.asList(FilmFormat.TWO_D, FilmFormat.IMAX),
-                        Arrays.asList(FilmFormat.TWO_D, FilmFormat.FOUR_D_FLEX)
-                )
-        );
-    }
-
     public List<Screen> addTheaterScreen(String theaterName, CityCode city, List<String> screenNames, List<ScreenFormat> screenFormats) {
         List<Screen> savedScreens = new ArrayList<>();
         Theater theater = createTheater(theaterName, city);
@@ -115,7 +76,7 @@ public class InitService {
                 .filmRating(FilmRating.G_RATED)
                 .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
                 .image(title + ".jpg")
-                .info(title + " information")
+                .intro(title + " information")
                 .nation("KR")
                 .runningTime(160)
                 .releaseDate(LocalDate.now().plusDays(10))
@@ -133,7 +94,7 @@ public class InitService {
                 .filmRating(FilmRating.G_RATED)
                 .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
                 .image("제목1.jpg")
-                .info("제목1 information")
+                .intro("제목1 information")
                 .nation("KR")
                 .runningTime(160)
                 .releaseDate(LocalDate.now().plusDays(10))

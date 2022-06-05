@@ -42,7 +42,7 @@ public class MovieSearchResponse {
                 .filmRating(movie.getFilmRating())
                 .nation(movie.getNation())
                 .releaseDate(movie.getReleaseDate())
-                .info(movie.getInfo())
+                .info(movie.getIntro())
                 .audience(movie.getAudience())
                 .image(movie.getImage())
                 .reviewCount(movie.getReviewCount())

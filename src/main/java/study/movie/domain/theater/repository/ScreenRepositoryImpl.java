@@ -28,8 +28,9 @@ public class ScreenRepositoryImpl extends BasicRepositoryUtil implements ScreenR
 
     private final JPAQueryFactory queryFactory;
 
+
     @Override
-    public Optional<Screen> findById(Long id) {
+    public Optional<Screen> findScreenById(Long id) {
         return Optional.ofNullable(
                 queryFactory.selectFrom(screen)
                         .leftJoin(screen.theater, theater)

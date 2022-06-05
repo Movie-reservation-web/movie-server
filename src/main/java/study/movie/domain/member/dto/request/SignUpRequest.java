@@ -1,6 +1,8 @@
 package study.movie.domain.member.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import study.movie.domain.member.entity.GenderType;
@@ -30,10 +32,11 @@ public class SignUpRequest {
     @NotNull
     @Past
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birth;
 
     @Pattern(regexp = "\\d{3}-\\d{3,4}-\\d{4}")
-    private String phone;
+    private String mobile;
 
     @NotNull
     private GenderType gender;
@@ -46,6 +49,7 @@ public class SignUpRequest {
                 .nickname(this.nickname)
                 .birth(this.birth)
                 .gender(this.gender)
+                .mobile(this.mobile)
                 .build();
     }
 }

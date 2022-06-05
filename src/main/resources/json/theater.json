@@ -1,0 +1,23 @@
+[
+  {
+    "name": "CGV 강남",
+    "city": "SEL",
+    "phone": "1234-5678"
+  },
+  {
+    "name": "CGV 용산",
+    "city": "SEL",
+    "phone": "1234-5678"
+  },
+  {
+    "name": "CGV 판교",
+    "city": "KYG",
+    "phone": "1234-5678"
+  },
+  {
+    "name": "CGV 해운대",
+    "city": "PUS_USN",
+    "phone": "1234-5678"
+  }
+]
+

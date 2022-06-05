@@ -1,0 +1,115 @@
+[
+  {
+    "name": "3관 8층",
+    "format": "TWO_D",
+    "maxRows": 12,
+    "maxCols": 14,
+    "theaterId": 1
+  },
+  {
+    "name": "4관 8층[LCK관]",
+    "format": "TWO_D",
+    "maxRows": 10,
+    "maxCols": 12,
+    "theaterId": 1
+  },
+  {
+    "name": "5관(LASER) 20층",
+    "format": "TWO_D",
+    "maxRows": 12,
+    "maxCols": 14,
+    "theaterId": 1
+  },
+  {
+    "name": "6관(LASER) 10층",
+    "format": "TWO_D",
+    "maxRows": 10,
+    "maxCols": 12,
+    "theaterId": 1
+  },
+  {
+    "name": "17관 [PREMIUM]",
+    "format": "PREMIUM",
+    "maxRows": 1,
+    "maxCols": 12,
+    "theaterId": 2
+  },
+  {
+    "name": "4DX관",
+    "format": "FOUR_D_FLEX",
+    "maxRows": 12,
+    "maxCols": 12,
+    "theaterId": 2
+  },
+  {
+    "name": "5관(Laser)",
+    "format": "TWO_D",
+    "maxRows": 9,
+    "maxCols": 21,
+    "theaterId": 2
+  },
+  {
+    "name": "IMAX관",
+    "format": "IMAX",
+    "maxRows": 16,
+    "maxCols": 39,
+    "theaterId": 2
+  },
+  {
+    "name": "1관[닉플레이스관] 7층",
+    "format": "TWO_D",
+    "maxRows": 10,
+    "maxCols": 20,
+    "theaterId": 3
+  },
+  {
+    "name": "4DX관",
+    "format": "FOUR_D_FLEX",
+    "maxRows": 12,
+    "maxCols": 12,
+    "theaterId": 3
+  },
+  {
+    "name": "3관 7층",
+    "format": "TWO_D",
+    "maxRows": 9,
+    "maxCols": 2,
+    "theaterId": 3
+  },
+  {
+    "name": "IMAX관",
+    "format": "IMAX",
+    "maxRows": 12,
+    "maxCols": 24,
+    "theaterId": 3
+  },
+  {
+    "name": "1관 4층[모션베드]",
+    "format": "TWO_D",
+    "maxRows": 9,
+    "maxCols": 10,
+    "theaterId": 4
+  },
+  {
+    "name": "2관 4층[모션베드]",
+    "format": "TWO_D",
+    "maxRows": 6,
+    "maxCols": 11,
+    "theaterId": 4
+  },
+  {
+    "name": "3관 4층[모션베드]",
+    "format": "TWO_D",
+    "maxRows": 7,
+    "maxCols": 11,
+    "theaterId": 4
+  },
+  {
+    "name": "5관 5층[모션베드]",
+    "format": "TWO_D",
+    "maxRows": 8,
+    "maxCols": 10,
+    "theaterId": 4
+  }
+]
+

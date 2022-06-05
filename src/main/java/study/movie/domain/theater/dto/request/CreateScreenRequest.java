@@ -24,4 +24,6 @@ public class CreateScreenRequest {
     @NotNull
     private Long theaterId;
 
+
+
 }

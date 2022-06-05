@@ -16,7 +16,7 @@ public class CreateTheaterRequest {
     private CityCode city;
 
     @NotBlank
-    @Pattern(regexp = "\\d{3}-\\d{3,4}-\\d{4}")
+    @Pattern(regexp = "\\d{3,4}-\\d{4}")
     private String phone;
 
     public Theater toEntity() {

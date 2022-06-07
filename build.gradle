@@ -37,6 +37,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+    // hateoas, swagger
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
     // lombok
     implementation 'org.projectlombok:lombok:1.18.18'

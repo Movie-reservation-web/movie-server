@@ -71,8 +71,16 @@ public abstract class ResponseMessage {
     public static final String READ_MOVIE_FORMATS = "영화 포멧 조회 성공";
 
     /**
+     * Domain: Iamport
+     */
+    public static final String PAYMENT_SUCCESS = "결제 성공";
+    public static final String PAYMENT_FAIL = "결제 실패";
+
+    /**
      * Category
      */
     public static final String READ_CATEGORY = " 카테고리 조회 성공";
+
+
 
 }

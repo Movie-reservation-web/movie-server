@@ -1,7 +1,6 @@
 package study.movie.domain.theater.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,7 @@ import study.movie.domain.theater.entity.Screen;
 import study.movie.domain.theater.entity.Theater;
 import study.movie.domain.theater.repository.ScreenRepository;
 import study.movie.domain.theater.repository.TheaterRepository;
+import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.DomainSpec;
 import study.movie.global.paging.PageableDTO;
@@ -26,7 +26,6 @@ import static study.movie.exception.ErrorCode.THEATER_NOT_FOUND;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Slf4j
 public class ScreenServiceImpl extends BasicServiceUtil implements ScreenService {
     private final TheaterRepository theaterRepository;
     private final ScreenRepository screenRepository;
@@ -52,22 +51,20 @@ public class ScreenServiceImpl extends BasicServiceUtil implements ScreenService
     }
 
     @Override
-    public void delete(Long screenId) {
-        screenRepository.deleteByIdEqQuery(screenId);
+    public void delete(IdListRequest request) {
+        screenRepository.deleteByIdEqQuery(request.getIds());
     }
 
     @Override
     public void update(Long id, UpdateScreenRequest request) {
-        Screen findScreen = screenRepository.findById(id)
-                .orElseThrow(getExceptionSupplier(SCREEN_NOT_FOUND));
-
+        Screen findScreen = screenRepository.getById(id);
         findScreen.update(request.getFormat(), request.getMaxRows(), request.getMaxCols());
     }
 
     @Override
     public ScreenResponse findById(Long id) {
         return ScreenResponse.of(
-                screenRepository.findById(id)
+                screenRepository.findScreenById(id)
                         .orElseThrow(getExceptionSupplier(SCREEN_NOT_FOUND))
         );
     }

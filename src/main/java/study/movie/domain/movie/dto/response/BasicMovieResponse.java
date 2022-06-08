@@ -43,7 +43,7 @@ public class BasicMovieResponse {
                 .filmRating(movie.getFilmRating())
                 .nation(movie.getNation())
                 .releaseDate(movie.getReleaseDate())
-                .info(movie.getInfo())
+                .info(movie.getIntro())
                 .audience(movie.getAudience())
                 .image(movie.getImage())
                 .reviews(

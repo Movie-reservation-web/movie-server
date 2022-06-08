@@ -5,6 +5,7 @@ import study.movie.domain.theater.dto.condition.ScreenSearchCond;
 import study.movie.domain.theater.dto.request.CreateScreenRequest;
 import study.movie.domain.theater.dto.request.UpdateScreenRequest;
 import study.movie.domain.theater.dto.response.ScreenResponse;
+import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.PageableDTO;
 
@@ -14,7 +15,7 @@ public interface ScreenService {
     PostIdResponse save(CreateScreenRequest request);
 
     //delete Screen
-    void delete(Long id);
+    void delete(IdListRequest request);
 
     //update Screen
     void update(Long id, UpdateScreenRequest request);

@@ -8,6 +8,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,9 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import study.movie.auth.jwt.CustomUserDetailsService;
 import study.movie.auth.exception.CustomAccessDeniedHandler;
 import study.movie.auth.exception.CustomAuthenticationEntryPoint;
+import study.movie.auth.jwt.CustomUserDetailsService;
 import study.movie.auth.jwt.JwtAuthenticationFilter;
 import study.movie.auth.jwt.JwtTokenProvider;
 import study.movie.auth.oauth2.OAuth2AuthenticationFilter;
@@ -63,13 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter(jwtProvider, redisRepository);
     }
 
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository() {
-//        List<ClientRegistration> registrations = new ArrayList<>();
-//        registrations.add(CustomOAuth2Provider.KAKAO.getBuilder("kakao")
-//                .clientId())
-//    }
-
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
@@ -82,7 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy());
         return defaultWebSecurityExpressionHandler;
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -116,5 +109,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(oAuth2AuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+                .antMatchers(
+                        "/favicon.ico",
+                        "/error",
+                        "/swagger-ui/**",
+                        "/swagger-resources/**",
+                        "/v3/api-docs"
+                );
     }
 }

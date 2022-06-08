@@ -18,6 +18,7 @@ import study.movie.domain.movie.dto.response.BasicMovieResponse;
 import study.movie.domain.movie.dto.response.FindMovieResponse;
 import study.movie.domain.movie.dto.response.MovieSearchResponse;
 import study.movie.domain.schedule.dto.response.MovieChartResponse;
+import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.DomainSpec;
 import study.movie.global.paging.PageableDTO;
@@ -89,19 +90,16 @@ public class MovieServiceImpl extends BasicServiceUtil implements MovieService {
     @Override
     @Transactional
     public void update(Long id, UpdateMovieRequest request) {
-        Movie findMovie = movieRepository
-                .findById(id)
-                .orElseThrow(getExceptionSupplier(MOVIE_NOT_FOUND));
+        Movie findMovie = movieRepository.getById(id);
 
         findMovie.update(request.getFilmRating(), request.getReleaseDate(),
                 request.getInfo(), request.getImage());
-
     }
 
     @Override
     @Transactional
-    public void delete(Long movieId) {
-        movieRepository.deleteById(movieId);
+    public void delete(IdListRequest request) {
+        movieRepository.deleteAllByIdInQuery(request.getIds());
     }
 
     @Override

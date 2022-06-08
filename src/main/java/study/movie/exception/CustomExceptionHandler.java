@@ -15,11 +15,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import study.movie.global.dto.CustomResponse;
 import study.movie.global.dto.ValidationResponse;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static study.movie.exception.ErrorCode.DUPLICATED_RESOURCE;
-import static study.movie.exception.ErrorCode.ILLEGAL_ARGUMENT;
+import static study.movie.exception.ErrorCode.*;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -35,6 +35,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public final ResponseEntity<?> handleIllegalArgumentExceptions() {
         return CustomResponse.fail(ILLEGAL_ARGUMENT);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+        return CustomResponse.fail(ENTITY_NOT_FOUND);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class, DataIntegrityViolationException.class})

@@ -4,6 +4,10 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+!**/src/main/resources/application.yml
+!**/src/main/resources/database.yml
+!**/src/main/resources/oauth2.yml
+build.gradle
 
 ### STS ###
 .apt_generated

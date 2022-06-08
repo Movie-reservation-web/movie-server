@@ -27,7 +27,7 @@ public class TicketAdminController {
         return CustomResponse.success(READ_TICKET, result);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteTicketInDB(@RequestBody IdListRequest request) {
         ticketService.delete(request);
         return CustomResponse.success(DELETE_TICKET);

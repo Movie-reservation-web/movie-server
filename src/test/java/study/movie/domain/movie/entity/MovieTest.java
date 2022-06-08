@@ -81,7 +81,7 @@ public class MovieTest {
         //then
         assertThat(findMovie.getImage()).isEqualTo(changeImage);
         assertThat(findMovie.getReleaseDate()).isEqualTo(changeReleaseDate);
-        assertThat(findMovie.getInfo()).isEqualTo(changeInfo);
+        assertThat(findMovie.getIntro()).isEqualTo(changeInfo);
         assertThat(findMovie.getFilmRating()).isEqualTo(changeRating);
     }
 

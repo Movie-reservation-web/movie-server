@@ -52,7 +52,7 @@ public class Movie extends BaseTimeEntity {
     private LocalDate releaseDate;
 
     @Lob
-    private String info;
+    private String intro;
 
     private long audience;
 
@@ -73,7 +73,7 @@ public class Movie extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
-    public Movie(String title, String director, List<String> actors, List<MovieGenre> genres, FilmRating filmRating, Integer runningTime, String nation, LocalDate releaseDate, List<FilmFormat> formats, String info, String image) {
+    public Movie(String title, String director, List<String> actors, List<MovieGenre> genres, FilmRating filmRating, Integer runningTime, String nation, LocalDate releaseDate, List<FilmFormat> formats, String intro, String image) {
         this.title = title;
         this.director = director;
         this.actors = actors;
@@ -83,7 +83,7 @@ public class Movie extends BaseTimeEntity {
         this.nation = nation;
         this.releaseDate = releaseDate;
         this.formats = formats;
-        this.info = info;
+        this.intro = intro;
         this.image = image;
         this.audience = 0L;
         this.avgScore = 0F;
@@ -119,7 +119,7 @@ public class Movie extends BaseTimeEntity {
     }
 
     private void updateInfo(String info) {
-        this.info = info;
+        this.intro = info;
     }
 
     private void updateImage(String image) {

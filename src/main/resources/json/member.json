@@ -1,0 +1,12 @@
+[
+  {
+    "name": "홍길동",
+    "email": "movie@gmail.com",
+    "password": "MovieTest!",
+    "nickname": "테스트아이디",
+    "birth": "2020-10-10",
+    "mobile": "010-1234-5678",
+    "gender": "MALE"
+  }
+]
+

@@ -1,32 +1,35 @@
 package study.movie.domain.movie.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
 import study.movie.domain.movie.entity.FilmFormat;
 import study.movie.domain.movie.entity.FilmRating;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.movie.entity.MovieGenre;
-import study.movie.global.converter.StringArrayConverter;
 
-import javax.persistence.Convert;
+import javax.persistence.Lob;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
 public class CreateMovieRequest {
-
-    private Long id;
+    @NotBlank
     private String title;
-    private Integer runningTime;
     private String director;
-    @Convert(converter = StringArrayConverter.class)
     private List<String> actors;
     private List<MovieGenre> genres;
     private List<FilmFormat> formats;
     private FilmRating filmRating;
-    private String nation;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate releaseDate;
-    private String info;
-    private Integer audience;
+    private Integer runningTime;
+    private String nation;
+    @Lob
+    private String intro;
     private String image;
 
     public Movie toEntity() {
@@ -40,7 +43,7 @@ public class CreateMovieRequest {
                 .nation(this.getNation())
                 .releaseDate(this.getReleaseDate())
                 .formats(this.getFormats())
-                .info(this.getInfo())
+                .intro(this.getIntro())
                 .image(this.getImage())
                 .build();
     }

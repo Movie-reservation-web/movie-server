@@ -50,9 +50,7 @@ public class TheaterServiceImpl extends BasicServiceUtil implements TheaterServi
     @Override
     @Transactional
     public void update(Long id, UpdateTheaterRequest request) {
-        Theater findTheater = theaterRepository.findById(id)
-                .orElseThrow(getExceptionSupplier(THEATER_NOT_FOUND));
-
+        Theater findTheater = theaterRepository.getById(id);
         findTheater.update(request.getPhone());
     }
 

@@ -10,6 +10,7 @@ import study.movie.domain.theater.dto.request.UpdateScreenRequest;
 import study.movie.domain.theater.dto.response.ScreenResponse;
 import study.movie.domain.theater.service.ScreenService;
 import study.movie.global.dto.CustomResponse;
+import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.PageableDTO;
 
@@ -37,9 +38,9 @@ public class ScreenAdminController {
         return CustomResponse.success(UPDATE_SCREEN);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        screenService.delete(id);
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody @Valid IdListRequest request) {
+        screenService.delete(request);
         return CustomResponse.success(DELETE_SCREEN);
     }
 

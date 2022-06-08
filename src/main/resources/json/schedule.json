@@ -1,0 +1,124 @@
+[
+  {
+    "startTime": "2022-06-06 08:00:00",
+    "movieId": 1,
+    "screenId": 1
+  },
+  {
+    "startTime": "2022-06-06 11:00:00",
+    "movieId": 1,
+    "screenId": 1
+  },
+  {
+    "startTime": "2022-06-06 12:00:00",
+    "movieId": 1,
+    "screenId": 3
+  },
+  {
+    "startTime": "2022-06-06 21:00:00",
+    "movieId": 1,
+    "screenId": 3
+  },
+  {
+    "startTime": "2022-06-06 11:15:00",
+    "movieId": 2,
+    "screenId": 2
+  },
+  {
+    "startTime": "2022-06-06 15:45:00",
+    "movieId": 2,
+    "screenId": 2
+  },
+  {
+    "startTime": "2022-06-06 12:30:00",
+    "movieId": 1,
+    "screenId": 5
+  },
+  {
+    "startTime": "2022-06-06 07:15:00",
+    "movieId": 1,
+    "screenId": 6
+  },
+  {
+    "startTime": "2022-06-06 16:15:00",
+    "movieId": 1,
+    "screenId": 6
+  },
+  {
+    "startTime": "2022-06-06 16:30:00",
+    "movieId": 1,
+    "screenId": 8
+  },
+  {
+    "startTime": "2022-06-06 22:30:00",
+    "movieId": 1,
+    "screenId": 8
+  },
+  {
+    "startTime": "2022-06-06 07:30:00",
+    "movieId": 5,
+    "screenId": 7
+  },
+  {
+    "startTime": "2022-06-07 00:25:00",
+    "movieId": 5,
+    "screenId": 7
+  },
+  {
+    "startTime": "2022-06-08 11:40:00",
+    "movieId": 3,
+    "screenId": 9
+  },
+  {
+    "startTime": "2022-06-08 18:50:00",
+    "movieId": 1,
+    "screenId": 10
+  },
+  {
+    "startTime": "2022-06-08 23:30:00",
+    "movieId": 1,
+    "screenId": 12
+  },
+  {
+    "startTime": "2022-06-08 14:30:00",
+    "movieId": 2,
+    "screenId": 11
+  },
+  {
+    "startTime": "2022-06-15 14:10:00",
+    "movieId": 4,
+    "screenId": 9
+  },
+  {
+    "startTime": "2022-06-15 17:00:00",
+    "movieId": 4,
+    "screenId": 9
+  },
+  {
+    "startTime": "2022-06-10 12:15:00",
+    "movieId": 3,
+    "screenId": 15
+  },
+  {
+    "startTime": "2022-06-08 11:20:00",
+    "movieId": 2,
+    "screenId": 13
+  },
+  {
+    "startTime": "2022-06-08 15:10:00",
+    "movieId": 2,
+    "screenId": 16
+  }
+]
+
+
+
+
+
+
+
+
+
+
+
+

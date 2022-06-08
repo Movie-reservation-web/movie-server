@@ -76,6 +76,4 @@ public class TicketApiController {
         ticketService.cancelReservation(reserveNumber, memberId);
         return CustomResponse.success(CANCEL_TICKET);
     }
-
-
 }

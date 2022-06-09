@@ -125,17 +125,17 @@ class MovieServiceTest {
         scheduleRepository.save(schedule2);
 
         ReserveTicketRequest request1 = new ReserveTicketRequest();
-        request1.setMemberId(member.getId());
-        request1.setScheduleId(schedule1.getId());
+        request1.setMemberEmail(member.getEmail());
+        request1.setScheduleNumber(schedule1.getScheduleNumber());
         request1.setSeats(Arrays.asList("A2", "C2"));
         ReserveTicketRequest request2 = new ReserveTicketRequest();
-        request2.setMemberId(member.getId());
-        request2.setScheduleId(schedule1.getId());
+        request2.setMemberEmail(member.getEmail());
+        request2.setScheduleNumber(schedule1.getScheduleNumber());
         request2.setSeats(Arrays.asList("A2", "C2", "B1"));
 
         ReserveTicketRequest request3 = new ReserveTicketRequest();
-        request3.setMemberId(member.getId());
-        request3.setScheduleId(schedule2.getId());
+        request3.setMemberEmail(member.getEmail());
+        request3.setScheduleNumber(schedule2.getScheduleNumber());
         request3.setSeats(Arrays.asList("A2", "C2", "B1", "A1"));
 
         ticketService.reserve(request1);

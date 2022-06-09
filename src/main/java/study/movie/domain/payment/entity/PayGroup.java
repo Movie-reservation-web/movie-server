@@ -1,4 +1,4 @@
-package study.movie.domain.ticket.entity.payment;
+package study.movie.domain.payment.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

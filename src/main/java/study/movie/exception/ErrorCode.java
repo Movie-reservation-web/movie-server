@@ -44,6 +44,7 @@ public enum ErrorCode {
     ALREADY_USED_TOKEN(BAD_REQUEST, "이미 사용 후 반납된 토큰입니다."),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     ALREADY_CANCELLED_TICKET(BAD_REQUEST, "이미 취소된 티켓입니다."),
+    ALREADY_CANCELLED_PAYMENT(BAD_REQUEST, "이미 취소된 결제입니다."),
     NOT_ALLOW_RESERVED_STATUS(BAD_REQUEST, "예약 상태로 변경할 수 없습니다."),
     NOT_CANCELLED_TICKET(BAD_REQUEST, "취소되지 않은 티켓입니다."),
     NOT_ALLOW_SCREEN_FORMAT(BAD_REQUEST, "상영관에서 지원하지 않는 영화 포멧입니다."),
@@ -55,6 +56,9 @@ public enum ErrorCode {
     INVALID_PASSWORD(BAD_REQUEST, "비밀번호가 올바르지 않습니다."),
 
     INVALID_OAUTH2_PROVIDER(BAD_REQUEST, "제공자(소셜)가 올바르지 않습니다."),
+
+    DIFFERENT_AMOUNT(BAD_REQUEST, "실제 결제된 금액과 맞지 않습니다."),
+    DIFFERENT_MERCHANT(BAD_REQUEST, "결제 번호가 일치하지 않습니다."),
     /**
      * <p>
      * Status: 404 NOT_FOUND
@@ -68,6 +72,7 @@ public enum ErrorCode {
     TICKET_NOT_FOUND(NOT_FOUND, "해당 티켓을 찾을 수 없습니다."),
     SCREEN_NOT_FOUND(NOT_FOUND, "해당 상영관을 찾을 수 없습니다."),
     THEATER_NOT_FOUND(NOT_FOUND, "해당 극장을 찾을 수 없습니다."),
+    PAYMENT_NOT_FOUND(NOT_FOUND, "해당 결제 정보를 찾을 수 없습니다."),
     EMAIL_MEMBER_NOT_FOUND(NOT_FOUND, "해당 이메일에 맞는 회원을 찾을 수 없습니다"),
     REFRESH_TOKEN_NOT_FOUND(BAD_REQUEST, "리프레시 토큰을 찾을 수 없습니다."),
     ENTITY_NOT_FOUND(BAD_REQUEST, "ID에 해당하는 테이블을 찾을 수 없습니다."),

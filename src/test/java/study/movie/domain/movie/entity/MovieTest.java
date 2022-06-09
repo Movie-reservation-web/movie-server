@@ -59,7 +59,7 @@ public class MovieTest {
                 .filmRating(rating)
                 .genres(Arrays.asList(MovieGenre.ACTION, MovieGenre.ADVENTURE))
                 .image(image)
-                .info(info)
+                .intro(info)
                 .nation("KR")
                 .runningTime(176)
                 .releaseDate(releaseDate)

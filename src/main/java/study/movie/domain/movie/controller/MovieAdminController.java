@@ -50,6 +50,4 @@ public class MovieAdminController {
         movieService.delete(request);
         return CustomResponse.success(DELETE_MOVIE);
     }
-
-
 }

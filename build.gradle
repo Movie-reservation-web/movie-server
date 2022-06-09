@@ -68,6 +68,9 @@ dependencies {
     // query dsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    // iamport
+    implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
 }
 
 tasks.named('test') {

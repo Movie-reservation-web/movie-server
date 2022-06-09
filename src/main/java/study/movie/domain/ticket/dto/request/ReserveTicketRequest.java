@@ -1,5 +1,6 @@
 package study.movie.domain.ticket.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -7,13 +8,18 @@ import java.util.List;
 
 @Data
 public class ReserveTicketRequest {
+    @NotNull
+    @JsonProperty("merchant_uid")
+    private String merchantUid;
 
     @NotNull
-    private Long scheduleId;
+    @JsonProperty("schedule_number")
+    private String scheduleNumber;
+
     @NotNull
-    private Long memberId;
+    @JsonProperty("member_email")
+    private String memberEmail;
+
     @NotNull
     private List<String> seats;
-    @NotNull
-    private Integer price;
 }

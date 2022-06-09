@@ -42,8 +42,8 @@ public class ScheduleApiController {
         return CustomResponse.success(READ_MOVIE_FORMATS, result);
     }
 
-    @GetMapping("/selected")
-    public ResponseEntity<?> getScheduleSeatInfo(@Valid @RequestBody ReservationScreenRequest request) {
+    @GetMapping("/seat-info/{id}")
+    public ResponseEntity<?> getScheduleSeatInfo(@RequestParam Long id, @Valid @RequestBody ReservationScreenRequest request) {
         ReservationScreenResponse result = scheduleService.getSelectedScreenInfo(request);
         return CustomResponse.success(READ_SCHEDULE_SEATS, result);
     }

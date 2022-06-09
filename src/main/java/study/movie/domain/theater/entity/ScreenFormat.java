@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import study.movie.domain.movie.entity.FilmFormat;
-import study.movie.domain.ticket.entity.payment.AgeType;
+import study.movie.domain.payment.entity.AgeType;
 import study.movie.global.enumMapper.EnumMapperType;
 
 import java.util.Map;
 import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.*;
-import static study.movie.domain.ticket.entity.payment.AgeType.ADULT;
-import static study.movie.domain.ticket.entity.payment.AgeType.TEENAGER;
+import static study.movie.domain.payment.entity.AgeType.ADULT;
+import static study.movie.domain.payment.entity.AgeType.TEENAGER;
 
 /**
  * FilmFormat 속성 안쓰는 경우 삭제!

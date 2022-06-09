@@ -115,7 +115,7 @@ public class Schedule extends BaseTimeEntity {
     private String createScheduleNumber(LocalDateTime dateTime) {
         return String.valueOf(dateTime.getYear()).substring(2) +
                 String.format("%02d", dateTime.getMonthValue()) +
-                UUID.randomUUID().toString().substring(0, 9).toUpperCase(Locale.ROOT);
+                UUID.randomUUID().toString().substring(0, 8).toUpperCase(Locale.ROOT);
     }
 
     //==조회 로직==//

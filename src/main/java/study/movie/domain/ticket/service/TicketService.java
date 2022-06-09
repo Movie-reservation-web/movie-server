@@ -1,13 +1,14 @@
 package study.movie.domain.ticket.service;
 
 import org.springframework.data.domain.Page;
-import study.movie.global.dto.IdListRequest;
-import study.movie.global.dto.PostIdResponse;
-import study.movie.global.paging.PageableDTO;
 import study.movie.domain.ticket.dto.condition.TicketSearchCond;
+import study.movie.domain.ticket.dto.request.CancelReservationRequest;
 import study.movie.domain.ticket.dto.request.ReserveTicketRequest;
 import study.movie.domain.ticket.dto.response.ReserveTicketResponse;
 import study.movie.domain.ticket.dto.response.TicketResponse;
+import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
+import study.movie.global.paging.PageableDTO;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface TicketService {
      * <p>
      * 티켓 예매 취소
      */
-    void cancelReservation(String reserveNumber, Long memberId);
+    void cancelReservation(CancelReservationRequest request);
 
     /**
      * Api Server

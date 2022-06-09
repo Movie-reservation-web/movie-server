@@ -30,6 +30,8 @@ public interface ScheduleRepositoryCustom {
      */
     Optional<Schedule> findDuplicatedSchedule(Long screenId, LocalDateTime startTime, LocalDateTime endTime);
 
+    Optional<Schedule> findByScheduleNumber(String scheduleNumber);
+
     /**
      * 상영일정 검색
      * <p>
@@ -63,7 +65,7 @@ public interface ScheduleRepositoryCustom {
      * @param scheduleId
      * @return List
      */
-    List<SeatEntity> findSeatsByScheduleId(Long scheduleId);
+    List<SeatEntity> findSeatsByScheduleNumber(String scheduleNumber);
 
     /**
      * 상영중인 영화의 포멧 조회
@@ -89,5 +91,6 @@ public interface ScheduleRepositoryCustom {
      * @param dateTime
      */
     void updateStatusByPastDaysStatus(LocalDateTime dateTime);
+
 
 }

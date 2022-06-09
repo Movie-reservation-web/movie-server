@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class ReservationScreenRequest {
 
     @NotNull
-    private Long id;
+    private String scheduleNumber;
     @NotNull
     private ScreenFormat format;
     @NotNull

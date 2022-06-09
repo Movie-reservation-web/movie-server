@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long>, ScheduleRepositoryCustom {
 
-    Optional<Schedule> findByScheduleNumber(String scheduleNumber);
+    Optional<Schedule> getByScheduleNumber(String scheduleNumber);
 
     @Transactional
     @Modifying

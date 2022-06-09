@@ -101,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/*/theater/**",
                         "/api/*/categories/**"
                 ).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()

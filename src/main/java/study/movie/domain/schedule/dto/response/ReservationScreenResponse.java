@@ -2,7 +2,7 @@ package study.movie.domain.schedule.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
-import study.movie.domain.ticket.entity.payment.AgeType;
+import study.movie.domain.payment.entity.AgeType;
 
 import java.util.List;
 import java.util.Map;

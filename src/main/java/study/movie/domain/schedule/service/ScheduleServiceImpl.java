@@ -22,8 +22,8 @@ import study.movie.domain.schedule.repository.SeatRepository;
 import study.movie.domain.theater.entity.Screen;
 import study.movie.domain.theater.entity.ScreenFormat;
 import study.movie.domain.theater.repository.ScreenRepository;
-import study.movie.domain.ticket.entity.payment.AgeType;
-import study.movie.domain.ticket.service.PaymentService;
+import study.movie.domain.payment.entity.AgeType;
+import study.movie.global.utils.PaymentUtil;
 import study.movie.exception.CustomException;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
@@ -47,7 +47,6 @@ public class ScheduleServiceImpl extends BasicServiceUtil implements ScheduleSer
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     private final SeatRepository seatRepository;
-    private final PaymentService paymentService;
     private final DomainSpec<ScheduleSortType> spec = new DomainSpec<>(ScheduleSortType.class);
 
     @Override
@@ -80,10 +79,10 @@ public class ScheduleServiceImpl extends BasicServiceUtil implements ScheduleSer
 
     @Override
     public ReservationScreenResponse getSelectedScreenInfo(ReservationScreenRequest request) {
-        List<SeatResponse> seats = scheduleRepository.findSeatsByScheduleId(request.getId()).stream()
+        List<SeatResponse> seats = scheduleRepository.findSeatsByScheduleNumber(request.getScheduleNumber()).stream()
                 .map(SeatResponse::of)
                 .collect(Collectors.toList());
-        Map<AgeType, Integer> priceMap = paymentService.getPriceMap(request.getFormat(), request.getDateTime());
+        Map<AgeType, Integer> priceMap = PaymentUtil.getPriceMap(request.getFormat(), request.getDateTime());
         return ReservationScreenResponse.of(seats, priceMap);
     }
 

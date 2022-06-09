@@ -68,6 +68,17 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
     }
 
     @Override
+    public Optional<Schedule> findByScheduleNumber(String scheduleNumber) {
+        return Optional.ofNullable(
+                queryFactory.selectFrom(schedule)
+                        .join(schedule.movie, movie).fetchJoin()
+                        .join(schedule.screen, screen).fetchJoin()
+                        .join(screen.theater, theater).fetchJoin()
+                        .where(scheduleNumEq(scheduleNumber))
+                        .fetchOne());
+    }
+
+    @Override
     public List<Schedule> searchBasicSchedules(ScheduleBasicSearchCond cond) {
         return getScheduleJPAQueryFetch()
                 .where(
@@ -101,15 +112,15 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
                 .set(seatEntity.status, cond.getStatus())
                 .where(
                         seatsIn(cond.getSeats()),
-                        scheduleIdEq(cond.getScheduleId()))
+                        seatScheduleIdEq(cond.getScheduleId()))
                 .execute();
     }
 
     @Override
-    public List<SeatEntity> findSeatsByScheduleId(Long scheduleId) {
+    public List<SeatEntity> findSeatsByScheduleNumber(String scheduleNumber) {
         return queryFactory.selectFrom(seatEntity)
                 .join(seatEntity.schedule, schedule).fetchJoin()
-                .where(scheduleIdEq(scheduleId))
+                .where(seatScheduleNumEq(scheduleNumber))
                 .fetch();
     }
 
@@ -197,8 +208,16 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
         return format != null ? screen.format.eq(format) : null;
     }
 
-    private BooleanExpression scheduleIdEq(Long scheduleId) {
+    private BooleanExpression seatScheduleIdEq(Long scheduleId) {
         return scheduleId != null ? seatEntity.schedule.id.eq(scheduleId) : null;
+    }
+
+    private BooleanExpression seatScheduleNumEq(String scheduleNumber) {
+        return hasText(scheduleNumber) ? seatEntity.schedule.scheduleNumber.eq(scheduleNumber) : null;
+    }
+
+    private BooleanExpression scheduleNumEq(String scheduleNumber) {
+        return hasText(scheduleNumber) ? schedule.scheduleNumber.eq(scheduleNumber) : null;
     }
 
     private BooleanExpression dateTimeLt(LocalDateTime dateTime) {

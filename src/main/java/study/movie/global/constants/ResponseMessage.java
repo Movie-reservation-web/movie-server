@@ -35,6 +35,7 @@ public abstract class ResponseMessage {
     public static final String DELETE_TICKET_HISTORY = "티켓 기록 지우기 성공";
     public static final String READ_TICKET = "티켓 조회 성공";
     public static final String READ_TICKET_COUNT = "티켓 수 조회 성공";
+    public static final String VERIFY_PAYMENT = "결제 검증 성공";
 
     /**
      * Domain: Screen

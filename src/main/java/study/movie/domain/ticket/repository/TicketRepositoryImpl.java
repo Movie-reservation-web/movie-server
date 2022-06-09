@@ -13,6 +13,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import study.movie.domain.theater.entity.ScreenFormat;
 import study.movie.domain.ticket.dto.condition.TicketSearchCond;
+import study.movie.domain.ticket.dto.request.CancelReservationRequest;
 import study.movie.domain.ticket.entity.Ticket;
 import study.movie.domain.ticket.entity.TicketStatus;
 
@@ -23,12 +24,13 @@ import java.util.Optional;
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
 import static org.springframework.util.StringUtils.hasText;
-import static study.movie.domain.theater.entity.QTheater.theater;
-import static study.movie.domain.ticket.entity.QTicket.ticket;
-import static study.movie.global.utils.DateTimeUtil.*;
 import static study.movie.domain.member.entity.QMember.member;
 import static study.movie.domain.movie.entity.QMovie.movie;
+import static study.movie.domain.payment.entity.QPayment.payment;
+import static study.movie.domain.theater.entity.QTheater.theater;
+import static study.movie.domain.ticket.entity.QTicket.ticket;
 import static study.movie.domain.ticket.entity.TicketStatus.RESERVED;
+import static study.movie.global.utils.DateTimeUtil.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -63,11 +65,14 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
     }
 
     @Override
-    public Optional<Ticket> findByReserveNumber(String reserveNumber, Long memberId) {
+    public Optional<Ticket> findByReserveNumber(CancelReservationRequest request) {
         return Optional.ofNullable(queryFactory.selectFrom(ticket)
+                .join(ticket.member, member).fetchJoin()
+                .join(ticket.payment, payment).fetchJoin()
+                .join(ticket.movie, movie).fetchJoin()
                 .where(
-                        memberIdEq(memberId),
-                        reserveNumberEq(reserveNumber)
+                        memberEmailEq(request.getMemberEmail()),
+                        reserveNumberEq(request.getReservedNumber())
                 )
                 .fetchOne());
     }
@@ -92,6 +97,7 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
         return queryFactory.selectFrom(ticket)
                 .join(ticket.movie, movie).fetchJoin()
                 .join(ticket.member, member).fetchJoin()
+                .join(ticket.payment, payment).fetchJoin()
                 .where(getSearchPredicts(cond));
     }
 
@@ -100,6 +106,7 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
                 .from(ticket)
                 .leftJoin(ticket.movie, movie)
                 .leftJoin(ticket.member, member)
+                .leftJoin(ticket.payment, payment)
                 .where(getSearchPredicts(cond));
     }
 
@@ -130,6 +137,10 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
 
     private BooleanExpression memberNameEq(String title) {
         return hasText(title) ? member.name.eq(title) : null;
+    }
+
+    private BooleanExpression memberEmailEq(String email) {
+        return hasText(email) ? member.email.eq(email) : null;
     }
 
     private BooleanExpression theaterNameEq(String name) {

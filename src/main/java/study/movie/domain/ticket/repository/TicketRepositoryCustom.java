@@ -2,8 +2,9 @@ package study.movie.domain.ticket.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import study.movie.domain.ticket.entity.Ticket;
 import study.movie.domain.ticket.dto.condition.TicketSearchCond;
+import study.movie.domain.ticket.dto.request.CancelReservationRequest;
+import study.movie.domain.ticket.entity.Ticket;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public interface TicketRepositoryCustom {
      * 예매 정보 조회(예매 취소시 사용)
      * @return
      */
-    Optional<Ticket> findByReserveNumber(String reserveNumber, Long memberId);
+    Optional<Ticket> findByReserveNumber(CancelReservationRequest request);
 
     // ADMIN
 

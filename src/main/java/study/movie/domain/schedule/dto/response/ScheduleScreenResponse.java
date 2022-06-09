@@ -7,7 +7,7 @@ import study.movie.domain.schedule.entity.ScreenTime;
 @Data
 @Builder
 public class ScheduleScreenResponse{
-    private Long id;
+    private String scheduleNumber;
     private String screenFormat;
     private String screenName;
     private ScreenTime screenTime;
@@ -16,7 +16,7 @@ public class ScheduleScreenResponse{
 
     public static ScheduleScreenResponse of(Schedule schedule) {
         return ScheduleScreenResponse.builder()
-                .id(schedule.getId())
+                .scheduleNumber(schedule.getScheduleNumber())
                 .screenName(schedule.getScreen().getName())
                 .screenFormat(schedule.getScreen().getFormat().getValue())
                 .screenTime(schedule.getScreenTime())

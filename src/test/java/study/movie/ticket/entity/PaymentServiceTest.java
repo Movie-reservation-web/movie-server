@@ -2,13 +2,12 @@ package study.movie.ticket.entity;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import study.movie.domain.ticket.entity.payment.AgeType;
-import study.movie.domain.ticket.entity.payment.DateTimeType;
-import study.movie.domain.ticket.entity.payment.DayWeekType;
 import study.movie.domain.theater.entity.ScreenFormat;
-import study.movie.domain.ticket.service.PaymentService;
+import study.movie.domain.payment.entity.AgeType;
+import study.movie.domain.payment.entity.DateTimeType;
+import study.movie.domain.payment.entity.DayWeekType;
+import study.movie.global.utils.PaymentUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,9 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @SpringBootTest
 public class PaymentServiceTest {
-
-    @Autowired
-    PaymentService paymentService;
 
     @Test
     void 요일_타입_가져오기() {
@@ -74,7 +70,7 @@ public class PaymentServiceTest {
         int applyTimePrice = dateTimeType.calcPolicy(dayWeekType.calcPolicy(basicPrice));
         int finalPrice = format.isFixRate() ? applyTimePrice : basicPrice;
 
-        Map<AgeType, Integer> priceMap = paymentService.getPriceMap(format, screenTime);
+        Map<AgeType, Integer> priceMap = PaymentUtil.getPriceMap(format, screenTime);
         // then
         assertThat(priceMap.get(AgeType.ADULT)).isEqualTo(finalPrice);
     }

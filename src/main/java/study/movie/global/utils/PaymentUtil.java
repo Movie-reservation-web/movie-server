@@ -1,20 +1,17 @@
-package study.movie.domain.ticket.service;
+package study.movie.global.utils;
 
-import org.springframework.stereotype.Service;
 import study.movie.domain.theater.entity.ScreenFormat;
-import study.movie.domain.ticket.entity.payment.AgeType;
-import study.movie.domain.ticket.entity.payment.DateTimeType;
-import study.movie.domain.ticket.entity.payment.DayWeekType;
+import study.movie.domain.payment.entity.AgeType;
+import study.movie.domain.payment.entity.DateTimeType;
+import study.movie.domain.payment.entity.DayWeekType;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
-public class PaymentServiceImpl implements PaymentService {
+public abstract class PaymentUtil {
 
-    @Override
-    public Map<AgeType, Integer> getPriceMap(ScreenFormat format, LocalDateTime dateTime) {
+    public static Map<AgeType, Integer> getPriceMap(ScreenFormat format, LocalDateTime dateTime) {
         Map<AgeType, Integer> result = new HashMap<>(format.getAgeCriterionMap());
         for (AgeType type : AgeType.values()) {
             result.compute(type, (ageType, price) -> applyAllPolicies(price, format, dateTime));
@@ -22,7 +19,7 @@ public class PaymentServiceImpl implements PaymentService {
         return result;
     }
 
-    private int applyAllPolicies(int price, ScreenFormat format, LocalDateTime dateTime) {
+    private static int applyAllPolicies(int price, ScreenFormat format, LocalDateTime dateTime) {
         return applyRatePolicy(
                 price,
                 format.isFixRate(),
@@ -30,21 +27,19 @@ public class PaymentServiceImpl implements PaymentService {
                 getDayWeekType(dateTime));
     }
 
-    private int applyRatePolicy(int price, boolean fixRate, DateTimeType dateTimeType, DayWeekType dayWeekType) {
+    private static int applyRatePolicy(int price, boolean fixRate, DateTimeType dateTimeType, DayWeekType dayWeekType) {
         return !fixRate ? applyDateTimePolicy(price, dateTimeType, dayWeekType) : price;
     }
 
-    private int applyDateTimePolicy(int price, DateTimeType dateTimeType, DayWeekType dayWeekType) {
+    private static int applyDateTimePolicy(int price, DateTimeType dateTimeType, DayWeekType dayWeekType) {
         return dateTimeType.calcPolicy(dayWeekType.calcPolicy(price));
     }
 
-    private DateTimeType getDateTimeType(LocalDateTime reservedTime) {
+    private static DateTimeType getDateTimeType(LocalDateTime reservedTime) {
         return DateTimeType.findByCriterion(reservedTime.toLocalTime());
     }
 
-    private DayWeekType getDayWeekType(LocalDateTime reservedTime) {
+    private static DayWeekType getDayWeekType(LocalDateTime reservedTime) {
         return DayWeekType.findByCriterion(reservedTime.getDayOfWeek());
     }
-
-
 }

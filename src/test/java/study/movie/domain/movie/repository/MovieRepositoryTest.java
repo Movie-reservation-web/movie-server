@@ -63,7 +63,7 @@ class MovieRepositoryTest {
                 .filmRating(FilmRating.UNDETERMINED)
                 .nation("한국")
                 .releaseDate(LocalDate.of(2022, 3, 1))
-                .info("영웅이 될 것인가 악당이 될 것인가")
+                .intro("영웅이 될 것인가 악당이 될 것인가")
                 .image("이미지")
                 .build();
 

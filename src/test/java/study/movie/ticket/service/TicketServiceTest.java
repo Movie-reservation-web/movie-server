@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
+import study.movie.domain.ticket.dto.request.CancelReservationRequest;
 import study.movie.domain.ticket.service.TicketServiceImpl;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
@@ -73,8 +74,8 @@ class TicketServiceTest {
 
         // when
         ReserveTicketRequest request = new ReserveTicketRequest();
-        request.setMemberId(member.getId());
-        request.setScheduleId(schedule.getId());
+        request.setMemberEmail(member.getEmail());
+        request.setScheduleNumber(schedule.getScheduleNumber());
         request.setSeats(seats);
 
         PostIdResponse response = ticketService.reserve(request);
@@ -104,15 +105,18 @@ class TicketServiceTest {
         List<String> seats = Arrays.asList("A2", "C2");
 
         ReserveTicketRequest request = new ReserveTicketRequest();
-        request.setMemberId(member.getId());
-        request.setScheduleId(savedSchedule.getId());
+        request.setMemberEmail(member.getEmail());
+        request.setScheduleNumber(savedSchedule.getScheduleNumber());
         request.setSeats(seats);
         PostIdResponse response = ticketService.reserve(request);
 
         Ticket savedTicket = ticketRepository.findById(response.getId()).orElseThrow();
 
         // when
-        ticketService.cancelReservation(savedTicket.getReserveNumber(), member.getId());
+        CancelReservationRequest request1 = new CancelReservationRequest();
+        request1.setMemberEmail(member.getEmail());
+        request1.setReservedNumber(savedTicket.getReserveNumber());
+        ticketService.cancelReservation(request1);
 
         boolean isTicketInMovie = savedTicket.getMovie().getTickets().contains(savedTicket);
         boolean isTicketInMember = savedTicket.getMember().getTickets().contains(savedTicket);
@@ -141,8 +145,8 @@ class TicketServiceTest {
         List<String> seats = Arrays.asList("A2", "C2");
 
         ReserveTicketRequest request = new ReserveTicketRequest();
-        request.setMemberId(member.getId());
-        request.setScheduleId(savedSchedule.getId());
+        request.setMemberEmail(member.getEmail());
+        request.setScheduleNumber(savedSchedule.getScheduleNumber());
         request.setSeats(seats);
         PostIdResponse response = ticketService.reserve(request);
 
@@ -174,8 +178,8 @@ class TicketServiceTest {
         List<String> seats = Arrays.asList("A2", "C2");
 
         ReserveTicketRequest request = new ReserveTicketRequest();
-        request.setMemberId(member.getId());
-        request.setScheduleId(savedSchedule.getId());
+        request.setMemberEmail(member.getEmail());
+        request.setScheduleNumber(savedSchedule.getScheduleNumber());
         request.setSeats(seats);
         PostIdResponse response = ticketService.reserve(request);
 
@@ -184,8 +188,12 @@ class TicketServiceTest {
         IdListRequest idRequest = new IdListRequest();
         idRequest.setIds(Collections.singletonList(id));
 
+
         // when
-        ticketService.cancelReservation(savedTicket.getReserveNumber(), member.getId());
+        CancelReservationRequest request1 = new CancelReservationRequest();
+        request1.setMemberEmail(member.getEmail());
+        request1.setReservedNumber(savedTicket.getReserveNumber());
+        ticketService.cancelReservation(request1);
 
         ticketService.delete(idRequest);
 

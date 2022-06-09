@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.movie.domain.member.entity.Member;
 import study.movie.domain.movie.entity.Movie;
+import study.movie.domain.payment.entity.Payment;
 import study.movie.domain.schedule.entity.Schedule;
 import study.movie.domain.schedule.entity.ScreenTime;
 import study.movie.domain.theater.entity.ScreenFormat;
@@ -42,13 +43,15 @@ public class Ticket extends BaseTimeEntity {
 
     private ScreenTime screenTime;
 
-    private Integer price;
-
     @Convert(converter = StringArrayConverter.class)
     private List<String> seats = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private TicketStatus ticketStatus;
+
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
@@ -60,7 +63,7 @@ public class Ticket extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder(builderClassName = "reserveTicket", builderMethodName = "reserveTicket")
-    public Ticket(Member member, Schedule schedule, List<String> seats) {
+    public Ticket(Member member, Schedule schedule, List<String> seats, Payment payment) {
         this.theaterName = schedule.getScreen().getTheater().getName();
         this.screenName = schedule.getScreen().getName();
         this.screenTime = schedule.getScreenTime();
@@ -68,6 +71,7 @@ public class Ticket extends BaseTimeEntity {
         this.seats = seats;
         this.ticketStatus = TicketStatus.RESERVED;
         this.format = schedule.getScreen().getFormat();
+        this.payment = payment;
         setMember(member);
         setMovie(schedule);
         setScheduleNumber(schedule);
@@ -102,8 +106,8 @@ public class Ticket extends BaseTimeEntity {
      */
     public void cancelReservation() {
         if (this.ticketStatus != TicketStatus.RESERVED) throw new CustomException(ALREADY_CANCELLED_TICKET);
-        getMember().getTickets().remove(this);
-        getMovie().getTickets().remove(this);
+        this.member = null;
+        this.movie = null;
         this.ticketStatus = TicketStatus.CANCEL;
     }
 

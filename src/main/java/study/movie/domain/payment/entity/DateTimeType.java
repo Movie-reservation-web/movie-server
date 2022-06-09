@@ -1,4 +1,4 @@
-package study.movie.domain.ticket.entity.payment;
+package study.movie.domain.payment.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

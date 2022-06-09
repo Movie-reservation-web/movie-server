@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import study.movie.domain.ticket.dto.request.CancelReservationRequest;
 import study.movie.domain.ticket.dto.request.ReserveTicketRequest;
 import study.movie.domain.ticket.dto.response.ReserveTicketResponse;
 import study.movie.global.dto.CustomResponse;
@@ -31,12 +32,6 @@ public class TicketApiController {
     public ResponseEntity<?> reserveTicket(@Valid @RequestBody ReserveTicketRequest request) {
         PostIdResponse result = ticketService.reserve(request);
         return CustomResponse.success(CREATED, RESERVE_TICKET, result);
-    }
-
-    @GetMapping("/payment")
-    public ResponseEntity<?> calcPayment(@RequestParam int price) {
-        // 결제 로직 실행되어야함.
-        return CustomResponse.success(null);
     }
 
     /**
@@ -71,9 +66,9 @@ public class TicketApiController {
     /**
      * 예매 취소
      */
-    @GetMapping("/cancel")
-    public ResponseEntity<?> cancelReservation(String reserveNumber, Long memberId) {
-        ticketService.cancelReservation(reserveNumber, memberId);
+    @PostMapping("/cancel")
+    public ResponseEntity<?> cancelReservation(@RequestBody CancelReservationRequest request) {
+        ticketService.cancelReservation(request);
         return CustomResponse.success(CANCEL_TICKET);
     }
 }

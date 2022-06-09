@@ -1,10 +1,11 @@
 spring:
   config:
-    import: classpath:database.yml, classpath:oauth2.yml
+    import: classpath:database.yml, classpath:oauth2.yml, classpath:iamport.yml
   profiles:
     include:
       - database
       - ouath2
+      - iamport
 
   mvc:
     pathmatch:

@@ -15,6 +15,7 @@ import static study.movie.exception.ErrorCode.PERMISSION_NOT_ACCESSIBLE;
 @RequiredArgsConstructor
 @RequestMapping("/exception")
 public class ExceptionController {
+
     @GetMapping("/entry-point")
     public ResponseEntity<?> entryPointException() {
         throw new CustomException(INVALID_JSON_WEB_TOKEN);

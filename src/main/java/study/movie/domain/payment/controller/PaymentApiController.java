@@ -16,7 +16,8 @@ public class PaymentApiController {
     private final PaymentService paymentService;
 
     @PostMapping("/complete/{imp_uid}")
-    public ResponseEntity<?> completePayment(@PathVariable("imp_uid") String impUid, @RequestBody PaymentRequest request) {
+    public ResponseEntity<?> completePayment(
+            @PathVariable("imp_uid") String impUid, @RequestBody PaymentRequest request) {
         paymentService.verifyPayment(impUid, request);
         return CustomResponse.success(VERIFY_PAYMENT);
     }

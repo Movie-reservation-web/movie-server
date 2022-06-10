@@ -15,7 +15,7 @@ public class JsonUtil {
     private static final String UTF_8 = "UTF-8";
 
     @SneakyThrows
-    private static InputStreamReader readJsonFile(String fileName) {
+    private static InputStreamReader readJsonFile(String fileName){
         ClassPathResource resource = new ClassPathResource(JSON_DIR + fileName + JSON_EXTENSION);
         return new InputStreamReader(resource.getInputStream(), UTF_8);
     }

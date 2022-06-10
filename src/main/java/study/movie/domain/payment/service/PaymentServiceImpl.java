@@ -22,13 +22,22 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void verifyPayment(String impUid, PaymentRequest request) {
         com.siot.IamportRestClient.response.Payment impPayment = iamPortProvider.paymentByImpUid(impUid);
-        if (request.getPaidAmount().intValue() != impPayment.getAmount().intValue()) {
+        this.checkAmount(impPayment, request.getPaidAmount().intValue());
+        this.checkMerchantUid(impPayment, request.getMerchantUid());
+        paymentRepository.save(Payment.builder().impPayment(impPayment).build());
+    }
+
+    private void checkAmount(com.siot.IamportRestClient.response.Payment impPayment, int requestAmount) {
+        if (impPayment.getAmount().intValue() != requestAmount) {
+            iamPortProvider.cancelPayment(impPayment.getMerchantUid());
             throw new CustomException(DIFFERENT_AMOUNT);
         }
-        if (!request.getMerchantUid().equals(impPayment.getMerchantUid())) {
+    }
+
+    private void checkMerchantUid(com.siot.IamportRestClient.response.Payment impPayment, String requestMerchantUid) {
+        if (!impPayment.getMerchantUid().equals(requestMerchantUid)) {
+            iamPortProvider.cancelPayment(impPayment.getMerchantUid());
             throw new CustomException(DIFFERENT_MERCHANT);
         }
-        Payment payment = Payment.builder().impPayment(impPayment).build();
-        paymentRepository.save(payment);
     }
 }

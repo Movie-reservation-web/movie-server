@@ -109,6 +109,7 @@ public class Ticket extends BaseTimeEntity {
         this.member = null;
         this.movie = null;
         this.ticketStatus = TicketStatus.CANCEL;
+        this.payment.cancelPayment();
     }
 
     /**

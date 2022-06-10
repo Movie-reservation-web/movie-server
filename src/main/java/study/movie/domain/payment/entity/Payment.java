@@ -30,6 +30,7 @@ public class Payment extends BaseTimeEntity {
 
     private String buyerEmail;
 
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
     //==생성 메서드==//

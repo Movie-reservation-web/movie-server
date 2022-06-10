@@ -1,5 +1,6 @@
 package study.movie.domain.member.controller;
 
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 import static study.movie.global.constants.ResponseMessage.CREATED_ADMIN;
 import static study.movie.global.constants.ResponseMessage.READ_MEMBER;
 
+@Api(value = "Member Controller", tags = "[Admin] Member")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/v1/members")

@@ -92,5 +92,10 @@ public interface ScheduleRepositoryCustom {
      */
     void updateStatusByPastDaysStatus(LocalDateTime dateTime);
 
+    /**
+     * 상영 예정인 모든 영화의 관객수
+     * @return long
+     */
+    Long findTotalReservationCount();
 
 }

@@ -29,7 +29,7 @@ public interface MovieRepositoryCustom {
      *
      * @return List
      */
-    List<Movie> findMovieByOpenStatus();
+    List<Movie> findUpdatedAudienceMovies();
 
     /**
      * 영화 검색
@@ -38,5 +38,4 @@ public interface MovieRepositoryCustom {
      * @return Page
      */
     Page<Movie> search(MovieSearchCond cond, Pageable pageable);
-
 }

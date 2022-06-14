@@ -108,6 +108,31 @@
     "startTime": "2022-06-08 15:10:00",
     "movieId": 2,
     "screenId": 16
+  },
+  {
+    "startTime": "2022-06-18 15:10:00",
+    "movieId": 6,
+    "screenId": 17
+  },
+  {
+    "startTime": "2022-06-18 15:45:00",
+    "movieId": 6,
+    "screenId": 6
+  },
+  {
+    "startTime": "2022-06-17 12:10:00",
+    "movieId": 7,
+    "screenId": 4
+  },
+  {
+    "startTime": "2022-06-19 15:25:00",
+    "movieId": 8,
+    "screenId": 7
+  },
+  {
+    "startTime": "2022-06-18 17:30:00",
+    "movieId": 9,
+    "screenId": 18
   }
 ]
 

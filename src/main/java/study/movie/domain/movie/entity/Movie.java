@@ -11,14 +11,11 @@ import study.movie.domain.schedule.entity.Schedule;
 import study.movie.domain.ticket.entity.Ticket;
 import study.movie.global.converter.StringArrayConverter;
 import study.movie.global.entity.BaseTimeEntity;
-import study.movie.exception.CustomException;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static study.movie.exception.ErrorCode.NEGATIVE_AUDIENCE_COUNT;
 
 @Entity
 @Getter
@@ -56,6 +53,8 @@ public class Movie extends BaseTimeEntity {
 
     private long audience;
 
+    private double reservationRate;
+
     private String image;
 
     private double avgScore;
@@ -86,21 +85,26 @@ public class Movie extends BaseTimeEntity {
         this.intro = intro;
         this.image = image;
         this.audience = 0L;
-        this.avgScore = 0F;
+        this.reservationRate = 0d;
+        this.avgScore = 0d;
     }
 
     //== 비즈니스 로직==//
+
     /**
      * 평점 계산
      */
     public void calcAverageScore() {
         this.avgScore = reviews.stream().
                 mapToDouble(Review::getScore)
-                .average().getAsDouble();
+                .average().orElse(0d);
     }
 
-    public String getAvgScoreToString() {
-        return String.format("%.1f", avgScore);
+    /**
+     * 예매율 계산
+     */
+    public void calcReservationRate(long totalCount) {
+        this.reservationRate = (double) this.audience / totalCount * 100d;
     }
 
     public void update(FilmRating filmRating, LocalDate releaseDate, String info, String image) {
@@ -126,21 +130,16 @@ public class Movie extends BaseTimeEntity {
         this.image = image;
     }
 
-    public void addAudience(int count) {
-        audience += count;
-    }
-
-    public void dropAudience(int count) {
-        if(audience < count) throw new CustomException(NEGATIVE_AUDIENCE_COUNT);
-        audience -= count;
+    public void updateAudience(long count) {
+        audience = count;
     }
 
     //== 조회 로직==//
+
     /**
      * 리뷰 개수
      */
     public long getReviewCount() {
         return reviews.size();
     }
-
 }

@@ -50,8 +50,14 @@ public class MovieApiController {
     @GetMapping("/chart")
     public ResponseEntity<?> getMoveChart(
             @RequestParam MovieChartSortType sortType,
-            @RequestParam(required = false) boolean isReleased) {
+            @RequestParam boolean isReleased) {
         List<MovieChartResponse> result = movieService.findMovieBySort(sortType, isReleased);
         return CustomResponse.success(READ_MOVIE_SORT, result);
+    }
+
+    @GetMapping("/update")
+    public ResponseEntity<?> update() {
+        movieService.updateMovieAudience();
+        return CustomResponse.success(UPDATE_MOVIE);
     }
 }

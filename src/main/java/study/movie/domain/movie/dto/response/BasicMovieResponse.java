@@ -6,6 +6,7 @@ import study.movie.domain.movie.entity.FilmFormat;
 import study.movie.domain.movie.entity.FilmRating;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.movie.entity.MovieGenre;
+import study.movie.global.utils.StringUtil;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,6 +29,7 @@ public class BasicMovieResponse {
     private String info;
     private long audience;
     private String image;
+    private String reservationRate;
 
     private List<ReviewResponse> reviews;
 
@@ -46,6 +48,7 @@ public class BasicMovieResponse {
                 .info(movie.getIntro())
                 .audience(movie.getAudience())
                 .image(movie.getImage())
+                .reservationRate(StringUtil.convertDoubleToString(movie.getReservationRate()))
                 .reviews(
                         movie.getReviews().stream()
                                 .map(ReviewResponse::of)

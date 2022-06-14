@@ -110,6 +110,20 @@
     "maxRows": 8,
     "maxCols": 10,
     "theaterId": 4
+  },
+  {
+    "name": "4관[SCREEN] 8층",
+    "format": "SCREEN_X",
+    "maxRows": 11,
+    "maxCols": 11,
+    "theaterId": 1
+  },
+  {
+    "name": "박찬욱관",
+    "format": "TWO_D",
+    "maxRows": 9,
+    "maxCols": 15,
+    "theaterId": 2
   }
 ]
 

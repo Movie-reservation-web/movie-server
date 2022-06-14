@@ -6,14 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
-import study.movie.exception.CustomException;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -41,7 +39,6 @@ public class MovieTest {
 
         //then
         assertThat(movie.getAvgScore()).isEqualTo(avgScore);
-        assertThat(movie.getAvgScoreToString()).isEqualTo(avgScoreToString);
     }
 
     @Test
@@ -83,30 +80,5 @@ public class MovieTest {
         assertThat(findMovie.getReleaseDate()).isEqualTo(changeReleaseDate);
         assertThat(findMovie.getIntro()).isEqualTo(changeInfo);
         assertThat(findMovie.getFilmRating()).isEqualTo(changeRating);
-    }
-
-    @Test
-    public void 영화_관객_추가_제거() {
-        // given
-        Movie theBatman = init.createMovie("더 배트맨", "맷 리브스",
-                Arrays.asList(FilmFormat.TWO_D, FilmFormat.IMAX, FilmFormat.FOUR_D_FLEX),
-                Arrays.asList("로버트 패틴슨", "폴 다노"));
-        Movie aboutTime = init.createMovie("어바웃 타임", "리차드 커티스",
-                Arrays.asList(FilmFormat.TWO_D),
-                Arrays.asList("도널 글리슨", "레이첼 맥아담스"));
-
-        //when
-        long beforeBatmanAudience = theBatman.getAudience();
-        theBatman.addAudience(100);
-        long addBatmanAudience = theBatman.getAudience();
-        theBatman.dropAudience(50);
-        long dropBatmanAudience = theBatman.getAudience();
-
-        //then
-        assertThat(beforeBatmanAudience).isEqualTo(0);
-        assertThat(addBatmanAudience).isEqualTo(100);
-        assertThat(dropBatmanAudience).isEqualTo(50);
-        assertThatThrownBy(() -> aboutTime.dropAudience(10))
-                .isInstanceOf(CustomException.class);
     }
 }

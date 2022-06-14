@@ -82,8 +82,8 @@ class MovieServiceTest {
         // when
         int movie1View = 10;
         int movie2View = 20;
-        movie1.addAudience(movie1View);
-        movie2.addAudience(movie2View);
+        movie1.updateAudience(movie1View);
+        movie2.updateAudience(movie2View);
         em.flush();
         em.clear();
         String movie1Rate = String.format("%.1f", (double) movie1View / (double) 30 * 100.0) + "%";

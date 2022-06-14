@@ -139,11 +139,11 @@ class MovieRepositoryTest {
                 Arrays.asList(FilmFormat.TWO_D),
                 Arrays.asList("패트릭 스튜어트", "휴 잭맨"));
 
-        theBatman.addAudience(100);
-        theRoundup.addAudience(90);
-        doctorStrange.addAudience(80);
-        aboutTime.addAudience(70);
-        xMan.addAudience(60);
+        theBatman.updateAudience(100L);
+        theRoundup.updateAudience(90L);
+        doctorStrange.updateAudience(80L);
+        aboutTime.updateAudience(70L);
+        xMan.updateAudience(60L);
 
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
@@ -232,11 +232,11 @@ class MovieRepositoryTest {
                 Arrays.asList(FilmFormat.TWO_D),
                 Arrays.asList("패트릭 스튜어트", "휴 잭맨"));
 
-        theBatman.addAudience(100);
-        theRoundup.addAudience(90);
-        doctorStrange.addAudience(80);
-        aboutTime.addAudience(70);
-        xMan.addAudience(60);
+        theBatman.updateAudience(100L);
+        theRoundup.updateAudience(90L);
+        doctorStrange.updateAudience(80L);
+        aboutTime.updateAudience(70L);
+        xMan.updateAudience(60L);
 
         Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
         Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
@@ -366,7 +366,7 @@ class MovieRepositoryTest {
 
         // when
 
-        List<Movie> movies = movieRepository.findMovieByOpenStatus();
+        List<Movie> movies = movieRepository.findUpdatedAudienceMovies();
         List<Schedule> allSchedules = scheduleRepository.findAll();
 
         // then

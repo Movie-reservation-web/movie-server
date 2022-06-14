@@ -5,19 +5,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.domain.movie.dto.request.CreateMovieRequest;
-import study.movie.domain.movie.entity.Movie;
-import study.movie.domain.movie.repository.MovieRepository;
-import study.movie.domain.ticket.entity.Ticket;
 import study.movie.domain.movie.dto.condition.MovieChartSortType;
 import study.movie.domain.movie.dto.condition.MovieSearchCond;
 import study.movie.domain.movie.dto.condition.MovieSearchType;
 import study.movie.domain.movie.dto.condition.MovieSortType;
+import study.movie.domain.movie.dto.request.CreateMovieRequest;
 import study.movie.domain.movie.dto.request.UpdateMovieRequest;
 import study.movie.domain.movie.dto.response.BasicMovieResponse;
 import study.movie.domain.movie.dto.response.FindMovieResponse;
 import study.movie.domain.movie.dto.response.MovieSearchResponse;
+import study.movie.domain.movie.entity.Movie;
+import study.movie.domain.movie.repository.MovieRepository;
 import study.movie.domain.schedule.dto.response.MovieChartResponse;
+import study.movie.domain.schedule.repository.ScheduleRepository;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 import study.movie.global.paging.DomainSpec;
@@ -35,24 +35,23 @@ import static study.movie.exception.ErrorCode.MOVIE_NOT_FOUND;
 @Transactional(readOnly = true)
 public class MovieServiceImpl extends BasicServiceUtil implements MovieService {
     private final MovieRepository movieRepository;
+    private final ScheduleRepository scheduleRepository;
     private final DomainSpec<MovieSortType> spec = new DomainSpec<>(MovieSortType.class);
 
     @Override
     public List<MovieChartResponse> findMovieBySort(MovieChartSortType sortType, boolean isReleased) {
         List<Movie> movies = movieRepository.findMovieBySort(sortType, isReleased);
-        double totalCount = getTotalAudienceCount(movies);
         return movies.stream()
-                .map(movie -> MovieChartResponse.of(movie, totalCount))
+                .map(movie -> MovieChartResponse.of(movie))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<MovieChartResponse> findUnreleasedMovies() {
         List<Movie> movies = movieRepository.findUnreleasedMovies();
-        double totalCount = getTotalAudienceCount(movies);
         return movies
                 .stream()
-                .map(movie -> MovieChartResponse.of(movie, totalCount))
+                .map(movie -> MovieChartResponse.of(movie))
                 .collect(Collectors.toList());
     }
 
@@ -111,10 +110,10 @@ public class MovieServiceImpl extends BasicServiceUtil implements MovieService {
     @Override
     @Transactional
     public void updateMovieAudience() {
-        List<Movie> movies = movieRepository.findMovieByOpenStatus();
+        List<Movie> movies = movieRepository.findUpdatedAudienceMovies();
+        Long totalReservationCount = scheduleRepository.findTotalReservationCount();
         for (Movie movie : movies) {
-            movie.addAudience(
-                    movie.getTickets().stream().mapToInt(Ticket::getReservedMemberCount).sum());
+            movie.calcReservationRate(totalReservationCount);
             movie.calcAverageScore();
         }
     }
@@ -129,9 +128,4 @@ public class MovieServiceImpl extends BasicServiceUtil implements MovieService {
                 return movieRepository.search(cond, pageable);
         }
     }
-
-    private double getTotalAudienceCount(List<Movie> movies) {
-        return movies.stream().mapToDouble(Movie::getAudience).sum();
-    }
-
 }

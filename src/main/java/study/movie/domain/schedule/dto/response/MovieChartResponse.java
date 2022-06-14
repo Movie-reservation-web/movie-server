@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import study.movie.domain.movie.entity.FilmRating;
 import study.movie.domain.movie.entity.Movie;
+import study.movie.global.utils.StringUtil;
 
 import java.time.LocalDate;
 
@@ -18,14 +19,14 @@ public class MovieChartResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate releaseDate;
 
-    public static MovieChartResponse of(Movie movie, double totalViewCount){
+    public static MovieChartResponse of(Movie movie){
         return MovieChartResponse.builder()
                 .id(movie.getId())
                 .title(movie.getTitle())
                 .image(movie.getImage())
                 .filmRating(movie.getFilmRating())
                 .releaseDate(movie.getReleaseDate())
-                .reservationRate(String.format("%.1f", (double) movie.getAudience() / totalViewCount * 100.0) + "%")
+                .reservationRate(StringUtil.convertDoubleToString(movie.getReservationRate()))
                 .build();
 
     }

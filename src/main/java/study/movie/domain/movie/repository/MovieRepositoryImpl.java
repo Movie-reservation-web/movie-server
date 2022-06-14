@@ -1,5 +1,6 @@
 package study.movie.domain.movie.repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -11,15 +12,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import study.movie.domain.movie.dto.condition.MovieChartSortType;
+import study.movie.domain.movie.dto.condition.MovieSearchCond;
 import study.movie.domain.movie.entity.FilmRating;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.schedule.entity.ScheduleStatus;
-import study.movie.domain.movie.dto.condition.MovieChartSortType;
-import study.movie.domain.movie.dto.condition.MovieSearchCond;
 import study.movie.global.utils.BasicRepositoryUtil;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.movie.entity.QMovie.movie;
@@ -57,15 +60,25 @@ public class MovieRepositoryImpl extends BasicRepositoryUtil implements MovieRep
     }
 
     @Override
-    public List<Movie> findMovieByOpenStatus() {
-        return queryFactory.select(movie)
+    public List<Movie> findUpdatedAudienceMovies() {
+        List<Tuple> fetch = queryFactory.select(schedule.reservedSeatCount.sum().longValue(), movie)
                 .from(schedule)
                 .leftJoin(schedule.movie, movie)
-                .where(
-                        scheduleStatusEq(OPEN)
+                .where(scheduleStatusEq(OPEN)
                 )
-                .groupBy(movie.id)
+                .groupBy(movie)
+                .having(schedule.reservedSeatCount.sum().longValue().ne(movie.audience))
                 .fetch();
+
+        for (Tuple tuple : fetch) {
+            Movie movie = tuple.get(1, Movie.class);
+            Long count = tuple.get(0, Long.class);
+            if (movie != null && count != null) movie.updateAudience(count);
+
+        }
+        return fetch.stream()
+                .map(tuple -> Objects.requireNonNull(tuple.get(1, Movie.class)))
+                .collect(Collectors.toList());
     }
 
     @Override

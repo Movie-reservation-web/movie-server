@@ -165,6 +165,14 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
                 );
     }
 
+    @Override
+    public Long findTotalReservationCount() {
+        return queryFactory.select(schedule.reservedSeatCount.sum().longValue())
+                .from(schedule)
+                .where(scheduleStatusEq(ScheduleStatus.OPEN))
+                .fetchOne();
+    }
+
     private JPAQuery<Schedule> getSearchElementsQuery(ScheduleSearchCond cond) {
         return queryFactory.selectFrom(schedule)
                 .join(schedule.movie, movie).fetchJoin()

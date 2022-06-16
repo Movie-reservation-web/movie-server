@@ -33,8 +33,6 @@ public class BasicMovieResponse {
     private String image;
     private String reservationRate;
 
-    private List<ReviewResponse> reviews;
-
     public static BasicMovieResponse of(Movie movie) {
         return BasicMovieResponse.builder()
                 .id(movie.getId())
@@ -51,11 +49,6 @@ public class BasicMovieResponse {
                 .audience(movie.getAudience())
                 .image(movie.getImage())
                 .reservationRate(StringUtil.convertDoubleToString(movie.getReservationRate()))
-                .reviews(
-                        movie.getReviews().stream()
-                                .map(ReviewResponse::of)
-                                .collect(Collectors.toList())
-                )
                 .build();
     }
 }

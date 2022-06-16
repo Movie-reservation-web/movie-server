@@ -10,9 +10,9 @@ import study.movie.global.enumMapper.EnumMapperType;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum FilmRating implements EnumMapperType {
     UNDETERMINED("미정"),
-    G_RATED("전체관람가"),
-    PG_12("12세 이상 관람가"),
-    PG_15("15세 이상 관람가"),
+    G_RATED("전체"),
+    PG_12("12세 이상"),
+    PG_15("15세 이상"),
     R_RATED("청소년 관람불가");
 
     private String value;

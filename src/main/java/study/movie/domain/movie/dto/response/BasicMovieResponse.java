@@ -1,5 +1,6 @@
 package study.movie.domain.movie.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import study.movie.domain.movie.entity.FilmFormat;
@@ -25,6 +26,7 @@ public class BasicMovieResponse {
     private List<FilmFormat> formats;
     private FilmRating filmRating;
     private String nation;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate releaseDate;
     private String info;
     private long audience;

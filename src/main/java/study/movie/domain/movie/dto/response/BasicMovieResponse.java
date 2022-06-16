@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 public class BasicMovieResponse {
-
     private Long id;
     private String title;
     private Integer runningTime;
@@ -30,7 +29,6 @@ public class BasicMovieResponse {
     private long audience;
     private String image;
     private String reservationRate;
-
     private List<ReviewResponse> reviews;
 
     public static BasicMovieResponse of(Movie movie) {

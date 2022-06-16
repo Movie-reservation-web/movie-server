@@ -13,7 +13,6 @@ import java.util.List;
 @Data
 @Builder
 public class MovieSearchResponse {
-
     private Long id;
     private String title;
     private Integer runningTime;
@@ -27,7 +26,6 @@ public class MovieSearchResponse {
     private String info;
     private long audience;
     private String image;
-
     private long reviewCount;
 
     public static MovieSearchResponse of(Movie movie) {

@@ -7,7 +7,6 @@ import study.movie.domain.schedule.entity.SeatStatus;
 @Data
 @Builder
 public class SeatResponse {
-
     private char row;
     private int column;
     private SeatStatus status;

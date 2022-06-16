@@ -8,7 +8,6 @@ import study.movie.domain.movie.entity.Movie;
 @Data
 @Builder
 public class FindMovieResponse {
-
     private Long id;
     private String image;
     private String title;

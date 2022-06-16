@@ -8,7 +8,6 @@ import study.movie.domain.movie.entity.Review;
 @Data
 @Builder
 public class ReviewResponse {
-
     private Long id;
     private Movie movie;
     private String writer;

@@ -2,6 +2,7 @@ package study.movie.domain.member.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,7 @@ public class AuthController {
     @Operation(summary = "일반 로그인", description = "일반 로그인을 한다.")
     @PostMapping("/login")
     public ResponseEntity<?> login(
-            @Valid @RequestBody LoginRequest request,
-            HttpServletResponse response) {
+            @Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         TokenResponse result = authService.login(request);
         response.addCookie(result.getRefreshTokenCookie());
         return CustomResponse.success(LOGIN_SUCCESS, AccessTokenResponse.of(result.getAccessToken()));

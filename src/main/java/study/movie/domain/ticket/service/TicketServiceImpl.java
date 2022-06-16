@@ -10,13 +10,13 @@ import study.movie.domain.payment.entity.Payment;
 import study.movie.domain.payment.provider.IamPortProvider;
 import study.movie.domain.payment.repository.PaymentRepository;
 import study.movie.domain.schedule.dto.request.UpdateSeatRequest;
+import study.movie.domain.schedule.dto.response.ScheduleMovieResponse;
 import study.movie.domain.schedule.entity.Schedule;
 import study.movie.domain.schedule.entity.SeatStatus;
 import study.movie.domain.schedule.repository.ScheduleRepository;
 import study.movie.domain.ticket.dto.condition.TicketSearchCond;
 import study.movie.domain.ticket.dto.condition.TicketSortType;
 import study.movie.domain.ticket.dto.request.CancelReservationRequest;
-import study.movie.domain.ticket.dto.request.ReserveTicketRequest;
 import study.movie.domain.ticket.dto.response.ReserveTicketResponse;
 import study.movie.domain.ticket.dto.response.TicketResponse;
 import study.movie.domain.ticket.entity.Ticket;
@@ -45,7 +45,7 @@ public class TicketServiceImpl extends BasicServiceUtil implements TicketService
 
     @Override
     @Transactional
-    public PostIdResponse reserve(ReserveTicketRequest request) {
+    public PostIdResponse reserve(ScheduleMovieResponse.ReserveTicketRequest request) {
         // 상영일정, 사용자 조회, 결제정보 조회
         Schedule schedule = scheduleRepository
                 .findByScheduleNumber(request.getScheduleNumber())

@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
 import study.movie.domain.member.entity.Member;
+import study.movie.domain.schedule.dto.response.ScheduleMovieResponse;
 import study.movie.domain.schedule.entity.Schedule;
 import study.movie.domain.schedule.entity.ScreenTime;
 import study.movie.domain.theater.entity.CityCode;
@@ -15,7 +16,6 @@ import study.movie.domain.theater.entity.ScreenFormat;
 import study.movie.domain.theater.entity.Theater;
 import study.movie.domain.movie.dto.condition.MovieChartSortType;
 import study.movie.domain.schedule.dto.response.MovieChartResponse;
-import study.movie.domain.ticket.dto.request.ReserveTicketRequest;
 import study.movie.domain.movie.entity.FilmFormat;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.movie.repository.MovieRepository;
@@ -124,16 +124,16 @@ class MovieServiceTest {
         scheduleRepository.save(schedule1);
         scheduleRepository.save(schedule2);
 
-        ReserveTicketRequest request1 = new ReserveTicketRequest();
+        ScheduleMovieResponse.ReserveTicketRequest request1 = new ScheduleMovieResponse.ReserveTicketRequest();
         request1.setMemberEmail(member.getEmail());
         request1.setScheduleNumber(schedule1.getScheduleNumber());
         request1.setSeats(Arrays.asList("A2", "C2"));
-        ReserveTicketRequest request2 = new ReserveTicketRequest();
+        ScheduleMovieResponse.ReserveTicketRequest request2 = new ScheduleMovieResponse.ReserveTicketRequest();
         request2.setMemberEmail(member.getEmail());
         request2.setScheduleNumber(schedule1.getScheduleNumber());
         request2.setSeats(Arrays.asList("A2", "C2", "B1"));
 
-        ReserveTicketRequest request3 = new ReserveTicketRequest();
+        ScheduleMovieResponse.ReserveTicketRequest request3 = new ScheduleMovieResponse.ReserveTicketRequest();
         request3.setMemberEmail(member.getEmail());
         request3.setScheduleNumber(schedule2.getScheduleNumber());
         request3.setSeats(Arrays.asList("A2", "C2", "B1", "A1"));

@@ -1,24 +1,24 @@
 package study.movie.domain.member.dto.request;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@ApiModel
+@ApiModel(description = "로그인요청 모델")
 @Data
 public class LoginRequest {
 
-    @ApiModelProperty(value = "아이디(이메일)", required = true)
+    @Schema(description = "아이디(이메일)", required = true)
     @NotBlank
     @Pattern(regexp = "[a-z0-9A-Z._-]*@[a-z0-9A-Z]*.[a-zA-Z.]*")
     private String email;
 
     @NotBlank
-    @ApiModelProperty(value = "비밀번호", required = true)
+    @Schema(description = "비밀번호", required = true)
     private String password;
 
     public UsernamePasswordAuthenticationToken toAuthentication() {

@@ -10,7 +10,6 @@ public class CreateScheduleResponse {
 
     private String movieTitle;
     private String theaterName;
-
     private ScreenTime screenTime;
 
     public static CreateScheduleResponse of(Schedule schedule) {

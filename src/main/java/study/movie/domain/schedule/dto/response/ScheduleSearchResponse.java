@@ -15,6 +15,7 @@ import java.time.LocalDate;
  * <p>
  * - 상영 날짜
  */
+
 @Data
 @Builder
 public class ScheduleSearchResponse {

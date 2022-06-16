@@ -1,9 +1,9 @@
 package study.movie.domain.ticket.service;
 
 import org.springframework.data.domain.Page;
+import study.movie.domain.schedule.dto.response.ScheduleMovieResponse;
 import study.movie.domain.ticket.dto.condition.TicketSearchCond;
 import study.movie.domain.ticket.dto.request.CancelReservationRequest;
-import study.movie.domain.ticket.dto.request.ReserveTicketRequest;
 import study.movie.domain.ticket.dto.response.ReserveTicketResponse;
 import study.movie.domain.ticket.dto.response.TicketResponse;
 import study.movie.global.dto.IdListRequest;
@@ -19,7 +19,7 @@ public interface TicketService {
      * 티켓 예매
      * @return
      */
-    PostIdResponse reserve(ReserveTicketRequest request);
+    PostIdResponse reserve(ScheduleMovieResponse.ReserveTicketRequest request);
 
     /**
      * Api Server

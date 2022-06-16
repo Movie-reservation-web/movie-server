@@ -1,5 +1,6 @@
 package study.movie.domain.movie.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import study.movie.domain.movie.entity.FilmFormat;
@@ -10,7 +11,6 @@ import study.movie.global.utils.StringUtil;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -24,13 +24,12 @@ public class BasicMovieResponse {
     private List<FilmFormat> formats;
     private FilmRating filmRating;
     private String nation;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate releaseDate;
     private String info;
     private long audience;
     private String image;
     private String reservationRate;
-    private List<ReviewResponse> reviews;
-
     public static BasicMovieResponse of(Movie movie) {
         return BasicMovieResponse.builder()
                 .id(movie.getId())
@@ -47,11 +46,6 @@ public class BasicMovieResponse {
                 .audience(movie.getAudience())
                 .image(movie.getImage())
                 .reservationRate(StringUtil.convertDoubleToString(movie.getReservationRate()))
-                .reviews(
-                        movie.getReviews().stream()
-                                .map(ReviewResponse::of)
-                                .collect(Collectors.toList())
-                )
                 .build();
     }
 }

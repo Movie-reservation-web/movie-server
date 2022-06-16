@@ -59,6 +59,7 @@ public class Movie extends BaseTimeEntity {
 
     private double avgScore;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private List<Review> reviews = new ArrayList<>();
 

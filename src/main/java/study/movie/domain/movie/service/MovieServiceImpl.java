@@ -42,7 +42,7 @@ public class MovieServiceImpl extends BasicServiceUtil implements MovieService {
     public List<MovieChartResponse> findMovieBySort(MovieChartSortType sortType, boolean isReleased) {
         List<Movie> movies = movieRepository.findMovieBySort(sortType, isReleased);
         return movies.stream()
-                .map(movie -> MovieChartResponse.of(movie))
+                .map(MovieChartResponse::of)
                 .collect(Collectors.toList());
     }
 
@@ -51,7 +51,7 @@ public class MovieServiceImpl extends BasicServiceUtil implements MovieService {
         List<Movie> movies = movieRepository.findUnreleasedMovies();
         return movies
                 .stream()
-                .map(movie -> MovieChartResponse.of(movie))
+                .map(MovieChartResponse::of)
                 .collect(Collectors.toList());
     }
 

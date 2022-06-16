@@ -1,5 +1,6 @@
 package study.movie.global.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -15,11 +16,12 @@ import java.util.List;
 import static study.movie.exception.ErrorCode.ARGUMENTS_NOT_VALID;
 import static study.movie.global.constants.ResponseMessage.SUCCESS;
 
+@Schema(description = "response")
 public class CustomResponse {
     @Data
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     private static class Result<T> {
-
+        @Schema(description = "http 상태")
         private int status;
         private LocalDateTime timeStamp;
         private String message;

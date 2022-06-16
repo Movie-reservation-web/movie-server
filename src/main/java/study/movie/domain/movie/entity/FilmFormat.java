@@ -1,6 +1,7 @@
 package study.movie.domain.movie.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import study.movie.global.enumMapper.EnumMapperType;
@@ -9,6 +10,7 @@ import study.movie.global.enumMapper.EnumMapperType;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum FilmFormat implements EnumMapperType {
+    @JsonIgnore
     TWO_D("2D"),
     IMAX("IMAX"),
     FOUR_D_FLEX("4DX"),

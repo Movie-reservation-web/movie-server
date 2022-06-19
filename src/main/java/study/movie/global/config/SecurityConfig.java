@@ -21,9 +21,7 @@ import study.movie.auth.exception.CustomAccessDeniedHandler;
 import study.movie.auth.exception.CustomAuthenticationEntryPoint;
 import study.movie.auth.jwt.CustomUserDetailsService;
 import study.movie.auth.jwt.JwtAuthenticationFilter;
-import study.movie.auth.jwt.JwtTokenProvider;
 import study.movie.auth.oauth2.OAuth2AuthenticationFilter;
-import study.movie.redis.RedisRepository;
 
 import static study.movie.domain.member.entity.Role.*;
 
@@ -37,31 +35,19 @@ import static study.movie.domain.member.entity.Role.*;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtTokenProvider jwtProvider;
-    private final RedisRepository redisRepository;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * authenticate 메소드로 인증 처리시 customUserDetailsServeice를 사용
-     * passwordEncoder와 같이
-     *
-     * @param auth
-     * @throws Exception
-     */
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtProvider, redisRepository);
     }
 
     @Bean
@@ -101,14 +87,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/*/theater/**",
                         "/api/*/categories/**"
                 ).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
                 .addFilterBefore(oAuth2AuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

@@ -64,7 +64,7 @@ public class ScreenAdminController {
     }
 
     @Operation(summary = "스크린 조건 조회", description = "조건(스크린 타입, 상영관 이름)으로 스크린을 조회한다.")
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<?> search(@RequestBody ScreenSearchCond cond, PageableDTO pageableDTO) {
         Page<ScreenResponse> result = screenService.search(cond, pageableDTO);
         return CustomResponse.success(READ_SCREEN, result);

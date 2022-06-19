@@ -55,7 +55,7 @@ public class ReviewApiController {
     }
 
     @Operation(summary = "리뷰 조건 검색", description = "조건(작성자, 영화제목), 페이지 정보로 리뷰를 조회한다.")
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<?> search(@RequestBody ReviewSearchCond cond, PageableDTO pageableDto) {
         Page<ReviewResponse> result = reviewService.search(cond, pageableDto);
         return CustomResponse.success(READ_REVIEW, result);

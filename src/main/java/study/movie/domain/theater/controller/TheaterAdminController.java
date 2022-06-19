@@ -63,7 +63,7 @@ public class TheaterAdminController {
     }
 
     @Operation(summary = "상영관 조건 조회", description = "조건(이름, 도시, 전화번호)으로 상영관 정보를 조회한다.")
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<?> search(@RequestBody TheaterSearchCond cond, PageableDTO pageableDTO) {
         Page<TheaterResponse> result = theaterService.search(cond, pageableDTO);
         return CustomResponse.success(READ_THEATER, result);

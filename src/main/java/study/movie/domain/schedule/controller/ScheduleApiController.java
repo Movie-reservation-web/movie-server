@@ -31,14 +31,14 @@ public class ScheduleApiController {
     private final ScheduleService scheduleService;
 
     @Operation(summary = "상영일정 리스트 조건 조회", description = "조건으로 상영일정(영화, 날짜, 극장) 리스트를 조회한다.")
-    @GetMapping("/basic")
+    @PostMapping("/basic")
     public ResponseEntity<?> searchBasicSchedules(@RequestBody ScheduleBasicSearchCond cond) {
         List<ScheduleSearchResponse> result = scheduleService.searchBasicSchedules(cond);
         return CustomResponse.success(READ_SCHEDULE, result);
     }
     //??
     @Operation(summary = "상영일정(상영관) 조회", description = "상영일정 id로 상영관을 조회한다.")
-    @GetMapping("/screen")
+    @PostMapping("/screen")
     public ResponseEntity<?> searchScheduleScreens(@Valid @RequestBody ScheduleScreenRequest request) {
         List<ScheduleScreenResponse> result = scheduleService.searchScheduleScreens(request);
         return CustomResponse.success(READ_SCHEDULE_SCREEN, result);
@@ -54,7 +54,7 @@ public class ScheduleApiController {
 
     @Operation(summary = "상영일정(좌석 정보) 조회", description = "상영일정 id로 좌석 정보, 금액을 조회한다.")
     @Parameters({@Parameter(name = "id", description = "상영일정 id", required = true, in = ParameterIn.PATH)})
-    @GetMapping("/seat-info/{id}")
+    @PostMapping("/seat-info/{id}")
     public ResponseEntity<?> getScheduleSeatInfo(@RequestParam Long id, @Valid @RequestBody ReservationScreenRequest request) {
         ReservationScreenResponse result = scheduleService.getSelectedScreenInfo(request);
         return CustomResponse.success(READ_SCHEDULE_SEATS, result);

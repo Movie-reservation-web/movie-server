@@ -10,7 +10,6 @@ import static study.movie.domain.movie.entity.QReview.review;
 @Getter
 @AllArgsConstructor
 public enum ReviewSortType implements MetaModelType {
-    ID_ASC("오래된 순", "id,asc", getColumn(review.id)),
     ID_DESC("최신 순", "id,desc", getColumn(review.id)),
     SCORE_ASC("평점 낮은순", "score,asc", getColumn(review.score)),
     SCORE_DESC("평점 높은순", "score,desc", getColumn(review.score));

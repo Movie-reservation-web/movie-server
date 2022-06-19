@@ -24,7 +24,7 @@ public class TicketAdminController {
     private final TicketService ticketService;
 
     @Operation(summary = "티켓 예매 조회", description = "조건으로 티켓 예매 정보를 조회한다.")
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<?> findAll(@RequestBody(required = false) TicketSearchCond cond, PageableDTO pageableDTO) {
         Page<TicketResponse> result = ticketService.search(cond, pageableDTO);
         return CustomResponse.success(READ_TICKET, result);

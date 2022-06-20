@@ -16,7 +16,7 @@ public enum EnumClassConst implements EnumMapperType {
     FILM_RATING("FilmRating", "상영 등급"),
     MOVIE_GENRE("MovieGenre", "장르"),
     MOVIE_SEARCH_TYPE("MovieSearchCondType", "영화 정렬 방식"),
-    MOVIE_CHART_SORT_TYPE("MovieChartSortType", "영화차트 정렬 방식"),
+    MOVIECHART_SORT_TYPE("MovieChartSortType", "영화차트 정렬 방식"),
     MOVIE_SORT_TYPE("MovieSortType", "영화 정렬 방식"),
     REVIEW_SEARCH_TYPE("ReviewSearchCondType", "리뷰 검색 타입"),
     REVIEW_SORT_TYPE("ReviewSortType", "리뷰 정렬 방식"),

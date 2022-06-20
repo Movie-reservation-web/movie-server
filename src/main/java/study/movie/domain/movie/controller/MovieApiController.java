@@ -60,9 +60,9 @@ public class MovieApiController {
     @Operation(summary = "영화 차트 보기", description = "정렬조건(관객순, 평점순), 탐색조건(상영예정여부)으로 영화 리스트를 출력한다.")
     @GetMapping("/chart")
     public ResponseEntity<?> getMoveChart(
-            @RequestParam MovieChartSortType sortType,
+            @RequestParam String sort,
             @RequestParam boolean isReleased) {
-        List<MovieChartResponse> result = movieService.findMovieBySort(sortType, isReleased);
+        List<MovieChartResponse> result = movieService.findMovieBySort(MovieChartSortType.getSortType(sort), isReleased);
         return CustomResponse.success(READ_MOVIE_SORT, result);
     }
 

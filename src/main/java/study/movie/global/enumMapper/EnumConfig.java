@@ -37,7 +37,7 @@ public class EnumConfig {
         enumMapper.put(FILM_RATING, FilmRating.class);
         enumMapper.put(MOVIE_GENRE, MovieGenre.class);
         enumMapper.put(MOVIE_SEARCH_TYPE, MovieSearchType.class);
-        enumMapper.put(MOVIE_CHART_SORT_TYPE, MovieChartSortType.class);
+        enumMapper.put(MOVIECHART_SORT_TYPE, MovieChartSortType.class);
         enumMapper.put(MOVIE_SORT_TYPE, MovieSortType.class);
         enumMapper.put(REVIEW_SEARCH_TYPE, ReviewSearchType.class);
         enumMapper.put(REVIEW_SORT_TYPE, ReviewSortType.class);

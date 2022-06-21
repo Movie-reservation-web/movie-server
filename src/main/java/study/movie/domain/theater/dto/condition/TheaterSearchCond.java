@@ -1,9 +1,11 @@
 package study.movie.domain.theater.dto.condition;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import study.movie.domain.theater.entity.CityCode;
 
-@Data
+@Getter
+@Setter
 public class TheaterSearchCond {
 
     private String name;

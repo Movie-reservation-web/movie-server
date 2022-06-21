@@ -1,11 +1,13 @@
 package study.movie.domain.schedule.dto.condition;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import study.movie.domain.schedule.entity.ScheduleStatus;
 import study.movie.domain.theater.entity.ScreenFormat;
 import study.movie.global.dto.DateRangeCond;
 
-@Data
+@Getter
+@Setter
 public class ScheduleSearchCond extends DateRangeCond {
 
     private String theaterName;

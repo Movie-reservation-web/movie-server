@@ -1,13 +1,15 @@
 package study.movie.domain.schedule.dto.condition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import study.movie.domain.theater.entity.ScreenFormat;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 public class ScheduleBasicSearchCond {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

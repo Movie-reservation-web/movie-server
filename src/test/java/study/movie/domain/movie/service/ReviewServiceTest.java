@@ -1,19 +1,22 @@
 package study.movie.domain.movie.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
-import study.movie.global.dto.PostIdResponse;
 import study.movie.domain.movie.dto.request.CreateReviewRequest;
 import study.movie.domain.movie.dto.request.UpdateReviewRequest;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.movie.entity.Review;
+import study.movie.domain.movie.repository.MovieRepository;
 import study.movie.domain.movie.repository.ReviewRepository;
+import study.movie.global.dto.PostIdResponse;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,6 +29,9 @@ public class ReviewServiceTest {
     ReviewRepository reviewRepository;
 
     @Autowired
+    MovieRepository movieRepository;
+
+    @Autowired
     ReviewService reviewService;
 
     @Autowired
@@ -34,21 +40,28 @@ public class ReviewServiceTest {
     @Autowired
     InitService init;
 
+    private List<Review> initialReviewList;
+    private List<Movie> initialMovieList;
+
+    @BeforeEach
+    void setUp() {
+        initialReviewList = reviewRepository.findAll();
+        initialMovieList = movieRepository.findAll();
+    }
 
     @Test
     void 리뷰_작성() {
         //given
-        Movie movie = init.createBasicMovie();
+        Movie movieForWriteReview = initialMovieList.get(0);
 
         CreateReviewRequest request = new CreateReviewRequest();
-        request.setMovieId(movie.getId());
+        request.setMovieId(movieForWriteReview.getId());
         request.setWriter("작성자");
         request.setComment("내용");
         request.setScore(10f);
 
         // when
         PostIdResponse response = reviewService.write(request);
-        System.out.println("response = " + response);
 
         Review findReview = reviewRepository.findById(response.getId()).get();
 
@@ -56,59 +69,37 @@ public class ReviewServiceTest {
         assertThat(findReview.getScore()).isEqualTo(request.getScore());
         assertThat(findReview.getWriter()).isEqualTo(request.getWriter());
         assertThat(findReview.getComment()).isEqualTo(request.getComment());
-        assertThat(findReview.getMovie()).isEqualTo(movie);
+        assertThat(findReview.getMovie()).isEqualTo(movieForWriteReview);
     }
 
     @Test
     void 리뷰_수정() {
         //given
-        Movie movie = init.createBasicMovie();
-        Review review = Review.writeReview()
-                .comment("내용")
-                .score(7f)
-                .writer("작성자")
-                .movie(movie)
-                .build();
-        em.flush();
+        Movie movieForEditReview = initialMovieList.get(0);
+        Review reviewForEdit = movieForEditReview.getReviews().get(0);
 
         // when
         UpdateReviewRequest request = new UpdateReviewRequest();
         request.setComment("내용1");
         request.setScore(10f);
 
-        reviewService.edit(review.getId(), request);
-        em.flush();
-
-        Review findReview = reviewRepository.findById(review.getId()).get();
+        reviewService.edit(reviewForEdit.getId(), request);
 
         //when
-        assertThat(findReview.getScore()).isEqualTo(request.getScore());
-        assertThat(findReview.getComment()).isEqualTo(request.getComment());
+        assertThat(reviewForEdit.getScore()).isEqualTo(request.getScore());
+        assertThat(reviewForEdit.getComment()).isEqualTo(request.getComment());
     }
 
     @Test
     void 리뷰_삭제() {
         // given
-        Movie movie = init.createBasicMovie();
-        Review review1 = Review.writeReview()
-                .comment("내용1")
-                .score(7f)
-                .writer("작성자1")
-                .movie(movie)
-                .build();
-
-        Review review2 = Review.writeReview()
-                .comment("내용2")
-                .score(8f)
-                .writer("작성자2")
-                .movie(movie)
-                .build();
-        em.flush();
+        Movie movieForDeleteReview = initialMovieList.get(0);
 
         // when
-        reviewService.delete(review1.getId());
+        Review reviewForDelete = movieForDeleteReview.getReviews().get(0);
+        reviewService.delete(reviewForDelete.getId());
 
         // then
-        assertThat(reviewRepository.count()).isEqualTo(1);
+        assertThat(reviewRepository.existsById(reviewForDelete.getId())).isFalse();
     }
 }

@@ -25,7 +25,7 @@ public interface MovieRepositoryCustom {
     List<Movie> findUnreleasedMovies();
 
     /**
-     * 상영중인 영화 조회
+     * 상영중인 영화 조회(영화 관객 수 업데이트)
      *
      * @return List
      */

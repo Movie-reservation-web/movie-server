@@ -1,4 +1,4 @@
-package study.movie.schedule.entity;
+package study.movie.domain.schedule.entity;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -6,25 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.InitService;
 import study.movie.domain.movie.entity.Movie;
-import study.movie.domain.schedule.entity.Schedule;
-import study.movie.domain.schedule.entity.ScheduleStatus;
-import study.movie.domain.schedule.entity.ScreenTime;
-import study.movie.domain.schedule.entity.SeatStatus;
 import study.movie.domain.schedule.repository.ScheduleRepository;
-import study.movie.domain.theater.entity.CityCode;
 import study.movie.domain.theater.entity.Screen;
-import study.movie.domain.theater.entity.ScreenFormat;
 import study.movie.domain.theater.entity.Theater;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static study.movie.domain.schedule.entity.SeatStatus.RESERVED;
 import static study.movie.global.constants.StringAttrConst.SEAT;
 import static study.movie.global.constants.StringAttrConst.TOTAL;
-import static study.movie.domain.schedule.entity.SeatStatus.RESERVED;
 
 @SpringBootTest
 @Transactional
@@ -38,39 +31,12 @@ class ScheduleTest {
     @Autowired
     ScheduleRepository scheduleRepository;
 
-    @Autowired
-    InitService init;
-
-    @Test
-    public void 상영일정_저장_조회() throws Exception {
-        // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
-
-        // when
-        ScreenTime screenTime = new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime());
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie)
-                .build();
-        em.flush();
-
-        Schedule findSchedule = em.find(Schedule.class, savedSchedule.getId());
-
-        // then
-        assertThat(findSchedule).isEqualTo(savedSchedule);
-        assertThat(findSchedule.getScreen()).isEqualTo(screen);
-        assertThat(findSchedule.getMovie()).isEqualTo(movie);
-    }
-
     @Test
     void 상영일정_전체_좌석_조회() {
         // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
+        Theater theater = em.find(Theater.class,1L);
+        Screen screen = theater.getScreens().get(0);
+        Movie movie = em.find(Movie.class, 1L);
 
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(new ScreenTime(LocalDateTime.of(2022, 3, 10, 3, 2, 21), movie.getRunningTime()))
@@ -91,9 +57,9 @@ class ScheduleTest {
     @Test
     void 상영중인_스케줄_좌석_조회_조회() {
         // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
+        Theater theater = em.find(Theater.class,1L);
+        Screen screen = theater.getScreens().get(0);
+        Movie movie = em.find(Movie.class, 1L);
         LocalDateTime now = LocalDateTime.now();
         Schedule savedSchedule = Schedule.builder()
                 .screenTime(new ScreenTime(now.plusHours(1), movie.getRunningTime()))
@@ -115,9 +81,9 @@ class ScheduleTest {
     @Test
     void 예매_종료된_스케줄_좌석_조회() {
         // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
+        Theater theater = em.find(Theater.class,1L);
+        Screen screen = theater.getScreens().get(0);
+        Movie movie = em.find(Movie.class, 1L);
 
         LocalDateTime now = LocalDateTime.now();
         Schedule savedSchedule = Schedule.builder()
@@ -137,9 +103,9 @@ class ScheduleTest {
     @Test
     void 매진된_스케줄_좌석_조회() {
         // given
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
+        Theater theater = em.find(Theater.class,1L);
+        Screen screen = theater.getScreens().get(0);
+        Movie movie = em.find(Movie.class, 1L);
 
         LocalDateTime now = LocalDateTime.now();
         Schedule savedSchedule = Schedule.builder()

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
+import static study.movie.global.utils.NumberUtil.getRandomIndex;
 
 @SpringBootTest
 @Transactional
@@ -40,8 +41,11 @@ class ReviewRepositoryTest {
     @DisplayName("리뷰를 조건(작성자) 검색한다.")
     void 리뷰_조건_검색_작성자() {
         //given
+
         //when
-        String writerForFind = initialReviewList.get(0).getWriter();
+        String writerForFind = initialReviewList
+                .get((int) getRandomIndex(reviewRepository.count())-1)
+                .getWriter();
         List<Review> findByWriter = initialReviewList.stream()
                 .filter(review -> review.getWriter().equals(writerForFind))
                 .collect(Collectors.toList());
@@ -64,7 +68,10 @@ class ReviewRepositoryTest {
     void 리뷰_조건_검색_영화제목() {
         //given
         //when
-        String movieTitleForFind = initialReviewList.get(0).getMovie().getTitle();
+        String movieTitleForFind = initialReviewList
+                .get((int) getRandomIndex(reviewRepository.count())-1)
+                .getMovie()
+                .getTitle();
         List<Review> findByMovieTitle = initialReviewList.stream()
                 .filter(review -> review.getMovie().getTitle().equals(movieTitleForFind))
                 .collect(Collectors.toList());
@@ -87,8 +94,9 @@ class ReviewRepositoryTest {
     void 리뷰_조건_검색_작성자_영화제목() {
         //given
         //when
-        String movieTitleForFind = initialReviewList.get(0).getMovie().getTitle();
-        String writerForFind = initialReviewList.get(0).getWriter();
+        Review initialRandomReview = initialReviewList.get((int) getRandomIndex(reviewRepository.count()));
+        String movieTitleForFind = initialRandomReview.getMovie().getTitle();
+        String writerForFind = initialRandomReview.getWriter();
         List<Review> findByCondition = initialReviewList.stream()
                 .filter(review -> review.getMovie().getTitle().equals(movieTitleForFind))
                 .filter(review -> review.getWriter().equals(writerForFind))
@@ -152,7 +160,7 @@ class ReviewRepositoryTest {
     @DisplayName("리뷰를 삭제한다.")
     void 리뷰_삭제_Cascade_PERSIST(){
         // given
-        Review reviewForDelete = initialReviewList.get(0);
+        Review reviewForDelete = initialReviewList.get((int) getRandomIndex(reviewRepository.count()));
 
         // when
         reviewRepository.deleteByIdEqQuery(reviewForDelete.getId());

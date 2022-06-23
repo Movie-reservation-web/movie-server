@@ -24,7 +24,7 @@ public class PaymentServiceImpl implements PaymentService {
         com.siot.IamportRestClient.response.Payment impPayment = iamPortProvider.paymentByImpUid(impUid);
         this.checkAmount(impPayment, request.getPaidAmount().intValue());
         this.checkMerchantUid(impPayment, request.getMerchantUid());
-        paymentRepository.save(Payment.builder().impPayment(impPayment).build());
+        paymentRepository.save(Payment.impBuilder().impPayment(impPayment).build());
     }
 
     private void checkAmount(com.siot.IamportRestClient.response.Payment impPayment, int requestAmount) {

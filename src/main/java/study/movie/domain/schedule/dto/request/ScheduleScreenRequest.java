@@ -9,7 +9,6 @@ import study.movie.domain.theater.entity.ScreenFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
 
 @ApiModel(description = "상영일정 상영관 정보 모델")
 @Data
@@ -30,5 +29,5 @@ public class ScheduleScreenRequest {
 
     @Schema(description = "극장 아이디", required = true)
     @NotNull
-    private List<Long> theaterIds;
+    private Long theaterId;
 }

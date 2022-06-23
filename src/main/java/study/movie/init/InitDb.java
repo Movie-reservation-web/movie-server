@@ -3,6 +3,8 @@ package study.movie.init;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 
 @Component
 @RequiredArgsConstructor
@@ -14,11 +16,11 @@ public class InitDb {
 
 //    @PostConstruct
     public void init() {
-//        initMemberService.initMemberData();
-//        initMovieService.initMovieData();
+        initMemberService.initMemberData();
+        initMovieService.initMovieData();
         initMovieService.initReviewData();
-//        initTheaterService.initTheaterData();
-//        initTheaterService.initScreenData();
-//        initScheduleService.initScheduleData();
+        initTheaterService.initTheaterData();
+        initTheaterService.initScreenData();
+        initScheduleService.initScheduleData();
     }
 }

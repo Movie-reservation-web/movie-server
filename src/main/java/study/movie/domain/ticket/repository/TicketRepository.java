@@ -13,6 +13,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, TicketRep
 
     @Transactional
     @Modifying
-    @Query(value = "delete from Ticket t where t.id in :ids")
+    @Query(nativeQuery = true, value = "delete from ticket where ticket.ticket_id in :ids and ticket_status='CANCEL'")
     void deleteAllByIdInQuery(@Param("ids") List<Long> ids);
 }

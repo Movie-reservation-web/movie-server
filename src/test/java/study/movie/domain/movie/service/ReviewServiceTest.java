@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.InitService;
 import study.movie.domain.movie.dto.request.CreateReviewRequest;
 import study.movie.domain.movie.dto.request.UpdateReviewRequest;
 import study.movie.domain.movie.entity.Movie;
@@ -16,13 +16,14 @@ import study.movie.domain.movie.repository.ReviewRepository;
 import study.movie.global.dto.PostIdResponse;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static study.movie.global.utils.NumberUtil.getRandomIndex;
 
 @SpringBootTest
 @Transactional
 @Slf4j
+@Rollback
 public class ReviewServiceTest {
 
     @Autowired
@@ -37,25 +38,19 @@ public class ReviewServiceTest {
     @Autowired
     EntityManager em;
 
-    @Autowired
-    InitService init;
-
-    private List<Review> initialReviewList;
-    private List<Movie> initialMovieList;
+    private Movie initialRandomMovie;
 
     @BeforeEach
     void setUp() {
-        initialReviewList = reviewRepository.findAll();
-        initialMovieList = movieRepository.findAll();
+        initialRandomMovie = movieRepository.findAll()
+                .get((int) getRandomIndex(movieRepository.count()));
     }
 
     @Test
     void 리뷰_작성() {
         //given
-        Movie movieForWriteReview = initialMovieList.get(0);
-
         CreateReviewRequest request = new CreateReviewRequest();
-        request.setMovieId(movieForWriteReview.getId());
+        request.setMovieId(initialRandomMovie.getId());
         request.setWriter("작성자");
         request.setComment("내용");
         request.setScore(10f);
@@ -69,14 +64,20 @@ public class ReviewServiceTest {
         assertThat(findReview.getScore()).isEqualTo(request.getScore());
         assertThat(findReview.getWriter()).isEqualTo(request.getWriter());
         assertThat(findReview.getComment()).isEqualTo(request.getComment());
-        assertThat(findReview.getMovie()).isEqualTo(movieForWriteReview);
+        assertThat(findReview.getMovie()).isEqualTo(initialRandomMovie);
     }
 
     @Test
     void 리뷰_수정() {
         //given
-        Movie movieForEditReview = initialMovieList.get(0);
-        Review reviewForEdit = movieForEditReview.getReviews().get(0);
+        Review reviewForEdit = Review.writeReview()
+                .movie(initialRandomMovie)
+                .comment("테스트")
+                .writer("작성자")
+                .score(10f)
+                .build();
+
+        reviewRepository.save(reviewForEdit);
 
         // when
         UpdateReviewRequest request = new UpdateReviewRequest();
@@ -93,10 +94,15 @@ public class ReviewServiceTest {
     @Test
     void 리뷰_삭제() {
         // given
-        Movie movieForDeleteReview = initialMovieList.get(0);
+        CreateReviewRequest request = new CreateReviewRequest();
+        request.setMovieId(initialRandomMovie.getId());
+        request.setWriter("작성자");
+        request.setComment("내용");
+        request.setScore(10f);
+
+        PostIdResponse reviewForDelete = reviewService.write(request);
 
         // when
-        Review reviewForDelete = movieForDeleteReview.getReviews().get(0);
         reviewService.delete(reviewForDelete.getId());
 
         // then

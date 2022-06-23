@@ -24,6 +24,7 @@ import study.movie.domain.theater.entity.ScreenFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.hasText;
 import static study.movie.domain.schedule.entity.QSchedule.schedule;
@@ -40,13 +41,6 @@ import static study.movie.domain.movie.entity.QMovie.movie;
 public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements ScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
-    private JPAQuery<Schedule> getScheduleJPAQueryFetch() {
-        return queryFactory.selectFrom(schedule)
-                .join(schedule.movie, movie).fetchJoin()
-                .join(schedule.screen, screen).fetchJoin()
-                .join(screen.theater, theater).fetchJoin();
-    }
 
     @Override
     public List<Schedule> findAllSchedules() {
@@ -82,29 +76,27 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
     public List<Schedule> searchBasicSchedules(ScheduleBasicSearchCond cond) {
         return getScheduleJPAQueryFetch()
                 .where(
-                        dateTimeGoe(LocalDateTime.now()),
+                        dateTimeGoe(dailyStartDateTime(cond.getScreenDate())),
                         dateTimeLt(dailyEndDateTime(cond.getScreenDate())),
-                        movie.id.eq(cond.getMovieId()),
-                        screen.format.eq(cond.getScreenFormat()),
-                        theater.id.eq(cond.getTheaterId())
+                        movieIdEq(cond.getMovieId()),
+                        screenFormatEq(cond.getScreenFormat()),
+                        theaterIdEq(cond.getTheaterId())
                 )
                 .fetch();
     }
 
     @Override
     public List<Schedule> searchScheduleScreens(ScheduleScreenRequest request) {
-        return queryFactory.selectFrom(schedule)
-                .join(schedule.screen, screen).fetchJoin()
+        return getScheduleJPAQueryFetch()
                 .where(
-                        dateTimeGoe(LocalDateTime.now()),
+                        dateTimeGoe(dailyStartDateTime(request.getScreenDate())),
                         dateTimeLt(dailyEndDateTime(request.getScreenDate())),
-                        movie.id.eq(request.getMovieId()),
-                        screen.format.eq(request.getScreenFormat()),
-                        theater.id.in(request.getTheaterIds())
+                        movieIdEq(request.getMovieId()),
+                        screenFormatEq(request.getScreenFormat()),
+                        theaterIdEq(request.getTheaterId())
                 )
                 .fetch();
     }
-
 
     @Override
     public void updateSeatStatus(UpdateSeatRequest cond) {
@@ -124,11 +116,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
                 .fetch();
     }
 
-
     @Override
     public List<ScreenFormat> findFormatByMovie(String movieTitle) {
-        return queryFactory.select(screen.format)
-                .from(schedule)
+        List<Schedule> schedules = queryFactory.selectFrom(schedule)
                 .join(schedule.movie, movie).fetchJoin()
                 .join(schedule.screen, screen).fetchJoin()
                 .where(
@@ -137,6 +127,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
                 )
                 .distinct()
                 .fetch();
+        return schedules.stream().map(schedule1 -> schedule1.getScreen().getFormat())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -171,6 +163,13 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
                 .from(schedule)
                 .where(scheduleStatusEq(ScheduleStatus.OPEN))
                 .fetchOne();
+    }
+
+    private JPAQuery<Schedule> getScheduleJPAQueryFetch() {
+        return queryFactory.selectFrom(schedule)
+                .join(schedule.movie, movie).fetchJoin()
+                .join(schedule.screen, screen).fetchJoin()
+                .join(screen.theater, theater).fetchJoin();
     }
 
     private JPAQuery<Schedule> getSearchElementsQuery(ScheduleSearchCond cond) {
@@ -210,6 +209,17 @@ public class ScheduleRepositoryImpl extends BasicRepositoryUtil implements Sched
 
     private BooleanExpression movieTitleEq(String title) {
         return hasText(title) ? movie.title.eq(title) : null;
+    }
+
+    private BooleanExpression movieIdEq(Long id) {
+        return id != null ? movie.id.eq(id) : null;
+    }
+
+    private BooleanExpression theaterIdEq(Long id) {
+        return id != null ? theater.id.eq(id) : null;
+    }
+    private BooleanExpression theaterIdIn(List<Long> ids) {
+        return ids != null ? theater.id.in(ids) : null;
     }
 
     private BooleanExpression screenFormatEq(ScreenFormat format) {

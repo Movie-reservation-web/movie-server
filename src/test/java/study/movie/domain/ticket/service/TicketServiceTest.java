@@ -1,46 +1,39 @@
 package study.movie.domain.ticket.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.InitService;
 import study.movie.domain.member.entity.Member;
-import study.movie.domain.movie.entity.Movie;
+import study.movie.domain.member.repository.MemberRepository;
+import study.movie.domain.payment.entity.Payment;
+import study.movie.domain.payment.repository.PaymentRepository;
 import study.movie.domain.schedule.entity.Schedule;
-import study.movie.domain.schedule.entity.ScreenTime;
 import study.movie.domain.schedule.repository.ScheduleRepository;
-import study.movie.domain.theater.entity.CityCode;
-import study.movie.domain.theater.entity.Screen;
-import study.movie.domain.theater.entity.ScreenFormat;
-import study.movie.domain.theater.entity.Theater;
 import study.movie.domain.ticket.dto.request.CancelReservationRequest;
 import study.movie.domain.ticket.dto.request.ReserveTicketRequest;
 import study.movie.domain.ticket.entity.Ticket;
 import study.movie.domain.ticket.entity.TicketStatus;
 import study.movie.domain.ticket.repository.TicketRepository;
-import study.movie.exception.CustomException;
 import study.movie.global.dto.IdListRequest;
 import study.movie.global.dto.PostIdResponse;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static study.movie.global.utils.NumberUtil.getRandomIndex;
 
 @SpringBootTest
 @Transactional
 @Slf4j
-//@Rollback
-@Commit
+@Rollback
 class TicketServiceTest {
     @Autowired
     EntityManager em;
@@ -51,134 +44,108 @@ class TicketServiceTest {
     @Autowired
     ScheduleRepository scheduleRepository;
     @Autowired
-    InitService init;
+    MemberRepository memberRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
 
+    private Schedule initialRandomSchedule;
+    private Member initialRandomMember;
+    private Payment initialPayment;
+    @BeforeEach
+    void setUp() {
+        initialRandomMember = memberRepository.findAll().get(0);
+        initialRandomSchedule = scheduleRepository.findAll()
+                .get((int) getRandomIndex(scheduleRepository.count()));
+
+        initialPayment = Payment.basicBuilder()
+                .merchantUid("1111")
+                .amount(10000)
+                .buyerEmail("test@test.com")
+                .buyerMobile("010-1111-1111")
+                .buyerName("test")
+                .build();
+        paymentRepository.save(initialPayment);
+    }
 
     @Test
-    public void 티켓_예매() throws Exception {
+    void 티켓_예매() {
         // given
-        Member member = init.createMember();
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
-        LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
-        Schedule schedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie)
-                .build();
-        scheduleRepository.save(schedule);
-        List<String> seats = Arrays.asList("A2", "C2");
+        List<String> seats = Arrays.asList("A1", "A2");
 
         // when
         ReserveTicketRequest request = new ReserveTicketRequest();
-        request.setMemberEmail(member.getEmail());
-        request.setScheduleNumber(schedule.getScheduleNumber());
+        request.setMemberEmail(initialRandomMember.getEmail());
+        request.setScheduleNumber(initialRandomSchedule.getScheduleNumber());
+        request.setMerchantUid(initialPayment.getMerchantUid());
         request.setSeats(seats);
 
         PostIdResponse response = ticketService.reserve(request);
 
         Ticket findTicket = ticketRepository.findById(response.getId()).orElseThrow();
-        log.info("findTicket={}", findTicket);
+
         // then
         assertEquals(request.getSeats().size(), findTicket.getReservedMemberCount());
     }
 
     @Test
-    public void 티켓_예매_취소() throws Exception {
+    void 티켓_예매_취소(){
         // given
-        Member member = init.createMember();
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
-        LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
-
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie)
-                .build();
-        em.flush();
-        List<String> seats = Arrays.asList("A2", "C2");
+        List<String> seats = Arrays.asList("A1", "A2");
 
         ReserveTicketRequest request = new ReserveTicketRequest();
-        request.setMemberEmail(member.getEmail());
-        request.setScheduleNumber(savedSchedule.getScheduleNumber());
+        request.setMemberEmail(initialRandomMember.getEmail());
+        request.setScheduleNumber(initialRandomSchedule.getScheduleNumber());
+        request.setMerchantUid(initialPayment.getMerchantUid());
         request.setSeats(seats);
         PostIdResponse response = ticketService.reserve(request);
 
-        Ticket savedTicket = ticketRepository.findById(response.getId()).orElseThrow();
 
         // when
+        Ticket savedTicket = ticketRepository.findById(response.getId()).orElseThrow();
+
         CancelReservationRequest request1 = new CancelReservationRequest();
-        request1.setMemberEmail(member.getEmail());
+        request1.setMemberEmail(initialRandomMember.getEmail());
         request1.setReservedNumber(savedTicket.getReserveNumber());
+
         ticketService.cancelReservation(request1);
 
-        boolean isTicketInMovie = savedTicket.getMovie().getTickets().contains(savedTicket);
-        boolean isTicketInMember = savedTicket.getMember().getTickets().contains(savedTicket);
         // then
         assertEquals(TicketStatus.CANCEL, savedTicket.getTicketStatus());
-        assertFalse(isTicketInMovie);
-        assertFalse(isTicketInMember);
     }
 
     @Test
-    public void 취소되지_않은_티켓_데이터_삭제() throws Exception {
+    void 취소되지_않은_티켓_데이터_삭제(){
         // given
-        Member member = init.createMember();
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
-        LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
-
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie)
-                .build();
-        em.flush();
         List<String> seats = Arrays.asList("A2", "C2");
 
         ReserveTicketRequest request = new ReserveTicketRequest();
-        request.setMemberEmail(member.getEmail());
-        request.setScheduleNumber(savedSchedule.getScheduleNumber());
+        request.setMemberEmail(initialRandomMember.getEmail());
+        request.setScheduleNumber(initialRandomSchedule.getScheduleNumber());
+        request.setMerchantUid(initialPayment.getMerchantUid());
         request.setSeats(seats);
         PostIdResponse response = ticketService.reserve(request);
 
+        // when
         Ticket savedTicket = ticketRepository.findById(response.getId()).orElseThrow();
+
         IdListRequest idRequest = new IdListRequest();
         idRequest.setIds(Collections.singletonList(savedTicket.getId()));
 
+        ticketService.delete(idRequest);
+
         // then
-        assertThatThrownBy(() -> ticketService.delete(idRequest))
-                .isInstanceOf(CustomException.class);
+        assertThat(ticketRepository.existsById(savedTicket.getId())).isTrue();
     }
 
     @Test
-    public void 취소된_티켓_데이터_삭제() throws Exception {
+    void 취소된_티켓_데이터_삭제(){
         // given
-        Member member = init.createMember();
-        Theater theater = init.createTheater("CGV 용산", CityCode.SEL);
-        Screen screen = init.registerScreen("1관", ScreenFormat.TWO_D, theater, 3, 3);
-        Movie movie = init.createBasicMovie();
-        LocalDate screenDate = LocalDate.of(2022, 3, 10);
-        ScreenTime screenTime = new ScreenTime(screenDate.atTime(3, 2, 21), movie.getRunningTime());
-
-        Schedule savedSchedule = Schedule.builder()
-                .screenTime(screenTime)
-                .screen(screen)
-                .movie(movie)
-                .build();
-        em.flush();
         List<String> seats = Arrays.asList("A2", "C2");
 
         ReserveTicketRequest request = new ReserveTicketRequest();
-        request.setMemberEmail(member.getEmail());
-        request.setScheduleNumber(savedSchedule.getScheduleNumber());
+        request.setMemberEmail(initialRandomMember.getEmail());
+        request.setScheduleNumber(initialRandomSchedule.getScheduleNumber());
+        request.setMerchantUid(initialPayment.getMerchantUid());
         request.setSeats(seats);
         PostIdResponse response = ticketService.reserve(request);
 
@@ -190,14 +157,13 @@ class TicketServiceTest {
 
         // when
         CancelReservationRequest request1 = new CancelReservationRequest();
-        request1.setMemberEmail(member.getEmail());
+        request1.setMemberEmail(initialRandomMember.getEmail());
         request1.setReservedNumber(savedTicket.getReserveNumber());
         ticketService.cancelReservation(request1);
 
         ticketService.delete(idRequest);
 
         // then
-        assertThatThrownBy(() -> ticketRepository.findById(id).orElseThrow())
-                .isInstanceOf(NoSuchElementException.class);
+        assertThat(ticketRepository.existsById(id)).isFalse();
     }
 }

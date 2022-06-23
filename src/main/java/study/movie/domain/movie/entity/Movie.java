@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"reviews", "schedules", "tickets"})
+@ToString(exclude = {"reviews", "schedules", "tickets", "intro"})
 public class Movie extends BaseTimeEntity {
 
     @Id

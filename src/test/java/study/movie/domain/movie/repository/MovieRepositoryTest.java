@@ -12,6 +12,7 @@ import study.movie.domain.movie.entity.FilmRating;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.movie.entity.MovieGenre;
 import study.movie.domain.schedule.repository.ScheduleRepository;
+import study.movie.global.utils.NumberUtil;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -82,7 +83,7 @@ class MovieRepositoryTest {
     void 영화_조회_감독이름() {
         // given
         // when
-        Movie movieForFind = initialMovieList.get(0);
+        Movie movieForFind = initialMovieList.get((int) NumberUtil.getRandomIndex(movieRepository.count()));
         String directorForFind = movieForFind.getDirector();
 
         List<Movie> findMovies = movieRepository.findByDirector(directorForFind);
@@ -98,7 +99,7 @@ class MovieRepositoryTest {
     void 영화_조회_배우이름() {
         // given
         // when
-        Movie movieForFind = initialMovieList.get(0);
+        Movie movieForFind = initialMovieList.get((int) NumberUtil.getRandomIndex(movieRepository.count()));
         String actorForFind = movieForFind.getActors().get(0);
 
         List<Movie> findMovies = movieRepository.findByActor(actorForFind);

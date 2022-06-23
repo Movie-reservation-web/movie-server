@@ -1,15 +1,17 @@
 package study.movie.domain.movie.entity;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.InitService;
+import study.movie.domain.movie.repository.MovieRepository;
 
 import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static study.movie.global.utils.NumberUtil.getRandomIndex;
 
 @SpringBootTest
 @Transactional
@@ -18,19 +20,26 @@ public class ReviewTest {
 
     @Autowired
     EntityManager em;
+
     @Autowired
-    InitService init;
+    MovieRepository movieRepository;
+
+    private Movie initialRandomMovie;
+
+    @BeforeEach
+    void setUp() {
+        initialRandomMovie = movieRepository.findAll()
+                .get((int) getRandomIndex(movieRepository.count()));
+    }
 
     @Test
     void 리뷰_연관관계_메서드() {
         // given
-        Movie movie = em.find(Movie.class, 1L);
-
         Review review = Review.writeReview()
                 .comment("내용")
                 .score(7f)
                 .writer("작성자")
-                .movie(movie)
+                .movie(initialRandomMovie)
                 .build();
         em.flush();
         em.clear();
@@ -39,20 +48,17 @@ public class ReviewTest {
         Review findReview = em.find(Review.class, review.getId());
 
         // then
-        assertThat(movie.getReviews()).containsExactly(findReview);
-        assertThat(findReview.getMovie()).isEqualTo(movie);
+        assertThat(findReview.getMovie().toString()).isEqualTo(initialRandomMovie.toString());
     }
 
     @Test
     void 리뷰_비즈니스_로직_수정하기() {
         // given
-        Movie movie = em.find(Movie.class, 1L);
-
         Review review = Review.writeReview()
                 .comment("내용")
                 .score(7f)
                 .writer("작성자")
-                .movie(movie)
+                .movie(initialRandomMovie)
                 .build();
 
         // when
@@ -67,6 +73,5 @@ public class ReviewTest {
         //then
         assertThat(editReview.getComment()).isEqualTo(editComment);
         assertThat(editReview.getScore()).isEqualTo(editScore);
-
     }
 }

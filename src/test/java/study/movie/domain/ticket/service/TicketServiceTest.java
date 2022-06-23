@@ -1,4 +1,4 @@
-package study.movie.ticket.service;
+package study.movie.domain.ticket.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -7,12 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.movie.InitService;
-import study.movie.domain.schedule.dto.response.ScheduleMovieResponse;
-import study.movie.domain.ticket.dto.request.CancelReservationRequest;
-import study.movie.domain.ticket.service.TicketServiceImpl;
-import study.movie.global.dto.IdListRequest;
-import study.movie.global.dto.PostIdResponse;
-import study.movie.exception.CustomException;
 import study.movie.domain.member.entity.Member;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.schedule.entity.Schedule;
@@ -22,9 +16,14 @@ import study.movie.domain.theater.entity.CityCode;
 import study.movie.domain.theater.entity.Screen;
 import study.movie.domain.theater.entity.ScreenFormat;
 import study.movie.domain.theater.entity.Theater;
+import study.movie.domain.ticket.dto.request.CancelReservationRequest;
+import study.movie.domain.ticket.dto.request.ReserveTicketRequest;
 import study.movie.domain.ticket.entity.Ticket;
 import study.movie.domain.ticket.entity.TicketStatus;
 import study.movie.domain.ticket.repository.TicketRepository;
+import study.movie.exception.CustomException;
+import study.movie.global.dto.IdListRequest;
+import study.movie.global.dto.PostIdResponse;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -73,7 +72,7 @@ class TicketServiceTest {
         List<String> seats = Arrays.asList("A2", "C2");
 
         // when
-        ScheduleMovieResponse.ReserveTicketRequest request = new ScheduleMovieResponse.ReserveTicketRequest();
+        ReserveTicketRequest request = new ReserveTicketRequest();
         request.setMemberEmail(member.getEmail());
         request.setScheduleNumber(schedule.getScheduleNumber());
         request.setSeats(seats);
@@ -104,7 +103,7 @@ class TicketServiceTest {
         em.flush();
         List<String> seats = Arrays.asList("A2", "C2");
 
-        ScheduleMovieResponse.ReserveTicketRequest request = new ScheduleMovieResponse.ReserveTicketRequest();
+        ReserveTicketRequest request = new ReserveTicketRequest();
         request.setMemberEmail(member.getEmail());
         request.setScheduleNumber(savedSchedule.getScheduleNumber());
         request.setSeats(seats);
@@ -144,7 +143,7 @@ class TicketServiceTest {
         em.flush();
         List<String> seats = Arrays.asList("A2", "C2");
 
-        ScheduleMovieResponse.ReserveTicketRequest request = new ScheduleMovieResponse.ReserveTicketRequest();
+        ReserveTicketRequest request = new ReserveTicketRequest();
         request.setMemberEmail(member.getEmail());
         request.setScheduleNumber(savedSchedule.getScheduleNumber());
         request.setSeats(seats);
@@ -177,7 +176,7 @@ class TicketServiceTest {
         em.flush();
         List<String> seats = Arrays.asList("A2", "C2");
 
-        ScheduleMovieResponse.ReserveTicketRequest request = new ScheduleMovieResponse.ReserveTicketRequest();
+        ReserveTicketRequest request = new ReserveTicketRequest();
         request.setMemberEmail(member.getEmail());
         request.setScheduleNumber(savedSchedule.getScheduleNumber());
         request.setSeats(seats);

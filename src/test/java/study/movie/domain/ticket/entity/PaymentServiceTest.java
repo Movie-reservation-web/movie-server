@@ -1,4 +1,4 @@
-package study.movie.ticket.entity;
+package study.movie.domain.ticket.entity;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

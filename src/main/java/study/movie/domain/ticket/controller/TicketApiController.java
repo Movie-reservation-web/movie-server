@@ -9,12 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import study.movie.domain.schedule.dto.response.ScheduleMovieResponse;
 import study.movie.domain.ticket.dto.request.CancelReservationRequest;
+import study.movie.domain.ticket.dto.request.ReserveTicketRequest;
 import study.movie.domain.ticket.dto.response.ReserveTicketResponse;
+import study.movie.domain.ticket.service.TicketService;
 import study.movie.global.dto.CustomResponse;
 import study.movie.global.dto.PostIdResponse;
-import study.movie.domain.ticket.service.TicketService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,7 +36,7 @@ public class TicketApiController {
      */
     @Operation(summary = "티켓 예매 생성", description = "티켓 예매 정보를 저장한다.")
     @PostMapping
-    public ResponseEntity<?> reserveTicket(@Valid @RequestBody ScheduleMovieResponse.ReserveTicketRequest request) {
+    public ResponseEntity<?> reserveTicket(@Valid @RequestBody ReserveTicketRequest request) {
         PostIdResponse result = ticketService.reserve(request);
         return CustomResponse.success(CREATED, RESERVE_TICKET, result);
     }

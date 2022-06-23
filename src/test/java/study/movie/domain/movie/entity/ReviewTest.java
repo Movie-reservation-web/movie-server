@@ -24,7 +24,7 @@ public class ReviewTest {
     @Test
     void 리뷰_연관관계_메서드() {
         // given
-        Movie movie = init.createBasicMovie();
+        Movie movie = em.find(Movie.class, 1L);
 
         Review review = Review.writeReview()
                 .comment("내용")
@@ -36,18 +36,17 @@ public class ReviewTest {
         em.clear();
 
         // when
-        Movie findMovie = em.find(Movie.class, movie.getId());
         Review findReview = em.find(Review.class, review.getId());
 
         // then
-        assertThat(findMovie.getReviews()).containsExactly(findReview);
-        assertThat(findReview.getMovie()).isEqualTo(findMovie);
+        assertThat(movie.getReviews()).containsExactly(findReview);
+        assertThat(findReview.getMovie()).isEqualTo(movie);
     }
 
     @Test
     void 리뷰_비즈니스_로직_수정하기() {
         // given
-        Movie movie = init.createBasicMovie();
+        Movie movie = em.find(Movie.class, 1L);
 
         Review review = Review.writeReview()
                 .comment("내용")

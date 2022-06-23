@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.movie.InitService;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,18 +21,38 @@ public class MovieTest {
     @Autowired
     EntityManager em;
 
-    @Autowired
-    InitService init;
-
     @Test
     public void 영화_평점_계산() {
         // given
-        Movie movie = init.createBasicMovie();
-        Review review1 = init.writeReview(movie, "작성자1", 10f);
-        Review review2 = init.writeReview(movie, "작성자2", 8f);
+        Movie movie = Movie.builder()
+                .title("제목1")
+                .director("감독1")
+                .actors(List.of("배우1", "배우2", "배우3"))
+                .formats(List.of(FilmFormat.TWO_D))
+                .filmRating(FilmRating.G_RATED)
+                .genres(Arrays.asList(MovieGenre.values()[0], MovieGenre.values()[1]))
+                .image("제목1.jpg")
+                .intro("제목1 information")
+                .nation("KR")
+                .runningTime(160)
+                .releaseDate(LocalDate.now().plusDays(10))
+                .build();
+        em.persist(movie);
+        Review review1 =Review.writeReview()
+                .writer("작성자1")
+                .comment("리뷰 내용")
+                .score(10f)
+                .movie(movie)
+                .build();
+        Review review2 =Review.writeReview()
+                .writer("작성자2")
+                .comment("리뷰 내용")
+                .score(8f)
+                .movie(movie)
+                .build();
 
+        em.flush();
         //when
-
         movie.calcAverageScore();
         double avgScore = (review1.getScore() + review2.getScore()) / 2;
         String avgScoreToString = String.format("%.1f", avgScore);

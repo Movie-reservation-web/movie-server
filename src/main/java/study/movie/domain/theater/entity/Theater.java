@@ -1,12 +1,8 @@
 package study.movie.domain.theater.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.movie.global.entity.BaseTimeEntity;
 
-import javax.management.Query;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = "screens")
 public class Theater extends BaseTimeEntity {
 
     @Id

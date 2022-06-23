@@ -1,9 +1,6 @@
 package study.movie.domain.movie.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -13,6 +10,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Review extends BaseTimeEntity {
 
     @Id

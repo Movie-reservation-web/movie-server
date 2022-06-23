@@ -1,10 +1,7 @@
 package study.movie.domain.theater.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.movie.domain.movie.entity.FilmFormat;
 import study.movie.domain.schedule.entity.Schedule;
 import study.movie.global.entity.BaseTimeEntity;
@@ -20,6 +17,7 @@ import static study.movie.exception.ErrorCode.NOT_ALLOW_SCREEN_FORMAT;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = "schedules")
 public class Screen extends BaseTimeEntity {
 
     @Id
@@ -62,7 +60,7 @@ public class Screen extends BaseTimeEntity {
 
     //==비즈니스 로직==//
     public void checkAllowedMovieFormat(List<FilmFormat> filmFormats) {
-        if (!filmFormats.stream().allMatch(value -> format.isAllowedFilmFormat(value)))
+        if (!filmFormats.stream().anyMatch(value -> format.isAllowedFilmFormat(value)))
             throw new CustomException(NOT_ALLOW_SCREEN_FORMAT);
     }
 

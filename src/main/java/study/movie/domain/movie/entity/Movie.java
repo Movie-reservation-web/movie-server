@@ -1,10 +1,7 @@
 package study.movie.domain.movie.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.movie.domain.movie.converter.FilmFormatConverter;
 import study.movie.domain.movie.converter.MovieGenreConverter;
 import study.movie.domain.schedule.entity.Schedule;
@@ -20,6 +17,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"reviews", "schedules", "tickets"})
 public class Movie extends BaseTimeEntity {
 
     @Id

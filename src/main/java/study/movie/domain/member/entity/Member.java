@@ -2,12 +2,9 @@ package study.movie.domain.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import study.movie.global.entity.BaseTimeEntity;
+import lombok.*;
 import study.movie.domain.ticket.entity.Ticket;
+import study.movie.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,6 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"password", "tickets"})
 public class Member extends BaseTimeEntity {
 
     @Id

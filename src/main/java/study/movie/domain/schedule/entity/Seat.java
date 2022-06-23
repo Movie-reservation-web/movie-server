@@ -11,7 +11,7 @@ import java.util.Objects;
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"rowNum", "colNum"})
+@ToString
 public class Seat {
 
     private Integer rowNum;

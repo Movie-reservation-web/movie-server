@@ -1,10 +1,7 @@
 package study.movie.domain.schedule.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.movie.domain.movie.entity.Movie;
 import study.movie.domain.theater.entity.Screen;
 import study.movie.global.entity.BaseTimeEntity;
@@ -23,6 +20,7 @@ import static study.movie.global.constants.StringAttrConst.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"seats"})
 public class Schedule extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

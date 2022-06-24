@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   config:
     import: classpath:database.yml, classpath:oauth2.yml, classpath:iamport.yml

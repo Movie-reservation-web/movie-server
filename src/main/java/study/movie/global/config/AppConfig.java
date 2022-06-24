@@ -15,7 +15,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("http://localhost:8081")
+                .allowedOriginPatterns("http://www.inf-cinema.shop")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") //요청 허용 메서드
                 .allowCredentials(true)
                 .maxAge(MAX_AGE_SECS);

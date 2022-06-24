@@ -14,7 +14,7 @@ public class InitDb {
     private final InitTheaterService initTheaterService;
     private final InitScheduleService initScheduleService;
 
-//    @PostConstruct
+    @PostConstruct
     public void init() {
         initMemberService.initMemberData();
         initMovieService.initMovieData();

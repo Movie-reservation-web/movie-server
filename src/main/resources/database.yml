@@ -1,13 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/movie?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-    password: 1234
+    url: jdbc:mysql://us-cdbr-east-05.cleardb.net:3306/heroku_2ef4624a9bf7d63?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+    username: b0a96bbc871c40
+    password: c0bd7b5e
 
   jpa:
     hibernate:
-      ddl-auto: update # 자동으로 테이블 생성
+      ddl-auto: create # 자동으로 테이블 생성
 
     properties:
       hibernate:

@@ -73,10 +73,10 @@ dependencies {
     implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
 }
 
-bootJar{
-    archiveBaseName ='-'
-    archiveFileName='inf-cinema.jar'
-    archiveVersion ="0.0.0"
+bootJar {
+    archiveBaseName = 'inf-cinema'
+    archiveFileName = 'inf-cinema.jar'
+    archiveVersion = "0.0.0"
 }
 
 tasks.named('test') {
@@ -98,4 +98,8 @@ configurations {
 }
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
+}
+
+jar {
+    enable = false
 }

@@ -15,7 +15,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("http://www.inf-cinema.shop")
+                .allowedOriginPatterns("https://www.inf-cinema.shop","https://inf-cinema.shop","https://icinema.netlify.app/")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") //요청 허용 메서드
                 .allowCredentials(true)
                 .maxAge(MAX_AGE_SECS);

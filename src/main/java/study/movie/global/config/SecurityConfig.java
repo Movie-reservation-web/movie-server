@@ -66,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfig.addAllowedOrigin("https://www.inf-cinema.shop");
         corsConfig.addAllowedOrigin("https://inf-cinema.shop");
         corsConfig.addAllowedOrigin("https://icinema.netlify.app");
-        corsConfig.addAllowedOrigin("https://localhost:8081");
+        corsConfig.addAllowedOrigin("http://localhost:8081");
         corsConfig.addAllowedMethod("*");
         corsConfig.addAllowedHeader("*");
         corsConfig.setAllowCredentials(true);

@@ -63,6 +63,8 @@ public class Member extends BaseTimeEntity {
         this.birth = birth;
         this.gender = gender;
         this.role = role;
+        this.socialType = SocialType.EMPTY;
+        this.profileImg = "";
     }
 
     @Builder(builderClassName = "socialBuilder", builderMethodName = "socialBuilder")

@@ -9,6 +9,7 @@ import study.movie.global.enumMapper.EnumMapperType;
 @AllArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum SocialType implements EnumMapperType {
+    EMPTY("unlink",""),
     KAKAO("kakao", "https://kapi.kakao.com/v2/user/me"),
     NAVER("naver", "https://openapi.naver.com/v1/nid/me"),
     GOOGLE("google", "https://www.googleapis.com/oauth2/v3/userinfo");

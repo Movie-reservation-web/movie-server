@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import study.movie.auth.dto.TokenResponse;
 import study.movie.exception.CustomException;
-import study.movie.global.config.AppProperties;
+import study.movie.global.config.OAuthProperties;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -26,12 +26,12 @@ import static study.movie.exception.ErrorCode.PERMISSION_NOT_ACCESSIBLE;
 @Component
 public class JwtTokenProvider {
     private Key key;
-    private final AppProperties appProperties;
+    private final OAuthProperties OAuthProperties;
     private static final String AUTHORITIES_KEY = "auth";
 
-    public JwtTokenProvider(AppProperties appProperties) {
-        this.appProperties = appProperties;
-        byte[] keyBites = Decoders.BASE64.decode(appProperties.getAuth().getTokenSecret());
+    public JwtTokenProvider(OAuthProperties OAuthProperties) {
+        this.OAuthProperties = OAuthProperties;
+        byte[] keyBites = Decoders.BASE64.decode(OAuthProperties.getAuth().getTokenSecret());
         this.key = Keys.hmacShaKeyFor(keyBites);
     }
 
@@ -181,7 +181,7 @@ public class JwtTokenProvider {
      */
     public String createAccessToken(Authentication authentication, Date date) {
         // 만료 시간 설정
-        Date accessTokenExpiration = this.getExpireTime(date, appProperties.getAuth().getAccessTokenExpireTime());
+        Date accessTokenExpiration = this.getExpireTime(date, OAuthProperties.getAuth().getAccessTokenExpireTime());
 
         // 권한 가져오기
         String authorities = this.convertToString(authentication);
@@ -201,7 +201,7 @@ public class JwtTokenProvider {
      * @return
      */
     private String createRefreshToken(Date date) {
-        Date refreshTokenExpiration = this.getExpireTime(date, appProperties.getAuth().getRefreshTokenExpireTime());
+        Date refreshTokenExpiration = this.getExpireTime(date, OAuthProperties.getAuth().getRefreshTokenExpireTime());
         return Jwts.builder()
                 .setExpiration(refreshTokenExpiration) // 만료시간
                 .signWith(key, SignatureAlgorithm.HS256)

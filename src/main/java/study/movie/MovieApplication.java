@@ -6,14 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import study.movie.global.config.AppProperties;
+import study.movie.global.config.OAuthProperties;
 import study.movie.global.config.IamportProperties;
+import study.movie.global.config.RedisProperties;
 
 import javax.persistence.EntityManager;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableConfigurationProperties({AppProperties.class, IamportProperties.class})
+@EnableConfigurationProperties({OAuthProperties.class, IamportProperties.class, RedisProperties.class})
 public class MovieApplication {
 
     public static void main(String[] args) {

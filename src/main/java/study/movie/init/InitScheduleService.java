@@ -35,9 +35,9 @@ public class InitScheduleService {
 
     private Schedule mapToSchedule(CreateScheduleRequest request) {
         Movie findMovie = movieRepository
-                .findById(request.getMovieId()).get();
+                .findAll().get((int) (request.getMovieId() - 1));
         Screen screen = screenRepository
-                .findById(request.getScreenId()).get();
+                .findAll().get((int) (request.getScreenId() - 1));
 
         Schedule schedule = Schedule.builder()
                 .movie(findMovie)

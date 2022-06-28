@@ -2,32 +2,22 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+      open-in-view: true
 
   config:
-    import: classpath:database.yml, classpath:oauth2.yml, classpath:iamport.yml
+    import: classpath:oauth2.yml, classpath:iamport.yml
   profiles:
-    group:
-      local:
-        - local-server
-        - local-db
-        - common-db
-        - ouath2
-        - iamport
-      prod:
-        - heroku-server
-        - heroku-db
-        - common-db
+    include:
         - oauth2
         - iamport
-
----
-spring:
-  config:
-    activate:
-      on-profile: heroku-server
-
-server:
-  port: $PORT
+    group:
+      local: local-server
+      prod: heroku-server
 
 ---
 spring:
@@ -35,9 +25,47 @@ spring:
     activate:
       on-profile: local-server
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/movie?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  redis:
+    host: localhost
+    port: 6379
+    password:
+
 server:
   port: 8080
 
 logging:
   level:
     org.hibernate.SQL: debug
+
+---
+spring:
+  config:
+    activate:
+      on-profile: heroku-server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://us-cdbr-east-05.cleardb.net:3306/heroku_04ebd93eadb0a6a?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+    username: b1516d9efd40a5
+    password: 8e8ceb63
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  redis:
+    host: redis-12335.c8.us-east-1-4.ec2.cloud.redislabs.com
+    port: 12335
+    password: rMlgGFnkQPWlbMpPKnOpyIo0gmrQDsUx
+
+server:
+  port: $PORT

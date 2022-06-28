@@ -29,7 +29,7 @@ public class InitMovieService {
     }
 
     @Transactional
-    public void initReviewData(){
+    public void initReviewData() {
         JsonUtil.jsonArrayToList(REVIEW, CreateReviewRequest.class).stream()
                 .map(this::mapToReview)
                 .collect(Collectors.toList()
@@ -37,7 +37,7 @@ public class InitMovieService {
     }
 
     private Review mapToReview(CreateReviewRequest request) {
-        Movie findMovie = movieRepository.findById(request.getMovieId()).get();
+        Movie findMovie = movieRepository.findAll().get((int) (request.getMovieId() - 1));
         Review review = Review.writeReview()
                 .movie(findMovie)
                 .writer(request.getWriter())

@@ -39,7 +39,7 @@ public class InitTheaterService {
     }
 
     private Screen mapToScreen(CreateScreenRequest request) {
-        Theater theater = theaterRepository.findById(request.getTheaterId()).get();
+        Theater theater = theaterRepository.findAll().get((int) (request.getTheaterId() - 1));
         Screen screen = Screen.builder()
                 .theater(theater)
                 .format(request.getFormat())

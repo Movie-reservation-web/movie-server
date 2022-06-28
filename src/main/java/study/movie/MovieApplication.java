@@ -14,7 +14,7 @@ import javax.persistence.EntityManager;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableConfigurationProperties({OAuthProperties.class, IamportProperties.class, RedisProperties.class})
+@EnableConfigurationProperties({OAuthProperties.class, IamportProperties.class})
 public class MovieApplication {
 
     public static void main(String[] args) {

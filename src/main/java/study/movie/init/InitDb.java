@@ -1,11 +1,13 @@
 package study.movie.init;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
 
+@Profile("local")
 @Component
 @RequiredArgsConstructor
 public class InitDb {
